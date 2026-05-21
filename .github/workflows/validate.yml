@@ -1,0 +1,24 @@
+name: Validate skills
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ripgrep
+        run: sudo apt-get update && sudo apt-get install -y ripgrep
+
+      - name: Install skillcheck
+        run: pip install skillcheck
+
+      - name: Install skill-scanner
+        run: pip install cisco-ai-skill-scanner || pip install skill-scanner || true
+
+      - name: Validate all skills
+        run: ./tools/validate-all.sh

@@ -1,0 +1,26 @@
+name: AccountBalance
+type: api_fact
+source_operation: BSS/ShowCustomerAccountBalances
+grain: one row per account balance snapshot
+description: 账户余额和欠费快照。
+common_questions:
+  - 当前账号是否欠费？
+  - 余额为什么没有抵扣？
+dimensions:
+  - name: account_type
+    path: account_balances[].account_type
+    type: enum
+    description: 账户类型。
+  - name: currency
+    path: currency
+    type: string
+    description: 币种。
+measures:
+  - name: amount
+    path: account_balances[].amount
+    type: number
+    description: 账户金额。
+  - name: debt_amount
+    path: debt_amount
+    type: number
+    description: 欠费金额。

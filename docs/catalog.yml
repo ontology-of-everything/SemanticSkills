@@ -1,0 +1,13 @@
+# Machine-readable skill index. Keep in sync with skills/ and qa/.
+version: 1
+skills:
+  - id: huawei-cloud-billing-scout
+    path: skills/huawei-cloud-billing-scout
+    qa: qa/huawei-cloud-billing-scout
+    domain: cloud
+    subdomains: [billing, finops]
+    summary: Read-only Huawei Cloud billing scout via KooCLI/BSS
+    summary_zh: 华为云账务只读侦察（KooCLI/BSS）
+    agents: [cursor, claude-code, codex]
+    compatibility: hcloud + read-only BSS IAM
+    version: "1.0.1"

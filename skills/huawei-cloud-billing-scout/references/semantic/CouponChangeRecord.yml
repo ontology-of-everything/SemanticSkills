@@ -1,0 +1,35 @@
+name: CouponChangeRecord
+type: api_fact
+source_operation: BSS/ListCustomerCouponChangeRecords
+grain: one row per coupon transaction
+description: 代金券收入、消费、退券、过期、回收流水。
+common_questions:
+  - 代金券为什么没有抵扣？
+  - 某张券用在哪些服务上？
+dimensions:
+  - name: balance_type
+    path: balance_type
+    type: enum
+    sample_values: [BALANCE_TYPE_COUPON]
+    description: 代金券账户。
+  - name: coupon_id
+    path: records[].coupon_id
+    type: string
+    description: 优惠券 ID，输出需脱敏。
+  - name: trade_time
+    path: records[].trade_time
+    type: time
+    description: 交易时间。
+  - name: trade_type
+    path: records[].trade_type
+    type: enum
+    description: 交易类型。
+  - name: revenue_expense_type
+    path: records[].revenue_expense_type
+    type: enum
+    description: 收入或支出。
+measures:
+  - name: amount
+    path: records[].amount
+    type: number
+    description: 券金额。

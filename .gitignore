@@ -1,0 +1,22 @@
+.DS_Store
+
+# Installed local agent copies
+.agents/
+.hermes/
+skills-lock.json
+dev/
+# Cloud credentials — never commit real secrets
+.credentials/
+credentials/*.csv
+credentials/*.json
+!credentials/*.example.*
+**/credentials*.csv
+!**/*.example.csv
+.env
+.env.*
+
+# Local study clones
+study/.tmp-clones/
+
+# Generated skill-evaluation workspaces
+.workspaces/

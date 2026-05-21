@@ -1,0 +1,47 @@
+name: MonthlyBillSummary
+type: api_fact
+source_operation: BSS/ShowCustomerMonthlySum
+grain: one row per bill cycle, service type, resource type, charge mode, bill type
+description: 月度消费汇总账单。
+common_questions:
+  - 本月各产品花了多少钱？
+  - 为什么月汇总和明细对不上？
+dimensions:
+  - name: bill_cycle
+    path: bill_sums[].bill_cycle
+    type: time
+    description: 账期。
+  - name: service_type_code
+    path: bill_sums[].service_type_code
+    type: string
+    description: 云服务类型编码。
+  - name: resource_type_code
+    path: bill_sums[].resource_type_code
+    type: string
+    description: 资源类型编码。
+  - name: charging_mode
+    path: bill_sums[].charging_mode
+    type: enum
+    sample_values: [1, 3, 10, 11]
+    description: 计费模式。
+  - name: bill_type
+    path: bill_sums[].bill_type
+    type: enum
+    description: 账单类型。
+measures:
+  - name: consume_amount
+    path: consume_amount
+    type: number
+    description: 消费金额汇总。
+  - name: cash_amount
+    path: cash_amount
+    type: number
+    description: 现金支付。
+  - name: coupon_amount
+    path: coupon_amount
+    type: number
+    description: 代金券抵扣。
+  - name: debt_amount
+    path: debt_amount
+    type: number
+    description: 欠费。

@@ -1,0 +1,39 @@
+name: CostAnalysis
+type: api_fact
+source_operation: BSS/ListCosts
+grain: one row per requested time bucket and group-by dimension set
+description: 成本分析聚合结果。
+common_questions:
+  - 按产品、区域、企业项目汇总费用。
+  - 本月哪个维度费用最高？
+dimensions:
+  - name: time_condition
+    path: time_condition
+    type: time
+    description: 查询时间范围和时间粒度。
+  - name: amount_type
+    path: amount_type
+    type: enum
+    sample_values: [PAYMENT_AMOUNT, NET_AMOUNT]
+    description: 金额类型。
+  - name: cost_type
+    path: cost_type
+    type: enum
+    sample_values: [ORIGINAL_COST, AMORTIZED_COST]
+    description: 成本类型。
+  - name: groupby
+    path: groupby[]
+    type: array
+    sample_values:
+      - CLOUD_SERVICE_TYPE
+      - RESOURCE_TYPE
+      - REGION_CODE
+      - ENTERPRISE_PROJECT_ID
+      - CHARGING_MODE
+      - RESOURCE_ID
+    description: 分组维度。
+measures:
+  - name: cost
+    path: costs[].amount
+    type: number
+    description: 聚合金额。

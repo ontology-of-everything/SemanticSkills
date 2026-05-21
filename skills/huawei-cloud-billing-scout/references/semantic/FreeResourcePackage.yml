@@ -1,0 +1,45 @@
+name: FreeResourcePackage
+type: api_fact
+source_operations:
+  - BSS/ListFreeResourceInfos
+  - BSS/ListFreeResourceUsages
+  - BSS/ListFreeResourcesUsageRecords
+grain: one row per resource package or package deduction record
+description: 资源包库存、余量和抵扣明细。
+common_questions:
+  - 买了资源包为什么还按需扣费？
+  - 资源包还剩多少？
+dimensions:
+  - name: product_id
+    path: free_resource_packages[].product_id
+    type: string
+    description: 资源包 ID。
+  - name: product_name
+    path: free_resource_packages[].product_name
+    type: string
+    description: 资源包名称。
+  - name: status
+    path: free_resource_packages[].status
+    type: enum
+    description: 状态。
+  - name: effective_time
+    path: free_resource_packages[].effective_time
+    type: time
+    description: 生效时间。
+  - name: expire_time
+    path: free_resource_packages[].expire_time
+    type: time
+    description: 失效时间。
+  - name: free_resource_id
+    path: free_resource_packages[].free_resources[].free_resource_id
+    type: string
+    description: 资源项 ID。
+measures:
+  - name: amount
+    path: free_resource_packages[].free_resources[].amount
+    type: number
+    description: 当前余量。
+  - name: original_amount
+    path: free_resource_packages[].free_resources[].original_amount
+    type: number
+    description: 原始额度。

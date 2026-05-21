@@ -1,0 +1,54 @@
+name: ResourceBillDetail
+type: api_fact
+source_operation: BSS/ListCustomerselfResourceRecordDetails
+grain: one row per resource bill detail line
+description: 资源详单，适合日级、资源级、用量级钻取。
+common_questions:
+  - 某资源每天扣了多少？
+  - 某产品具体是什么用量在收费？
+dimensions:
+  - name: cycle
+    path: monthly_records[].cycle
+    type: time
+    description: 账期。
+  - name: bill_date
+    path: monthly_records[].bill_date
+    type: time
+    description: 日级账单日期，按日查询时有效。
+  - name: res_instance_id
+    path: monthly_records[].res_instance_id
+    type: string
+    description: 资源实例 ID，输出需脱敏。
+  - name: cloud_service_type
+    path: monthly_records[].cloud_service_type
+    type: string
+    description: 云服务。
+  - name: resource_type_code
+    path: monthly_records[].resource_type_code
+    type: string
+    description: 资源类型编码。
+  - name: charge_mode
+    path: monthly_records[].charge_mode
+    type: enum
+    description: 计费模式。
+  - name: bill_type
+    path: monthly_records[].bill_type
+    type: enum
+    description: 账单类型。
+measures:
+  - name: consume_amount
+    path: monthly_records[].consume_amount
+    type: number
+    description: 消费金额。
+  - name: cash_amount
+    path: monthly_records[].cash_amount
+    type: number
+    description: 现金支付。
+  - name: coupon_amount
+    path: monthly_records[].coupon_amount
+    type: number
+    description: 代金券抵扣。
+  - name: debt_amount
+    path: monthly_records[].debt_amount
+    type: number
+    description: 欠费金额。
