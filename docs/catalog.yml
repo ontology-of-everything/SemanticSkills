@@ -9,5 +9,6 @@ skills:
     summary: Read-only Huawei Cloud billing scout via KooCLI/BSS
     summary_zh: 华为云账务只读侦察（KooCLI/BSS）
     agents: [cursor, claude-code, codex]
-    compatibility: hcloud + read-only BSS IAM
-    version: "1.0.1"
+    compatibility: hcloud (KooCLI), read-only BSS IAM, outbound network; no agent auto-install
+    version: "2.0.0"
+    marketplaces: [skills-sh, skillsmp, clawhub]

@@ -8,7 +8,7 @@ English: [README.md](README.md).
 
 ## 设计思路
 
-**本体语义先行。** 每个技能在 `references/semantic/*.yml` 里定义稳定的事实实体（粒度、维度、指标）；命令参数单独一层，语义层不复制 API 字段。协作手册叠在上面：负责把用户意图分流到协作能力、查询顺序和输出形态，不重复语义模型。
+**本体语义先行。** 每个技能在 `references/semantic/*.yml` 里定义事实实体（粒度、维度、指标、来源 Operation）；命令参数单独一层。`SKILL.md` 写执行协议；协作手册负责多步编排与输出形态。
 
 运行时一条问题走这条链：
 
@@ -16,27 +16,28 @@ English: [README.md](README.md).
 用户问题
      │
      ▼
-协作手册 ──► 能力 → 内部口径 → 查询顺序 → 用户可读输出
+语义层 ────────► 抽取事实/维度/指标 → source_operation(s)
      │
      ▼
-本体语义 ──► 选定事实实体（references/semantic/*.yml）
+命令层 ──────────► related-commands.md 取模板 → 直接执行（禁止先 --help）
      │
      ▼
-命令层 ────► 只读操作（如 hcloud BSS）
+协作手册（多步时）──► 查询顺序 + 输出结构
      │
      ▼
-证据表 → 小结 → 用户可读说明 → 证据边界
+同一 yml ────────► 解析 dimensions/measures → 证据表 → 小结
 ```
 
 
 | 层    | 放什么               | 典型文件                                         |
 | ---- | ----------------- | -------------------------------------------- |
-| 本体语义 | Agent 可引用的事实实体    | `references/semantic/*.yml`、`*-semantics.md` |
-| 协作手册 | 协作能力、内部口径、查询顺序、用户可读输出 | `*-playbook.md`                              |
-| 命令   | 仅 API/CLI 映射      | `related-commands.md`、IAM、安装说明               |
+| 本体语义 | 事实定义 + 响应解析 | `references/semantic/*.yml` |
+| 命令   | API/CLI 模板      | `related-commands.md`、IAM、安装说明               |
+| 协作手册 | 多步编排、用户可读输出 | `*-playbook.md`                              |
+| 语义说明 | 语义模型 + 术语口径 | `*-semantics.md` |
 
 
-`skills/<name>/` 是可安装运行时包；`qa/<name>/` 放 eval 与验证脚本，不会被 `npx skills add` 复制。兼容 Claude Code、Cursor、Codex CLI 与 [SkillsMP](https://skillsmp.com/) 收录。
+`skills/<name>/` 是可安装运行时包；`qa/<name>/` 放 eval 与验证脚本，不会被 `npx skills add` 复制。可出现在 [skills.sh](https://www.skills.sh/)、由 [SkillsMP](https://skillsmp.com/) 抓取，并可发布到 [ClawHub](https://clawhub.ai/)。
 
 示例：[huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md)。编写规范：[docs/authoring.md](docs/authoring.md)。
 
@@ -66,13 +67,35 @@ SemanticSkills/
 
 ## 安装
 
+[![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
+
 从 GitHub 安装（[Cursor 说明](docs/agents/cursor.md)）：
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills \
   --skill huawei-cloud-billing-scout \
   --agent cursor \
-  --copy
+  --copy -y
+```
+
+Claude Code 或 Codex：
+
+```bash
+npx skills add ontology-of-everything/SemanticSkills \
+  --skill huawei-cloud-billing-scout \
+  --agent claude-code \
+  --copy -y
+
+npx skills add ontology-of-everything/SemanticSkills \
+  --skill huawei-cloud-billing-scout \
+  --agent codex \
+  --copy -y
+```
+
+安装前先列出本仓库可用技能：
+
+```bash
+npx skills add ontology-of-everything/SemanticSkills --list
 ```
 
 本地路径：
@@ -81,7 +104,7 @@ npx skills add ontology-of-everything/SemanticSkills \
 npx skills add ./skills/huawei-cloud-billing-scout \
   --skill huawei-cloud-billing-scout \
   --agent cursor \
-  --copy
+  --copy -y
 ```
 
 ## 验证
@@ -116,6 +139,12 @@ HUAWEICLOUD_BILLING_SCOUT_CYCLE=2025-04 \
 ./tools/skill-scaffold.sh <skill-name>
 ```
 
-## SkillsMP
+## 市场收录
 
-每个技能位于 `skills/<name>/SKILL.md`，包含 `name`、带触发词的 `description`，以及可选的 `license` / `compatibility` / `metadata` 便于市场收录。
+| 平台 | 收录方式 | 你需要做的 |
+| --- | --- | --- |
+| [skills.sh](https://www.skills.sh/) | `npx skills add` 安装遥测 | 公开 GitHub 仓库；README 写清安装命令 |
+| [SkillsMP](https://skillsmp.com/) | GitHub 爬虫（无提交表单） | 公开仓库 + `skills/<name>/SKILL.md`；仓库 **≥2 stars** |
+| [ClawHub](https://clawhub.ai/) | 在技能目录执行 `clawhub publish` | GitHub 账号满 1 周；frontmatter 含 `metadata.openclaw`；在 ClawHub 上以 **MIT-0** 发布 |
+
+每个技能位于 `skills/<name>/SKILL.md`，包含 `name`、带触发词的 `description`，以及可选的 `license` / `compatibility` / `metadata`（含 ClawHub 用的 `metadata.openclaw`）。参考技能见 [docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md)。
