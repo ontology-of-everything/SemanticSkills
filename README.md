@@ -8,7 +8,7 @@ Cloud agents get billing wrong in boring, repeatable ways: wrong grain, skipped 
 
 ## Design
 
-**Build ontology-first.** Each skill defines stable domain vocabulary in `references/semantic/*.yml` (entities, grain, dimensions, measures) and keeps command parameters in a separate layer. A playbook sits on top: it routes user intent into collaboration modes, query order, and output shape without duplicating the semantic model.
+**Build ontology-first.** Each skill defines stable domain vocabulary in `references/semantic/*.yml` (fact entities, grain, dimensions, measures, source operations) and keeps command parameters in a separate layer. `SKILL.md` holds the execution protocol; the playbook covers multi-step flows and output shape.
 
 At runtime a question flows like this:
 
@@ -16,25 +16,26 @@ At runtime a question flows like this:
 User question
      │
      ▼
-Playbook ───► capability → query basis → order → user-readable output
+Semantic layer ─► extract fact/dimensions/measures → source_operation(s)
      │
      ▼
-Semantics ──► pick fact entity (references/semantic/*.yml)
+Commands ───────► related-commands.md templates → execute (no --help first)
      │
      ▼
-Commands ───► read-only operations (e.g. hcloud BSS)
+Playbook (if multi-step) ──► query order + output structure
      │
      ▼
-Evidence table → summary → user-readable note → evidence boundary
+Same YAML ───────► parse dimensions/measures → evidence table → summary
 ```
 
 | Layer | What it holds | Typical files |
 | --- | --- | --- |
-| Ontology | Fact entities the agent can cite | `references/semantic/*.yml`, `*-semantics.md` |
-| Playbook | Collaboration modes, query basis, query order, user-readable output | `*-playbook.md` |
-| Commands | API/CLI mapping only | `related-commands.md`, IAM, install notes |
+| Ontology | Fact definitions + response parsing | `references/semantic/*.yml` |
+| Commands | API/CLI templates | `related-commands.md`, IAM, install notes |
+| Playbook | Multi-step flows, user-readable output | `*-playbook.md` |
+| Semantics | Semantic model + glossary | `*-semantics.md` |
 
-`skills/<name>/` is the installable runtime bundle; `qa/<name>/` holds evals and validation and is never copied by `npx skills add`. Compatible with Claude Code, Cursor, Codex CLI, and [SkillsMP](https://skillsmp.com/).
+`skills/<name>/` is the installable runtime bundle; `qa/<name>/` holds evals and validation and is never copied by `npx skills add`. Listed on [skills.sh](https://www.skills.sh/), indexed by [SkillsMP](https://skillsmp.com/), and publishable to [ClawHub](https://clawhub.ai/).
 
 Working example: [huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md). Authoring conventions: [docs/authoring.md](docs/authoring.md).
 
@@ -62,13 +63,35 @@ Machine-readable index: [docs/catalog.yml](docs/catalog.yml).
 
 ## Install
 
+[![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
+
 From GitHub ([Cursor](docs/agents/cursor.md) example):
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills \
   --skill huawei-cloud-billing-scout \
   --agent cursor \
-  --copy
+  --copy -y
+```
+
+Claude Code or Codex:
+
+```bash
+npx skills add ontology-of-everything/SemanticSkills \
+  --skill huawei-cloud-billing-scout \
+  --agent claude-code \
+  --copy -y
+
+npx skills add ontology-of-everything/SemanticSkills \
+  --skill huawei-cloud-billing-scout \
+  --agent codex \
+  --copy -y
+```
+
+List skills in this repo before installing:
+
+```bash
+npx skills add ontology-of-everything/SemanticSkills --list
 ```
 
 Local path:
@@ -77,7 +100,7 @@ Local path:
 npx skills add ./skills/huawei-cloud-billing-scout \
   --skill huawei-cloud-billing-scout \
   --agent cursor \
-  --copy
+  --copy -y
 ```
 
 ## Validate
@@ -112,6 +135,12 @@ New skill:
 ./tools/skill-scaffold.sh <skill-name>
 ```
 
-## SkillsMP
+## Marketplaces
 
-Each skill lives at `skills/<name>/SKILL.md` with `name`, keyword-rich `description`, and optional `license` / `compatibility` / `metadata` for marketplace indexing.
+| Platform | How it is listed | What you need |
+| --- | --- | --- |
+| [skills.sh](https://www.skills.sh/) | Install telemetry via `npx skills add` | Public GitHub repo; README install commands |
+| [SkillsMP](https://skillsmp.com/) | GitHub crawler (no submit form) | Public repo with `skills/<name>/SKILL.md`; repo **≥2 stars** |
+| [ClawHub](https://clawhub.ai/) | `clawhub publish` from skill folder | GitHub account ≥1 week; `metadata.openclaw` in frontmatter; published under **MIT-0** on ClawHub |
+
+Each skill lives at `skills/<name>/SKILL.md` with `name`, keyword-rich `description`, and optional `license` / `compatibility` / `metadata` (including `metadata.openclaw` for ClawHub). See [docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md) for the reference skill.

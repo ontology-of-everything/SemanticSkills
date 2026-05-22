@@ -8,6 +8,18 @@ Conventions for skills in this monorepo. Spec baseline: [agentskills.io](https:/
 | --- | --- |
 | `skills/<name>/` | Installable runtime only (`SKILL.md` + optional `references/`, `scripts/`, `assets/`) |
 | `qa/<name>/` | Validation, evals, assertions — never copied by `npx skills add` |
+
+QA layout (scheme A):
+
+```text
+qa/<name>/
+├── validate.sh          # CI/local entry
+├── README.md
+├── evals/evals.json
+├── assertions/README.md
+├── fixtures/            # optional contract or golden data
+└── bin/                 # optional maintainer scripts
+```
 | `docs/skills/<name>.md` | Human-facing skill overview for the repo README index |
 
 ## Naming
@@ -20,17 +32,30 @@ Conventions for skills in this monorepo. Spec baseline: [agentskills.io](https:/
 
 Required: `name`, `description` (trigger keywords + scope).
 
-Recommended for SkillsMP discovery:
+Recommended for marketplace discovery ([SkillsMP](https://skillsmp.com/), [skills.sh](https://www.skills.sh/), [ClawHub](https://clawhub.ai/)):
 
 ```yaml
 license: Apache-2.0
-compatibility: <short environment requirement>
+compatibility: <bins, IAM, network; note if agent must not auto-install>
 metadata:
   author: ontology-of-everything
   version: "1.0.0"
+  openclaw:          # ClawHub security review only
+    requires:
+      bins: [<cli>]
+    homepage: https://github.com/<org>/<repo>/tree/main/skills/<name>
+    envVars:         # optional; required: false for profile-based auth
+      - name: EXAMPLE_API_KEY
+        required: false
+        description: ...
 ```
 
-Keep frontmatter under ~100 tokens; put long guidance in `references/`.
+- **`description`**: English + Chinese trigger phrases, task scope, and explicit refuse rules (payment/delete/refund).
+- **SkillsMP**: public GitHub repo, `skills/<name>/SKILL.md`, repo **≥2 stars** (crawler filter).
+- **skills.sh**: same layout; promote `npx skills add <org>/SemanticSkills --skill <name> -y` in README; optional badge `https://skills.sh/b/<org>/SemanticSkills`.
+- **ClawHub**: publish from `skills/<name>/` with `clawhub publish`; registry license is **MIT-0** (GitHub may stay Apache-2.0); declare `metadata.openclaw` so scans match runtime behavior.
+
+Keep frontmatter concise; put long guidance in `references/`.
 
 ## Install purity
 
