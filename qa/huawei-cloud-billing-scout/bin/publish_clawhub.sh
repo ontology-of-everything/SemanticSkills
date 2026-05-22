@@ -26,8 +26,7 @@ if ! clawhub whoami >/dev/null 2>&1; then
   exit 1
 fi
 
-cd "$SKILL_DIR"
-clawhub skill publish . \
+clawhub skill publish "$SKILL_DIR" \
   --slug huawei-cloud-billing-scout \
   --name "Huawei Cloud Billing Scout" \
   --version "$VERSION" \
