@@ -3,9 +3,6 @@ type: api_fact
 source_operation: BSS/ListCustomerAccountChangeRecords
 grain: one row per cash or credit account transaction
 description: 现金、授信、储值类收支流水。
-common_questions:
-  - 充值后为什么没扣余额？
-  - 某笔现金支出去了哪里？
 dimensions:
   - name: balance_type
     path: balance_type

@@ -3,9 +3,6 @@ type: api_fact
 source_operation: BSS/ShowCustomerMonthlySum
 grain: one row per bill cycle, service type, resource type, charge mode, bill type
 description: 月度消费汇总账单。
-common_questions:
-  - 本月各产品花了多少钱？
-  - 为什么月汇总和明细对不上？
 dimensions:
   - name: bill_cycle
     path: bill_sums[].bill_cycle

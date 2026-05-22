@@ -3,9 +3,6 @@ type: api_fact
 source_operation: BSS/ShowCustomerAccountBalances
 grain: one row per account balance snapshot
 description: 账户余额和欠费快照。
-common_questions:
-  - 当前账号是否欠费？
-  - 余额为什么没有抵扣？
 dimensions:
   - name: account_type
     path: account_balances[].account_type

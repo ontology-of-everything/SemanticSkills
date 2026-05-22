@@ -1,6 +1,11 @@
 # 账务语义层
 
-语义层只做意图到事实的映射，不复制命令参数。
+> 事实硬定义在 `references/semantic/*.yml`；命令模板在
+> `references/related-commands.md`。
+
+语义层的目的，是让 Agent 在调用 CLI 前先确定“要查什么事实”。事实实体有
+稳定粒度，维度用于筛选和分组，指标用于汇总或解释金额。它不复制命令参数，
+也不把用户话术压成 FAQ。
 
 ## 事实实体
 
@@ -10,12 +15,32 @@
 | `MonthlyBillSummary` | 一个账期内服务/资源类型汇总行 | `ShowCustomerMonthlySum` |
 | `ResourceBillRecord` | 一个资源消费记录行 | `ListCustomerselfResourceRecords` |
 | `ResourceBillDetail` | 一个资源详单行 | `ListCustomerselfResourceRecordDetails` |
-| `FreeResourcePackage` | 一个资源包/资源项 | `ListFreeResourceInfos` |
+| `FreeResourcePackage` | 资源包库存、余量或抵扣记录 | 多 Operation，见 playbook §3 |
 | `AccountChangeRecord` | 一条现金/授信/储值收支流水 | `ListCustomerAccountChangeRecords` |
 | `CouponChangeRecord` | 一条代金券收支流水 | `ListCustomerCouponChangeRecords` |
 | `CostAnalysis` | 一个成本分析分组结果 | `ListCosts` |
 
-YAML 硬定义在 `references/semantic/*.yml`。
+每个实体 YAML 只保留事实定义：`grain`、`dimensions`、`measures`、
+`source_operation` / `source_operations`。用户问题可以有很多说法，路由时
+应比较事实粒度、已知维度和目标指标，而不是查找某个问题样例是否命中。
+
+## 路由语义
+
+先从用户问题抽取这些槽位：
+
+| 槽位 | 用途 |
+| --- | --- |
+| 目标 | 找事实、做归因、做对账、做咨询 |
+| 时间 | 账期、自然日、近 N 天、跨月范围 |
+| 范围 | 当前账号、企业主账号、子账号、支付账号 |
+| 过滤维度 | 云服务、资源、区域、企业项目、计费模式、账单类型 |
+| 指标 | 应付、实付、现金、授信、券、储值、欠费、用量 |
+| 证据粒度 | 汇总、资源记录、资源详单、流水、资源包抵扣记录 |
+
+选择事实实体时遵循两个原则：
+
+- 能用更粗粒度回答的问题，先用汇总事实；需要解释来源时再钻明细。
+- 一个事实实体无法解释的问题，交给 playbook 组织多事实链路，而不是猜一个万能 API。
 
 ## 通用维度
 
@@ -48,7 +73,7 @@ YAML 硬定义在 `references/semantic/*.yml`。
 | `usage` | 使用量 |
 | `free_resource_usage` | 资源包抵扣量 |
 
-## 术语口径
+## 金额口径
 
 | 术语 | 口径 |
 | --- | --- |
