@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# 遍历 qa/*/validate.sh，与 GitHub validate workflow 一致。
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

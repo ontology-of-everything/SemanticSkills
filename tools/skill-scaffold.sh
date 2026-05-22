@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# 从 template/ 脚手架新 skill：skills/<name>/ + qa/<name>/，并替换占位符。
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -18,10 +19,12 @@ QA_DIR="$ROOT/qa/$NAME"
 cp -R "$ROOT/template/skill" "$SKILL_DIR"
 mkdir -p "$QA_DIR/evals" "$QA_DIR/assertions"
 cp "$ROOT/template/qa/validate.sh" "$QA_DIR/validate.sh"
+cp "$ROOT/template/qa/README.md" "$QA_DIR/README.md"
 cp "$ROOT/template/qa/evals/evals.json" "$QA_DIR/evals/evals.json"
 cp "$ROOT/template/qa/assertions/README.md" "$QA_DIR/assertions/README.md"
 chmod +x "$QA_DIR/validate.sh"
 
+# 替换 skill-template / __SKILL_NAME__ 占位符
 replace() {
   local file=$1
   if sed --version >/dev/null 2>&1; then
@@ -33,6 +36,7 @@ replace() {
 
 replace "$SKILL_DIR/SKILL.md"
 replace "$QA_DIR/validate.sh"
+replace "$QA_DIR/README.md"
 replace "$QA_DIR/evals/evals.json"
 
 printf 'Scaffolded skill: %s\n' "$NAME"

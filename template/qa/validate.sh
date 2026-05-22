@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# 通用 skill QA 模板：布局 + skills-ref + markdownlint + skillcheck。
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -14,14 +15,18 @@ run_local_or_npx() {
   else need_cmd npx; npx "$bin" "$@"; fi
 }
 
+# skill 安装包纯度：不含 eval/qa/.workspaces 等
 check_skill_layout() {
   [[ -f "$SKILL_DIR/SKILL.md" ]] || fail "missing SKILL.md"
+  [[ -f "$QA_DIR/README.md" ]] || fail "missing QA README"
   local item
   local forbidden=(.DS_Store .agents analysis evals qa scripts tests .workspaces)
   for item in "${forbidden[@]}"; do
     [[ ! -e "$SKILL_DIR/$item" ]] || fail "forbidden in skill dir: $item"
   done
   [[ -f "$QA_DIR/evals/evals.json" ]] || fail "missing evals file: $QA_DIR/evals/evals.json"
+  [[ -f "$QA_DIR/assertions/README.md" ]] || fail "missing assertions guide"
+  [[ ! -f "$QA_DIR/evals.json" ]] || fail "duplicate eval source: $QA_DIR/evals.json"
 }
 
 need_cmd rg
