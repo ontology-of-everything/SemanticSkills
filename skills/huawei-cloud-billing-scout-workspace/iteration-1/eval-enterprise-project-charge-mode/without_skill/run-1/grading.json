@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "回答把“本月”解析为当前月，并在用户可读说明中说明。",
+      "passed": true,
+      "evidence": "Graded from iteration-1 simulated without_skill response."
+    },
+    {
+      "text": "回答包含企业项目 EP-FINANCE 过滤条件。",
+      "passed": true,
+      "evidence": "Graded from iteration-1 simulated without_skill response."
+    },
+    {
+      "text": "回答包含计费模式分组或 charge_mode/CHARGING_MODE 维度。",
+      "passed": false,
+      "evidence": "Graded from iteration-1 simulated without_skill response."
+    },
+    {
+      "text": "回答优先选择成本分析或月汇总类 BSS 只读查询。",
+      "passed": false,
+      "evidence": "Graded from iteration-1 simulated without_skill response."
+    },
+    {
+      "text": "回答表格应按计费模式列出金额，并保留合计或占比。",
+      "passed": false,
+      "evidence": "Graded from iteration-1 simulated without_skill response."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 3,
+    "total": 5,
+    "pass_rate": 0.4
+  }
+}

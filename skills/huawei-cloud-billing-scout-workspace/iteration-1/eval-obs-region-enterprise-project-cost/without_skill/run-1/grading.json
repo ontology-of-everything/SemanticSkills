@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "回答把“上个月”解析为最近完整账期或自然月，并在用户可读说明中说明。",
+      "passed": false,
+      "evidence": "仅泛称「上个月」，未指明对应账期/自然月起止或未解释最近完整账期定义。"
+    },
+    {
+      "text": "回答包含 OBS、华南一区/region、企业项目三个过滤或分组条件。",
+      "passed": false,
+      "evidence": "未给出等价 `region`/`cn-south-*` 明确过滤；OBS 仅以口语提及；未落实企业项目的查询或分组。"
+    },
+    {
+      "text": "回答优先使用月汇总或成本分析等 BSS 只读查询，再按需钻取明细。",
+      "passed": false,
+      "evidence": "无任何 `ShowCustomerMonthlySum`/`ListCosts` 等只读链路，仅以控制台目测替代。"
+    },
+    {
+      "text": "回答要求表格输出按企业项目列出金额、占比或合计。",
+      "passed": false,
+      "evidence": "无表格，亦无按企业项目列金额或占比。"
+    },
+    {
+      "text": "回答不把控制台猜测当作结论，结论必须依赖查询或官方口径。",
+      "passed": false,
+      "evidence": "直接给出主观「多半几百块钱」猜测，控制台导向占主，不满足查询/官方证据要求。"
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 5,
+    "total": 5,
+    "pass_rate": 0.0
+  }
+}
