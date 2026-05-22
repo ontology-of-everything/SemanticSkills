@@ -27,78 +27,53 @@ metadata:
 
 > 社区版本，非华为云官方。 / Community edition — not official Huawei Cloud.
 
-账务问题容易答错：粒度不对、口径混用、无表格凭据。本技能在 CLI 层加入
-账务语义层，让 Agent 先对齐“要查什么事实”，再选择已验证 BSS 命令，
-避免靠 `--help` 猜 API 名或把经典问题当成穷举 FAQ。
+只读调查华为云账务（余额、账单、扣费、对账、代金券、资源包等）。按团队约定的顺序：先定事实与口径，再查 BSS，最后给表格证据和小结——不把用户原话当成固定问法去套模板。
 
-需要 KooCLI（`hcloud`）、只读 BSS IAM、网络可达华为云 API。
+## 验收标准
+
+- 从问题中抽出事实、维度、指标、时间、账号范围；路由依据语义实体，而非话术相似度。
+- 仅 BSS/KooCLI 只读；拒绝支付、续费、退款、回收及一切写操作。
+- 先表格证据后结论；无查询或官网依据不下结论。
+- 用户可读说明写清时间范围、账号范围、TopN/行数；对话默认不写 API/字段名（复现/排错/审计时附 `技术细节`）。
+- 不输出完整 AK/SK、Token、账号/资源/订单/交易 ID。
 
 ## 能力边界
 
-支持：找事实、做归因、做对账、做咨询（见 `references/billing-playbook.md` §1）。
-
-不执行支付、续费、退款、回收、创建、修改、删除、停用、关闭、告警配置变更。
-遇此类请求，收集只读证据并引导控制台、工单或账号经理。
-
-## 协作模式
-
-1. 只读、授权、最小范围。
-2. 将问题映射为事实、维度、指标、时间窗口。
-3. 有安全默认时，先说明查询范围再执行。
-4. 表格证据先于结论；简单问题短答，复杂归因或对账再展开口径与边界。
-5. API 名、字段名、命令摘要默认不进对话；复现/排错/审计时追加 `技术细节`。
-6. 无证据禁结论。
-
-## 硬性规则
-
-- 不暴露 AK/SK、Token、完整账号/资源/订单/交易 ID。
-- 禁止写操作；`ListCustomerAccountChangeRecords` / `ListCustomerCouponChangeRecords` 是只读流水，允许。
-- 产品交叉验证只限 `List` / `Show` / `Get`。
-- 没有查询或官网依据时，不下结论。
+四类目标：找事实、做归因、做对账、做咨询（步骤见 `references/billing-playbook.md` §1）。操作类（支付、删资源等）只留只读证据，引导控制台、工单或账号经理。
 
 ## 前置检查
 
-未通过则停止，读 `references/cli-installation.md` 指引用户；Agent 不自动安装。
+未通过则停止，读 `references/cli-installation.md`；不自动安装。
 
-1. `hcloud version` — 确认 CLI 已装。
-2. `hcloud configure list` — 确认 profile 与 region。
+1. `hcloud version`
+2. `hcloud configure list`
 
 ## 执行协议
 
-执行协议的目的不是把用户话术匹配到 FAQ，而是把问题还原成可查询的账务
-事实：事实实体、粒度、时间窗口、账号范围、维度和指标。语义层决定“查什么”，
-命令层只负责“怎么查”。
-
-1. 先判断协作目标：找事实、做归因、做对账、做咨询；不要把同一句话强行归到单一经典问题。
-2. 从用户问题抽取事实槽位：时间、账号/企业范围、云服务、资源、区域、企业项目、计费模式、金额口径。
-3. 用 `references/billing-semantics.md` 和 `references/semantic/*.yml`
-   选择最小事实实体；依据是实体粒度、维度、指标和
-   `source_operation` / `source_operations`。
-4. 在 `references/related-commands.md` 按 Operation 取命令模板，套用
-   §默认口径；只在查询会扩大范围或改变结论时追问。
-5. 归因链、对账、资源包/代金券抵扣等多事实问题，按
-   `references/billing-playbook.md` 组织查询顺序，先汇总后钻取。
-6. 用所选事实实体的 `dimensions` / `measures` 组织表格证据，再给小结和
-   用户可读说明；证据边界影响结论时才显式列出。
-7. 仅 API 报错、Operation 不在命令层、或需要核对本机 KooCLI 参数时，才用
-   `hcloud BSS <Op> --help` 兜底。
+1. **目标**：找事实 / 归因 / 对账 / 咨询（一句可含多目标）。
+2. **槽位**：时间、账号/企业范围、云服务、资源、区域、企业项目、计费模式、金额口径。
+3. **实体**：`references/billing-semantics.md` + `references/semantic/*.yml`
+  → 最小事实实体（粒度、维度、指标、`source_operation(s)`）。
+4. **命令**：`references/related-commands.md` 按 Operation + §默认口径；扩大范围或改结论时再问。
+5. **编排**：多事实链用 `references/billing-playbook.md`，先汇总后钻取。
+6. **输出**：用 `dimensions` / `measures` 制表 → 小结；区分已证实 / 可能解释 / 待核验。
+  仅报错、缺 Operation 或核对参数时用 `hcloud BSS <Op> --help`。
 
 ## 参考文件
 
-| 角色 | 文件 |
+| 用途 | 文件 |
 | --- | --- |
-| 事实硬定义：粒度、维度、指标、来源 Operation | `references/semantic/*.yml` |
+| 事实定义 | `references/semantic/*.yml` |
 | 命令模板 | `references/related-commands.md` |
-| 意图判断、多步编排、输出原则 | `references/billing-playbook.md` |
-| 语义层说明与术语口径 | `references/billing-semantics.md` |
-| 安装与凭据 | `references/cli-installation.md` |
+| 多步编排 | `references/billing-playbook.md` |
+| 术语口径 | `references/billing-semantics.md` |
+| 安装凭据 | `references/cli-installation.md` |
 | 最小权限 | `references/iam-policies.md` |
 
 ## 默认口径
 
-时间：本月→当前月，上月→最近完整月，最近→近 7 天。账号：当前 profile。
-行数：用户查询 `limit=10`，验证 `limit<=3`。多账号：默认 `method=oneself`，
-明确企业范围才用 `all`。粒度：先汇总，再钻明细。扩大范围或改变含义时先问。
+本月→当前月；上月→最近完整月；最近→近 7 天。账号→当前 profile。
+查询 `limit=10`，验证 `limit<=3`。多账号默认 `method=oneself`，明确企业范围才 `all`。先汇总后明细。
 
 ## 大结果与拒绝
 
