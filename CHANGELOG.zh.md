@@ -1,53 +1,36 @@
-## 1.0.5 - 2026-05-21
+# 更新日志
 
-### 修复
-- 收紧 `huawei-cloud-billing-scout` 只读边界，避免将 BSS `List*ChangeRecords` 流水证据查询误判为写操作
-- 修正 `ResourceBillDetail` 中 `resource_type_code` 的语义路径
+## 2.0.0 - 2026-05-22
 
-### 测试
-- 增加只读 ChangeRecords 策略和资源详单字段路径的防回归验证
-
-## 1.0.4 - 2026-05-21
-
-### 重构
-- 优化 `huawei-cloud-billing-scout` 输出结构：用用户可读说明替代固定查询口径表达，默认隐藏技术细节，并仅在影响结论时追加待核验边界
-
-### 文档
-- 更新 README、技能文档与 QA 断言，说明用户可读账务输出和证据边界规则
-
-## 1.0.3 - 2026-05-21
-
-### 重构
-- 将 `billing-scenarios` 与 `billing-scout-workflow` 合并为 `billing-playbook`，按协作能力（查事实、归因、对账、咨询）组织
-
-### 文档
-- 更新 README、技能文档与验证布局，采用协作手册优先架构
-
-## 1.0.2 - 2026-05-21
-
-### 文档
-- README / README-CN 新增本体语义驱动设计说明：语义分层、运行时流程、`skills/` 与 `qa/` 分工
-
-## 1.0.1 - 2026-05-21
-
-### 重构
-- 采用标准 monorepo 布局（方案 B）：`qa/`、`docs/`、`tools/`、`template/` 与 GitHub 验证工作流
-
-### 文档
-- README、README-CN 与 `huawei-cloud-billing-scout` SKILL.md 添加社区版本声明（非华为云官方）
-
-## 1.0.0 - 2026-05-21
+[SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) 首次公开发布 — 社区版本，非华为云官方。
 
 ### 新功能
-- [SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) 首次发布，包含 `huawei-cloud-billing-scout`：基于 KooCLI/BSS 的华为云账务只读侦察（找事实、做归因、做对账、做咨询）
+
+- `huawei-cloud-billing-scout`：基于 KooCLI/BSS 的华为云账务只读侦察（找事实、做归因、做对账、做咨询）
+- 本体语义驱动：`references/semantic/*.yml` 定义事实实体；`SKILL.md` 承载执行协议；命令与 playbook 分层存放
+
+### 重构
+
+- 标准 monorepo 布局：`skills/`、`qa/`、`docs/`、`tools/`、`template/`；安装包不含 eval 与 QA
+- 统一 `billing-playbook.md`（合并原场景/流程文档）；输出表格优先、证据驱动、用户可读
+- 按事实/维度/指标/时间/范围路由，不再 FAQ 匹配；实体 YAML 移除 `common_questions`
+- 目的驱动执行协议 + 前置检查；优先 `related-commands.md`，`--help` 仅兜底
+- 只读边界：允许 BSS `List*ChangeRecords` 流水查询；拒绝可变写操作
+- 语义字段补齐：`CouponChangeRecord.trade_id`、资源详单 region/企业项目、`resource_type_code` 路径修正
 
 ### 文档
-- README / README-CN：单仓布局、SkillsMP 收录说明与 GitHub 安装方式
-- SKILL.md frontmatter 对齐 agentskills.io 与 SkillsMP 索引要求
+
+- README / README-CN：语义分层运行时、`npx skills` 安装命令、skills.sh 徽章、三平台市场收录表（skills.sh / SkillsMP / ClawHub）
+- 强化 `SKILL.md` frontmatter（`description`、`compatibility`、`metadata.openclaw`）便于检索与 ClawHub 安全审查
+- 技能文档、编写规范、catalog、QA 断言与 `CLAUDE.md` 同步语义层模型与 QA 布局
 
 ### 测试
-- 验证流程：`skills-ref validate`、skillcheck、markdownlint、skill-scanner、Cursor 安装烟测
-- `skillcheck.toml` 声明 agentskills.io 扩展字段（`license`、`compatibility`、`metadata`）
+
+- 每 skill 独立 `validate.sh`；仓库级 `./tools/validate-all.sh`（CI）
+- Eval、semantic 路由、实体覆盖、只读策略防回归
+- 跨层校验：`fixtures/ops_contracts.yml` + `bin/verify_ops.py`（semantic ↔ 命令文档 ↔ 可选 `hcloud --help`）
+- 外部门禁：`skills-ref`、skillcheck、markdownlint、skill-scanner、安装烟测
 
 ### 维护
-- 本地路径不入库：`dev/`、`.agents/`、`.workspaces/`、`.credentials/`
+
+- 忽略本地路径：`.agents/`、`.workspaces/`、`.credentials/`、`skills/*-workspace/`、gate 报告
