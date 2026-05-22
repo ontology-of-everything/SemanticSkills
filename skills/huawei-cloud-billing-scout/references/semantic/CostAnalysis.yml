@@ -3,9 +3,6 @@ type: api_fact
 source_operation: BSS/ListCosts
 grain: one row per requested time bucket and group-by dimension set
 description: 成本分析聚合结果。
-common_questions:
-  - 按产品、区域、企业项目汇总费用。
-  - 本月哪个维度费用最高？
 dimensions:
   - name: time_condition
     path: time_condition

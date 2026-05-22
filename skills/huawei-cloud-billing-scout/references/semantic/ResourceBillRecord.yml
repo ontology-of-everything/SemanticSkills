@@ -3,9 +3,6 @@ type: api_fact
 source_operation: BSS/ListCustomerselfResourceRecords
 grain: one row per resource consumption record
 description: 资源维度消费记录，适合定位持续扣费资源。
-common_questions:
-  - 哪些资源还在扣费？
-  - 删除资源后为什么还有费用？
 dimensions:
   - name: cycle
     path: cycle

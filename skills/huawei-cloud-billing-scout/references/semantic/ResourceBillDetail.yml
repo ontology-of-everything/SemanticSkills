@@ -3,9 +3,6 @@ type: api_fact
 source_operation: BSS/ListCustomerselfResourceRecordDetails
 grain: one row per resource bill detail line
 description: 资源详单，适合日级、资源级、用量级钻取。
-common_questions:
-  - 某资源每天扣了多少？
-  - 某产品具体是什么用量在收费？
 dimensions:
   - name: cycle
     path: monthly_records[].cycle
@@ -23,6 +20,14 @@ dimensions:
     path: monthly_records[].cloud_service_type
     type: string
     description: 云服务。
+  - name: region
+    path: monthly_records[].region
+    type: string
+    description: 资源区域。
+  - name: enterprise_project_id
+    path: monthly_records[].enterprise_project_id
+    type: string
+    description: 企业项目。
   - name: resource_type_code
     path: monthly_records[].resource_type_code
     type: string

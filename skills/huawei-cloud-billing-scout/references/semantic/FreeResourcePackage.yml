@@ -4,11 +4,8 @@ source_operations:
   - BSS/ListFreeResourceInfos
   - BSS/ListFreeResourceUsages
   - BSS/ListFreeResourcesUsageRecords
-grain: one row per resource package or package deduction record
-description: 资源包库存、余量和抵扣明细。
-common_questions:
-  - 买了资源包为什么还按需扣费？
-  - 资源包还剩多少？
+grain: one row per resource package, usage snapshot, or deduction record
+description: 资源包库存、余量和抵扣明细；多步查询顺序见 billing-playbook.md §3。
 dimensions:
   - name: product_id
     path: free_resource_packages[].product_id
