@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>skillcheck vs skills-ref — 功能与实现对比</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface2: #243044;
+      --text: #e6edf3;
+      --muted: #8b9cb3;
+      --ref: #58a6ff;
+      --check: #3fb950;
+      --overlap: #bc8cff;
+      --border: #30363d;
+      --code-bg: #161b22;
+      --warn: #d29922;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 2rem 1rem 4rem;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    header h1 { font-size: 1.7rem; margin-bottom: .4rem; }
+    header p { color: var(--muted); font-size: .92rem; }
+    header a { color: var(--accent, var(--ref)); text-decoration: none; }
+    .pill-row { display: flex; justify-content: center; gap: .75rem; flex-wrap: wrap; margin-top: 1rem; }
+    .pill {
+      font-size: .78rem;
+      padding: .25rem .7rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .pill.ref { background: #1f3a5f; color: var(--ref); border: 1px solid var(--ref); }
+    .pill.check { background: #1f3d2e; color: var(--check); border: 1px solid var(--check); }
+    nav.toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 2rem;
+    }
+    nav.toc h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: .6rem; }
+    nav.toc ol { padding-left: 1.2rem; }
+    nav.toc a { color: var(--ref); text-decoration: none; font-size: .9rem; }
+    section { margin-bottom: 2.8rem; }
+    h2 {
+      font-size: 1.3rem;
+      margin-bottom: .9rem;
+      padding-bottom: .4rem;
+      border-bottom: 2px solid var(--overlap);
+      display: inline-block;
+    }
+    h3 { font-size: 1rem; margin: 1.3rem 0 .6rem; color: var(--check); }
+    p, li { font-size: .93rem; }
+    p { margin-bottom: .8rem; }
+    ul, ol { padding-left: 1.3rem; margin-bottom: .9rem; }
+    li { margin: .25rem 0; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.3rem;
+      margin: .9rem 0;
+    }
+    .card.split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 700px) { .card.split { grid-template-columns: 1fr; } }
+    .card h4 { font-size: .88rem; margin-bottom: .5rem; }
+    .card.ref h4 { color: var(--ref); }
+    .card.check h4 { color: var(--check); }
+    .diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .86rem;
+      margin: .9rem 0;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: .55rem .65rem;
+      vertical-align: top;
+    }
+    th { background: var(--surface2); }
+    th.ref { color: var(--ref); }
+    th.check { color: var(--check); }
+    th.both { color: var(--overlap); }
+    td.yes { color: var(--check); }
+    td.no { color: var(--muted); }
+    td.partial { color: var(--warn); }
+    code {
+      font-family: "SF Mono", Consolas, monospace;
+      background: var(--code-bg);
+      padding: .1rem .3rem;
+      border-radius: 3px;
+      font-size: .84em;
+      color: #ff7b72;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .9rem 1rem;
+      overflow-x: auto;
+      font-size: .8rem;
+      line-height: 1.5;
+      margin: .7rem 0;
+    }
+    pre code { background: none; padding: 0; color: #c9d1d9; }
+    .src { font-size: .76rem; color: var(--muted); margin-top: .3rem; }
+    .src a { color: var(--ref); text-decoration: none; }
+    .verdict {
+      background: linear-gradient(135deg, #1a2332 0%, #1f2d3d 100%);
+      border: 1px solid var(--overlap);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+    }
+    .verdict strong { color: var(--overlap); }
+    footer {
+      margin-top: 2rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .8rem;
+      text-align: center;
+    }
+    .tag { font-size: .7rem; padding: .08rem .4rem; border-radius: 4px; }
+    .tag.ref { background: #1f3a5f; color: var(--ref); }
+    .tag.check { background: #1f3d2e; color: var(--check); }
+    .tag.shared { background: #2d1f3d; color: var(--overlap); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>skillcheck vs skills-ref</h1>
+  <p>功能视角 + 实现视角 · 基于源码摘要</p>
+  <div class="pill-row">
+    <span class="pill ref">skills-ref · npm · TypeScript · 官方参考实现</span>
+    <span class="pill check">skillcheck · pip · Python · 跨 Agent 质量门禁</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>目录</h2>
+  <ol>
+    <li><a href="#s0">30 秒定位：各管什么</a></li>
+    <li><a href="#s1">功能对比总表</a></li>
+    <li><a href="#s2">实现架构对比</a></li>
+    <li><a href="#s3">Frontmatter 校验：重叠与分歧</a></li>
+    <li><a href="#s4">skillcheck 独有能力</a></li>
+    <li><a href="#s5">skills-ref 独有能力</a></li>
+    <li><a href="#s6">CI 流水线中的顺序</a></li>
+    <li><a href="#s7">选型建议</a></li>
+  </ol>
+</nav>
+
+<!-- ===== 0 ===== -->
+<section id="s0">
+  <h2>0. 30 秒定位</h2>
+
+  <div class="diagram">
+    <svg viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif" font-size="11">
+      <!-- skills-ref -->
+      <rect x="30" y="30" width="300" height="140" rx="10" fill="#1a2332" stroke="#58a6ff" stroke-width="1.5"/>
+      <text x="180" y="58" fill="#58a6ff" text-anchor="middle" font-weight="700" font-size="13">skills-ref validate</text>
+      <text x="50" y="82" fill="#8b9cb3">· agentskills.io 最小 schema</text>
+      <text x="50" y="100" fill="#8b9cb3">· 只读 SKILL.md frontmatter</text>
+      <text x="50" y="118" fill="#8b9cb3">· pass / fail 二元</text>
+      <text x="50" y="136" fill="#8b9cb3">· 附带 to-prompt XML 生成</text>
+      <text x="50" y="154" fill="#8b9cb3">类比：JSON Schema validate</text>
+
+      <!-- skillcheck -->
+      <rect x="430" y="30" width="300" height="140" rx="10" fill="#1a2332" stroke="#3fb950" stroke-width="1.5"/>
+      <text x="580" y="58" fill="#3fb950" text-anchor="middle" font-weight="700" font-size="13">skillcheck</text>
+      <text x="450" y="82" fill="#8b9cb3">· spec + 工程化质量规则</text>
+      <text x="450" y="100" fill="#8b9cb3">· frontmatter + body + refs</text>
+      <text x="450" y="118" fill="#8b9cb3">· error / warning / info 分级</text>
+      <text x="450" y="136" fill="#8b9cb3">· description 0–100 分 + 多 Agent 兼容</text>
+      <text x="450" y="154" fill="#8b9cb3">类比：ESLint + 兼容性矩阵</text>
+
+      <!-- overlap -->
+      <rect x="310" y="75" width="140" height="50" rx="6" fill="#2d1f3d" stroke="#bc8cff"/>
+      <text x="380" y="98" fill="#bc8cff" text-anchor="middle" font-weight="600">重叠区</text>
+      <text x="380" y="114" fill="#8b9cb3" text-anchor="middle" font-size="9">name · description · 长度 · 目录名</text>
+    </svg>
+  </div>
+
+  <div class="verdict">
+    <strong>结论：</strong>两者不是替代关系。<code>skills-ref</code> 是规范层的<strong>官方最小契约</strong>；<code>skillcheck</code> 是在同一 spec 之上的<strong>扩展质量门禁</strong>。你们 pipeline 先跑 <code>skills-ref validate</code> 再跑 <code>skillcheck</code>，正是「先过 schema，再过 lint」。
+  </div>
+</section>
+
+<!-- ===== 1 ===== -->
+<section id="s1">
+  <h2>1. 功能对比总表</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:28%">能力</th>
+        <th class="ref" style="width:22%">skills-ref</th>
+        <th class="check" style="width:22%">skillcheck</th>
+        <th class="both" style="width:28%">说明</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>SKILL.md 存在</td>
+        <td class="yes">✓</td>
+        <td class="yes">✓</td>
+        <td>skills-ref 也接受 <code>skill.md</code> 小写</td>
+      </tr>
+      <tr>
+        <td>YAML frontmatter 解析</td>
+        <td class="yes">✓</td>
+        <td class="yes">✓</td>
+        <td>ref: 手写 split + js-yaml；check: PyYAML</td>
+      </tr>
+      <tr>
+        <td>name / description 必填</td>
+        <td class="yes">✓</td>
+        <td class="yes">✓</td>
+        <td>共有</td>
+      </tr>
+      <tr>
+        <td>name ≤64、description ≤1024</td>
+        <td class="yes">✓</td>
+        <td class="yes">✓</td>
+        <td>与 agentskills.io 一致</td>
+      </tr>
+      <tr>
+        <td>目录名 == name</td>
+        <td class="yes">✓</td>
+        <td class="yes">✓</td>
+        <td>check 对 VS Code 更强调（可 <code>--strict-vscode</code>）</td>
+      </tr>
+      <tr>
+        <td>name 字符集</td>
+        <td class="partial">Unicode 字母 + 数字 + -</td>
+        <td class="partial">仅 [a-z0-9-]</td>
+        <td><strong>分歧：</strong>ref 支持 i18n name；check 更严 ASCII kebab-case</td>
+      </tr>
+      <tr>
+        <td>frontmatter 字段白名单</td>
+        <td class="partial">严格 6 字段</td>
+        <td class="partial">spec + ecosystem + toml 扩展</td>
+        <td>check 允许 <code>version</code>、<code>hooks</code> 等 Agent 扩展字段</td>
+      </tr>
+      <tr>
+        <td>description 质量评分</td>
+        <td class="no">—</td>
+        <td class="yes">✓ 0–100</td>
+        <td>动词 / 触发语 / 关键词 / 具体性 / 长度五维</td>
+      </tr>
+      <tr>
+        <td>body 行数 / token 预算</td>
+        <td class="no">—</td>
+        <td class="yes">✓</td>
+        <td>500 行、8000 tokens；metadata ~100、body ~5000</td>
+      </tr>
+      <tr>
+        <td>文件引用完整性</td>
+        <td class="no">—</td>
+        <td class="yes">✓</td>
+        <td>断链、越界路径、引用深度</td>
+      </tr>
+      <tr>
+        <td>跨 Agent 兼容矩阵</td>
+        <td class="no">—</td>
+        <td class="yes">✓</td>
+        <td>Claude / VS Code / Codex / Cursor</td>
+      </tr>
+      <tr>
+        <td>生成 &lt;available_skills&gt; XML</td>
+        <td class="yes">✓ to-prompt</td>
+        <td class="no">—</td>
+        <td>ref 独有：给 Agent system prompt 用</td>
+      </tr>
+      <tr>
+        <td>read-properties JSON</td>
+        <td class="yes">✓</td>
+        <td class="no">—</td>
+        <td>ref 独有</td>
+      </tr>
+      <tr>
+        <td>Capability graph / history</td>
+        <td class="no">—</td>
+        <td class="yes">✓</td>
+        <td>check 进阶：图分析、历史 ledger</td>
+      </tr>
+      <tr>
+        <td>LLM critique 接入</td>
+        <td class="no">—</td>
+        <td class="yes">✓ 可选</td>
+        <td>emit/ingest critique prompt（非默认）</td>
+      </tr>
+      <tr>
+        <td>扫描 scripts 安全</td>
+        <td class="no">—</td>
+        <td class="no">—</td>
+        <td>两者都不做；用 cisco-ai-skill-scanner</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== 2 ===== -->
+<section id="s2">
+  <h2>2. 实现架构对比</h2>
+
+  <div class="card split">
+    <div class="card ref">
+      <h4><span class="tag ref">skills-ref</span> 实现栈</h4>
+      <ul>
+        <li><strong>语言：</strong>TypeScript (Node ≥14)</li>
+        <li><strong>包：</strong>npm <code>skills-ref@0.1.5</code></li>
+        <li><strong>依赖：</strong><code>js-yaml</code>、<code>commander</code></li>
+        <li><strong>入口：</strong><code>dist/cli.js</code></li>
+        <li><strong>核心模块：</strong>
+          <code>parser.js</code> →
+          <code>validator.js</code> →
+          <code>prompt.js</code>
+        </li>
+        <li><strong>体量：</strong>~60KB，31 文件</li>
+        <li><strong>定位：</strong>README 写明 demonstration / reference only</li>
+      </ul>
+    </div>
+    <div class="card check">
+      <h4><span class="tag check">skillcheck</span> 实现栈</h4>
+      <ul>
+        <li><strong>语言：</strong>Python ≥3.10</li>
+        <li><strong>包：</strong>pip <code>skillcheck@1.3.0</code></li>
+        <li><strong>依赖：</strong><code>pyyaml</code>；可选 <code>tiktoken</code></li>
+        <li><strong>入口：</strong><code>skillcheck.cli:main</code></li>
+        <li><strong>核心模块：</strong>
+          <code>parser</code> →
+          <code>rules/*</code> →
+          <code>formatters</code> →
+          <code>core/graph</code>
+        </li>
+        <li><strong>体量：</strong>744 tests，多 rule 模块</li>
+        <li><strong>定位：</strong>Production/Stable cross-agent quality gate</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>执行流对比</h3>
+  <div class="diagram">
+    <svg viewBox="0 0 760 240" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif" font-size="10">
+      <!-- skills-ref flow -->
+      <text x="180" y="18" fill="#58a6ff" text-anchor="middle" font-weight="600">skills-ref validate</text>
+      <rect x="20" y="28" width="100" height="36" rx="5" fill="#243044" stroke="#58a6ff"/>
+      <text x="70" y="50" fill="#e6edf3" text-anchor="middle">skill_dir</text>
+      <line x1="120" y1="46" x2="140" y2="46" stroke="#8b9cb3" marker-end="url(#a)"/>
+      <rect x="142" y="28" width="100" height="36" rx="5" fill="#243044" stroke="#58a6ff"/>
+      <text x="192" y="50" fill="#e6edf3" text-anchor="middle">findSkillMd</text>
+      <line x1="242" y1="46" x2="262" y2="46" stroke="#8b9cb3" marker-end="url(#a)"/>
+      <rect x="264" y="28" width="110" height="36" rx="5" fill="#243044" stroke="#58a6ff"/>
+      <text x="319" y="50" fill="#e6edf3" text-anchor="middle">parseFrontmatter</text>
+      <line x1="319" y1="64" x2="319" y2="84" stroke="#8b9cb3" marker-end="url(#a)"/>
+      <rect x="254" y="86" width="130" height="36" rx="5" fill="#1f3a5f" stroke="#58a6ff"/>
+      <text x="319" y="108" fill="#58a6ff" text-anchor="middle">validateMetadata()</text>
+      <line x1="319" y1="122" x2="319" y2="142" stroke="#3fb950" marker-end="url(#a)"/>
+      <rect x="269" y="144" width="100" height="30" rx="5" fill="#1f3d2e" stroke="#3fb950"/>
+      <text x="319" y="163" fill="#3fb950" text-anchor="middle">[] 或 errors[]</text>
+      <text x="180" y="190" fill="#8b9cb3" text-anchor="middle" font-size="9">单函数 · 无 rule 插件 · 不读 body</text>
+
+      <!-- skillcheck flow -->
+      <text x="580" y="18" fill="#3fb950" text-anchor="middle" font-weight="600">skillcheck</text>
+      <rect x="420" y="28" width="90" height="36" rx="5" fill="#243044" stroke="#3fb950"/>
+      <text x="465" y="50" fill="#e6edf3" text-anchor="middle">path</text>
+      <line x1="510" y1="46" x2="530" y2="46" stroke="#8b9cb3" marker-end="url(#a)"/>
+      <rect x="532" y="28" width="90" height="36" rx="5" fill="#243044" stroke="#3fb950"/>
+      <text x="577" y="50" fill="#e6edf3" text-anchor="middle">parse</text>
+      <line x1="622" y1="46" x2="642" y2="46" stroke="#8b9cb3" marker-end="url(#a)"/>
+      <rect x="644" y="28" width="100" height="36" rx="5" fill="#243044" stroke="#3fb950"/>
+      <text x="694" y="50" fill="#e6edf3" text-anchor="middle">load toml</text>
+      <line x1="694" y1="64" x2="694" y2="78" stroke="#8b9cb3" marker-end="url(#a)"/>
+      <rect x="440" y="80" width="280" height="44" rx="5" fill="#1f3d2e" stroke="#3fb950"/>
+      <text x="580" y="98" fill="#3fb950" text-anchor="middle" font-weight="600">get_rules() → 30+ rule 函数顺序执行</text>
+      <text x="580" y="114" fill="#8b9cb3" text-anchor="middle" font-size="9">frontmatter · sizing · desc · refs · disclosure · compat</text>
+      <line x1="580" y1="124" x2="580" y2="144" stroke="#8b9cb3" marker-end="url(#a)"/>
+      <rect x="500" y="146" width="160" height="36" rx="5" fill="#243044" stroke="#d29922"/>
+      <text x="580" y="168" fill="#d29922" text-anchor="middle">Diagnostic[] 分级输出</text>
+      <text x="580" y="210" fill="#8b9cb3" text-anchor="middle" font-size="9">ERROR / WARNING / INFO · exit 0–3</text>
+
+      <defs><marker id="a" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#8b9cb3"/></marker></defs>
+    </svg>
+  </div>
+</section>
+
+<!-- ===== 3 ===== -->
+<section id="s3">
+  <h2>3. Frontmatter 校验：重叠与分歧</h2>
+
+  <h3>3.1 共有规则（实现几乎同构）</h3>
+  <table>
+    <thead><tr><th>检查项</th><th>skills-ref</th><th>skillcheck rule id</th></tr></thead>
+    <tbody>
+      <tr><td>frontmatter 以 --- 包裹</td><td><code>parseFrontmatter</code></td><td>解析阶段</td></tr>
+      <tr><td>name 非空、lowercase</td><td><code>validateName</code></td><td><code>frontmatter.name.*</code></td></tr>
+      <tr><td>无首尾/连续 hyphen</td><td>✓</td><td><code>leading-trailing-hyphen</code> · <code>consecutive-hyphens</code></td></tr>
+      <tr><td>description 非空、≤1024</td><td><code>validateDescription</code></td><td><code>frontmatter.description.*</code></td></tr>
+      <tr><td>compatibility ≤500</td><td>✓</td><td>（在 spec 字段集中）</td></tr>
+      <tr><td>目录名匹配 name</td><td>NFKC 后比较</td><td><code>frontmatter.name.directory-mismatch</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 关键分歧（源码证据）</h3>
+
+  <div class="card split">
+    <div class="card ref">
+      <h4>skills-ref：严格 6 字段白名单</h4>
+      <pre><code>ALLOWED_FIELDS = {
+  "name", "description", "license",
+  "allowed-tools", "metadata",
+  "compatibility"
+}
+// 多一个 key → error</code></pre>
+      <p class="src"><a href="https://github.com/agentskills/agentskills/blob/main/docs/specification.mdx" target="_blank">agentskills.io spec</a> 对齐</p>
+    </div>
+    <div class="card check">
+      <h4>skillcheck：分层字段模型 + toml 扩展</h4>
+      <pre><code>SPEC_FIELDS      # version, hooks, agent...
+ECOSYSTEM_FIELDS # license, repository...
+extension_fields # skillcheck.toml 声明
+# unknown → info/warning，非一律 error</code></pre>
+      <p class="src">你们仓库 <code>skillcheck.toml</code>：<br><code>extension_fields = ["license", "compatibility", "metadata"]</code></p>
+    </div>
+  </div>
+
+  <div class="card split">
+    <div class="card ref">
+      <h4>skills-ref：name 允许 Unicode</h4>
+      <pre><code>// 支持 Cyrillic、CJK 等 i18n
+isLetter(c) // Latin + Cyrillic + CJK...</code></pre>
+    </div>
+    <div class="card check">
+      <h4>skillcheck：ASCII kebab-case only</h4>
+      <pre><code>_NAME_VALID_CHARS_RE =
+  re.compile(r"^[a-z0-9-]+$")</code></pre>
+      <p>与 agentskills.io 文档字面一致；ref 更宽</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4>skillcheck 额外 frontmatter 规则（ref 无）</h4>
+    <ul>
+      <li><code>description.no-xml-tags</code> — 禁止 description 含 <code>&lt;</code> <code>&gt;</code>（防 XML 注入 to-prompt）</li>
+      <li><code>description.person-voice</code> — 人称/语气建议</li>
+      <li><code>name.reserved-word</code> — 含 anthropic/claude 警告</li>
+      <li><code>yaml.anchors</code> — 禁止 YAML anchor 混淆</li>
+      <li><code>template.detected</code> — 识别模板占位 skill</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 4 ===== -->
+<section id="s4">
+  <h2>4. skillcheck 独有能力（实现摘要）</h2>
+
+  <h3>4.1 Description 质量分（核心差异化）</h3>
+  <p>五维加权，总分 100 — 源码 <code>rules/description.py</code>：</p>
+  <table>
+    <thead><tr><th>维度</th><th>满分</th><th>测什么</th></tr></thead>
+    <tbody>
+      <tr><td>action</td><td>25</td><td>是否以动作动词开头（200+ 动词表 + 三单归一化）</td></tr>
+      <tr><td>trigger</td><td>25</td><td>「Use when…」「Make sure to use this skill…」等触发语</td></tr>
+      <tr><td>keywords</td><td>25</td><td>内容词 / 停用词比例（反 filler）</td></tr>
+      <tr><td>specificity</td><td>15</td><td> vague 词（tool/helper/stuff…）密度</td></tr>
+      <tr><td>length</td><td>10</td><td>40–300 字符 sweet spot</td></tr>
+    </tbody>
+  </table>
+  <pre><code>skillcheck "$SKILL_DIR" --min-desc-score 70
+# → score &lt; 70 时 WARNING（description.min-score）</code></pre>
+
+  <h3>4.2 Progressive disclosure 预算</h3>
+  <p>源码 <code>rules/disclosure.py</code> + <code>config.py</code>：</p>
+  <ul>
+    <li>metadata 层 ~100 tokens（name + description）</li>
+    <li>body 层 ~5000 tokens（SKILL.md 正文）</li>
+    <li>bloat 检测：代码块 &gt;50 行、表格 &gt;20 行</li>
+  </ul>
+
+  <h3>4.3 文件引用图</h3>
+  <p><code>rules/references.py</code>：解析 Markdown 链接 / run 语句 / import，验证目标文件存在、不逃逸 skill 目录、深度限制。</p>
+
+  <h3>4.4 跨 Agent 兼容矩阵</h3>
+  <p><code>config.COMPAT_MATRIX</code> + <code>rules/compat.py</code>：每个 frontmatter 字段在 claude / vscode / codex / cursor 下是 supported / ignored / unknown。</p>
+  <pre><code>--target-agent cursor --strict-cursor
+# Claude-only 字段（hooks, mode, agent...）在 Cursor 下告警/报错</code></pre>
+</section>
+
+<!-- ===== 5 ===== -->
+<section id="s5">
+  <h2>5. skills-ref 独有能力</h2>
+
+  <h3>5.1 validate — 最小 schema _gate</h3>
+  <pre><code>skills-ref validate path/to/skill
+# exit 0: "Valid skill: ..."
+# exit 1: 列出 validateMetadata errors</code></pre>
+
+  <h3>5.2 read-properties — 结构化读取</h3>
+  <pre><code>skills-ref read-properties path/to/skill
+# → JSON { name, description, license, ... }</code></pre>
+
+  <h3>5.3 to-prompt — Agent 集成</h3>
+  <p>生成 Anthropic 推荐的 <code>&lt;available_skills&gt;</code> XML，含 name、description、SKILL.md 绝对路径；HTML escape 防注入。</p>
+  <pre><code>&lt;available_skills&gt;
+&lt;skill&gt;
+&lt;name&gt;my-skill&lt;/name&gt;
+&lt;description&gt;...&lt;/description&gt;
+&lt;location&gt;/path/to/SKILL.md&lt;/location&gt;
+&lt;/skill&gt;
+&lt;/available_skills&gt;</code></pre>
+  <p class="src">源码：<code>dist/prompt.js</code> · agentskills.io 文档直接推荐此工具做 validate</p>
+</section>
+
+<!-- ===== 6 ===== -->
+<section id="s6">
+  <h2>6. 你们 CI 中的顺序</h2>
+
+  <div class="diagram">
+    <svg viewBox="0 0 700 90" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,sans-serif" font-size="11">
+      <rect x="10" y="25" width="95" height="40" rx="6" fill="#243044" stroke="#58a6ff"/>
+      <text x="57" y="50" fill="#58a6ff" text-anchor="middle">skills-ref</text>
+      <text x="115" y="48" fill="#8b9cb3">→</text>
+      <rect x="125" y="25" width="110" height="40" rx="6" fill="#243044" stroke="#8b9cb3"/>
+      <text x="180" y="50" fill="#e6edf3" text-anchor="middle">markdownlint</text>
+      <text x="245" y="48" fill="#8b9cb3">→</text>
+      <rect x="255" y="25" width="95" height="40" rx="6" fill="#243044" stroke="#3fb950"/>
+      <text x="302" y="50" fill="#3fb950" text-anchor="middle">skillcheck</text>
+      <text x="360" y="48" fill="#8b9cb3">→</text>
+      <rect x="370" y="25" width="110" height="40" rx="6" fill="#243044" stroke="#f85149"/>
+      <text x="425" y="50" fill="#f85149" text-anchor="middle">skill-scanner</text>
+      <text x="490" y="48" fill="#8b9cb3">→</text>
+      <rect x="500" y="25" width="90" height="40" rx="6" fill="#243044" stroke="#bc8cff"/>
+      <text x="545" y="50" fill="#bc8cff" text-anchor="middle">evals</text>
+      <text x="600" y="48" fill="#8b9cb3">→</text>
+      <rect x="610" y="25" width="80" height="40" rx="6" fill="#243044" stroke="#d29922"/>
+      <text x="650" y="50" fill="#d29922" text-anchor="middle">install</text>
+      <text x="350" y="15" fill="#8b9cb3" text-anchor="middle" font-size="9">schema → 排版 → 扩展规范/质量 → 安全 → 行为 → 烟测</text>
+    </svg>
+  </div>
+
+  <pre><code><span class="cm"># template/qa/validate.sh</span>
+run_local_or_npx skills-ref validate "$SKILL_DIR"
+run_local_or_npx markdownlint-cli2 "$SKILL_DIR/**/*.md"
+skillcheck "$SKILL_DIR" --target-agent cursor --strict-cursor --min-desc-score 70</code></pre>
+
+  <table>
+    <thead><tr><th>阶段</th><th>工具</th><th>失败含义</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>skills-ref</td><td>不符合 agentskills.io 最小 spec → 平台可能无法注册 skill</td></tr>
+      <tr><td>2</td><td>markdownlint</td><td>Markdown 风格不一致</td></tr>
+      <tr><td>3</td><td>skillcheck</td><td>质量/兼容/description 分/引用/体积问题</td></tr>
+      <tr><td>4+</td><td>scanner / evals</td><td>安全 / 运行时行为</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== 7 ===== -->
+<section id="s7">
+  <h2>7. 选型建议</h2>
+
+  <table>
+    <thead><tr><th>场景</th><th>用哪个</th></tr></thead>
+    <tbody>
+      <tr><td>官方 spec 合规、生成 available_skills XML</td><td><strong>skills-ref</strong></td></tr>
+      <tr><td>CI 质量门禁、多 Agent 发布、description 可发现性</td><td><strong>skillcheck</strong></td></tr>
+      <tr><td>只需回答「frontmatter 合法吗」</td><td>skills-ref 足够</td></tr>
+      <tr><td>Cursor strict + desc score ≥70</td><td>必须 skillcheck</td></tr>
+      <tr><td>两者都跑</td><td>推荐 — 重叠成本低，互补价值高</td></tr>
+    </tbody>
+  </table>
+
+  <div class="verdict">
+    <strong>实现视角一句话：</strong>
+    <code>skills-ref</code> 是一个<strong>单函数 schema validator</strong>（~200 行核心逻辑 + prompt 工具）；
+    <code>skillcheck</code> 是一个<strong>可配置的 rule engine</strong>（30+ 规则函数、compat 矩阵、scoring rubric、可选 graph/critique）。
+    前者定义「能不能被 Agent 平台识别」；后者定义「识别之后好不好用、会不会在 VS Code/Cursor 上静默失败」。
+  </div>
+</section>
+
+<footer>
+  生成于 Personal-SuperAwareness ·
+  <a href="https://github.com/moonrunnerkc/skillcheck" target="_blank">moonrunnerkc/skillcheck</a> ·
+  <a href="https://www.npmjs.com/package/skills-ref" target="_blank">npm skills-ref</a> ·
+  <a href="https://agentskills.io/specification" target="_blank">agentskills.io spec</a>
+</footer>
+
+</div>
+</body>
+</html>
