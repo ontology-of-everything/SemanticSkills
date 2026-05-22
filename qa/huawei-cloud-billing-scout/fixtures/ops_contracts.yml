@@ -1,0 +1,239 @@
+# Bridges semantic entities, related-commands.md templates, and KooCLI --help.
+# Update when adding query filters, changing response shapes, or KooCLI upgrades.
+
+operations:
+  ShowCustomerAccountBalances:
+    entity: AccountBalance
+    required_flags:
+      - --cli-region
+    documented_flags: []
+    filter_bindings: {}
+    response_roots:
+      - account_balances
+      - debt_amount
+      - currency
+
+  ShowCustomerMonthlySum:
+    entity: MonthlyBillSummary
+    required_flags:
+      - --cli-region
+      - --bill_cycle
+    documented_flags:
+      - --limit
+      - --offset
+      - --service_type_code
+      - --enterprise_project_id
+      - --method
+      - --sub_customer_id
+    filter_bindings:
+      bill_cycle: --bill_cycle
+      service_type_code: --service_type_code
+      enterprise_project_id: --enterprise_project_id
+    response_roots:
+      - bill_sums
+
+  ListCustomerselfResourceRecords:
+    entity: ResourceBillRecord
+    required_flags:
+      - --cli-region
+      - --cycle
+    documented_flags:
+      - --limit
+      - --offset
+      - --bill_date_begin
+      - --bill_date_end
+      - --bill_type
+      - --charge_mode
+      - --cloud_service_type
+      - --enterprise_project_id
+      - --region
+      - --resource_id
+      - --trade_id
+      - --statistic_type
+      - --method
+      - --sub_customer_id
+    filter_bindings:
+      cycle: --cycle
+      cloud_service_type: --cloud_service_type
+      resource_id: --resource_id
+      region: --region
+      enterprise_project_id: --enterprise_project_id
+      charge_mode: --charge_mode
+    response_roots:
+      - fee_records
+      - cycle
+
+  ListCustomerselfResourceRecordDetails:
+    entity: ResourceBillDetail
+    required_flags:
+      - --cli-region
+      - --cycle
+    documented_flags:
+      - --limit
+      - --offset
+      - --statistic_type
+      - --query_type
+      - --bill_cycle_begin
+      - --bill_cycle_end
+      - --bill_type
+      - --charge_mode
+      - --cloud_service_type
+      - --enterprise_project_id
+      - --region
+      - --res_instance_id
+      - --resource_type
+      - --method
+      - --sub_customer_id
+      - --payer_account_id
+    filter_bindings:
+      cycle: --cycle
+      res_instance_id: --res_instance_id
+      cloud_service_type: --cloud_service_type
+      resource_type_code: --resource_type
+      region: --region
+      enterprise_project_id: --enterprise_project_id
+      charge_mode: --charge_mode
+    response_roots:
+      - monthly_records
+
+  ListCosts:
+    entity: CostAnalysis
+    required_flags:
+      - --cli-region
+      - --amount_type
+      - --cost_type
+      - --time_condition.begin_time
+      - --time_condition.end_time
+      - --time_condition.time_measure_id
+      - --groupby.1.type
+      - --groupby.1.key
+    documented_flags:
+      - --limit
+      - --offset
+      - --filters.1.filter_factor.key
+      - --filters.1.filter_factor.value.1
+      - --filters.1.operator
+      - --filters.2.filter_factor.key
+      - --filters.2.filter_factor.value.1
+      - --filters.2.operator
+    filter_bindings:
+      amount_type: --amount_type
+      cost_type: --cost_type
+      time_condition: --time_condition.begin_time
+      groupby: --groupby.1.key
+    groupby_keys:
+      - CLOUD_SERVICE_TYPE
+      - RESOURCE_TYPE
+      - REGION_CODE
+      - ENTERPRISE_PROJECT_ID
+      - CHARGING_MODE
+      - RESOURCE_ID
+    filter_dimension_keys:
+      - CLOUD_SERVICE_TYPE
+      - REGION_CODE
+      - ENTERPRISE_PROJECT_ID
+      - CHARGING_MODE
+    response_roots:
+      - costs
+      - time_condition
+
+  ListCustomerAccountChangeRecords:
+    entity: AccountChangeRecord
+    required_flags:
+      - --cli-region
+      - --balance_type
+    documented_flags:
+      - --limit
+      - --offset
+      - --trade_time_begin
+      - --trade_time_end
+      - --trade_type
+      - --revenue_expense_type
+      - --trade_id
+      - --payment_channel_id
+      - --payment_channel_no
+    filter_bindings:
+      balance_type: --balance_type
+      trade_time: --trade_time_begin
+      trade_type: --trade_type
+      revenue_expense_type: --revenue_expense_type
+      trade_id: --trade_id
+    response_roots:
+      - records
+      - balance_type
+
+  ListCustomerCouponChangeRecords:
+    entity: CouponChangeRecord
+    required_flags:
+      - --cli-region
+      - --balance_type
+    documented_flags:
+      - --limit
+      - --offset
+      - --trade_time_begin
+      - --trade_time_end
+      - --trade_type
+      - --revenue_expense_type
+      - --trade_id
+      - --coupon_id
+    filter_bindings:
+      balance_type: --balance_type
+      coupon_id: --coupon_id
+      trade_time: --trade_time_begin
+      trade_type: --trade_type
+      revenue_expense_type: --revenue_expense_type
+      trade_id: --trade_id
+    response_roots:
+      - records
+      - balance_type
+
+  ListFreeResourceInfos:
+    entity: FreeResourcePackage
+    required_flags:
+      - --cli-region
+    documented_flags:
+      - --limit
+      - --offset
+      - --product_id
+      - --product_name
+      - --status
+      - --region_code
+      - --enterprise_project_id
+      - --order_id
+      - --service_type_code_list.1
+    filter_bindings:
+      product_id: --product_id
+      product_name: --product_name
+      status: --status
+      free_resource_id: --product_id
+    response_roots:
+      - free_resource_packages
+
+  ListFreeResourceUsages:
+    entity: FreeResourcePackage
+    required_flags:
+      - --cli-region
+      - --free_resource_ids.1
+    documented_flags: []
+    filter_bindings:
+      free_resource_id: --free_resource_ids.1
+    response_roots:
+      - free_resource_usages
+
+  ListFreeResourcesUsageRecords:
+    entity: FreeResourcePackage
+    required_flags:
+      - --cli-region
+      - --deduct_time_begin
+      - --deduct_time_end
+    documented_flags:
+      - --limit
+      - --offset
+      - --free_resource_id
+      - --product_id
+      - --resource_type_code
+    filter_bindings:
+      product_id: --product_id
+      free_resource_id: --free_resource_id
+    response_roots:
+      - free_resource_usage_records
