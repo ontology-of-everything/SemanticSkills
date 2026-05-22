@@ -10,5 +10,5 @@ skills:
     summary_zh: 华为云账务只读侦察（KooCLI/BSS）
     agents: [cursor, claude-code, codex]
     compatibility: hcloud (KooCLI), read-only BSS IAM, outbound network; no agent auto-install
-    version: "2.0.0"
+    version: "2.0.1"
     marketplaces: [skills-sh, skillsmp, clawhub]

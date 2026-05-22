@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.1 - 2026-05-22
+
+### Documentation
+
+- `huawei-cloud-billing-scout`: refactor `SKILL.md` with eval-aligned acceptance criteria and a six-step protocol; ~10% shorter body
+- Replace FAQ / classic-question wording with semantic routing and fixed-question-template language across playbook, semantics, and QA assertions
+
 ## 2.0.0 - 2026-05-22
 
 First public release of [SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) — community edition, not official Huawei Cloud.

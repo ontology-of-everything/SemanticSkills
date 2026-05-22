@@ -5,7 +5,7 @@ license: Apache-2.0
 compatibility: Requires hcloud (KooCLI), read-only BSS IAM, outbound network to Huawei Cloud API; user installs CLI manually — agent must not run install scripts.
 metadata:
   author: ontology-of-everything
-  version: "2.0.0"
+  version: "2.0.1"
   openclaw:
     requires:
       bins:

@@ -1,5 +1,12 @@
 # 更新日志
 
+## 2.0.1 - 2026-05-22
+
+### 文档
+
+- `huawei-cloud-billing-scout`：重构 `SKILL.md`，增加与 eval 对齐的验收标准与六步协议，正文约减 10%
+- playbook、语义说明与 QA 断言统一为语义路由表述，移除 FAQ / 经典问题用语
+
 ## 2.0.0 - 2026-05-22
 
 [SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) 首次公开发布 — 社区版本，非华为云官方。
