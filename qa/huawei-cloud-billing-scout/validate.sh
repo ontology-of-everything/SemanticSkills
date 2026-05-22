@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
+# huawei-cloud-billing-scout 质量门禁：布局、eval、语义路由、跨层契约、安装纯度、外部 linter。
+# CI 入口：tools/validate-all.sh；可选 HUAWEICLOUD_BILLING_SCOUT_REAL=1 做真实 BSS 冒烟。
 set -euo pipefail
 
-TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILL_DIR="$(cd "$TEST_DIR/../../skills/huawei-cloud-billing-scout" && pwd)"
-EVALS_FILE="$TEST_DIR/evals/evals.json"
+QA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILL_DIR="$(cd "$QA_DIR/../../skills/huawei-cloud-billing-scout" && pwd)"
+EVALS_FILE="$QA_DIR/evals/evals.json"
+CONTRACTS_FILE="$QA_DIR/fixtures/ops_contracts.yml"
+VERIFY_PY="$QA_DIR/bin/verify_ops.py"
+MANUAL_VERIFY="$QA_DIR/bin/manual_verify_ops.sh"
+
+run_verify_ops() {
+  python3 "$VERIFY_PY" "$SKILL_DIR" "$CONTRACTS_FILE" "$@"
+}
 
 fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 need_cmd() { command -v "$1" >/dev/null 2>&1 || fail "missing command: $1"; }
@@ -14,12 +23,14 @@ run_local_or_npx() {
   else need_cmd npx; npx "$bin" "$@"; fi
 }
 
+# rg 命中 pattern 则失败（用于禁止写操作示例、ECS 残留等）
 check_rg() {
   local label=$1 pattern=$2 hits
   hits=$(rg -n "$pattern" "$SKILL_DIR/SKILL.md" "$SKILL_DIR/references" 2>/dev/null | head -80 || true)
   [[ -z "$hits" ]] || { printf '%s\n' "$hits" >&2; fail "$label"; }
 }
 
+# skill 必需文件、禁止 eval/qa 混入安装包、QA 侧必需产物
 check_skill_layout() {
   local f item
   local files=(
@@ -43,10 +54,15 @@ check_skill_layout() {
   for f in "${files[@]}"; do [[ -f "$SKILL_DIR/$f" ]] || fail "missing file: $f"; done
   for item in "${forbidden[@]}"; do [[ ! -e "$SKILL_DIR/$item" ]] || fail "forbidden in skill dir: $item"; done
   [[ -f "$EVALS_FILE" ]] || fail "missing evals file: $EVALS_FILE"
-  [[ ! -f "$TEST_DIR/evals.json" ]] || fail "duplicate eval source: $TEST_DIR/evals.json"
-  [[ -f "$TEST_DIR/assertions/README.md" ]] || fail "missing assertions guide"
+  [[ ! -f "$QA_DIR/evals.json" ]] || fail "duplicate eval source: $QA_DIR/evals.json"
+  [[ -f "$QA_DIR/assertions/README.md" ]] || fail "missing assertions guide"
+  [[ -f "$CONTRACTS_FILE" ]] || fail "missing operation contracts"
+  [[ -f "$VERIFY_PY" ]] || fail "missing verify_ops.py"
+  [[ -f "$MANUAL_VERIFY" ]] || fail "missing manual operation verifier"
+  [[ -f "$QA_DIR/README.md" ]] || fail "missing QA README"
 }
 
+# evals.json 字段完整性：Skill Creator 用例结构
 check_eval_schema() {
   need_cmd python3
   python3 - "$EVALS_FILE" <<'PY'
@@ -81,6 +97,7 @@ print(f"eval schema ok: {len(evals)} cases")
 PY
 }
 
+# 文档口径：禁止错误字段名；ChangeRecords 只读策略必须存在且不被宽泛 Change 规则误伤
 check_semantic_consistency() {
   check_rg "ResourceBillDetail has stale resource_Type_code path" \
     'resource_Type_code'
@@ -93,6 +110,52 @@ check_semantic_consistency() {
     '禁止.*`Change`|`Change`.*写操作|名称含.*`Change`'
 }
 
+# eval 数量不少于 semantic 实体数
+check_eval_entity_coverage() {
+  need_cmd python3
+  python3 - "$EVALS_FILE" "$SKILL_DIR" <<'PY'
+import json, sys
+from pathlib import Path
+
+evals = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))["evals"]
+entities = len(list(Path(sys.argv[2], "references/semantic").glob("*.yml")))
+if len(evals) < entities:
+    raise SystemExit(f"eval count {len(evals)} < semantic entities {entities}")
+print(f"eval entity coverage ok: {len(evals)} evals >= {entities} entities")
+PY
+}
+
+# semantic YAML 中的 source_operation 必须在 related-commands.md 出现
+check_semantic_routing() {
+  need_cmd python3
+  python3 - "$SKILL_DIR" <<'PY'
+import re, sys
+from pathlib import Path
+
+skill = Path(sys.argv[1])
+cmds = (skill / "references/related-commands.md").read_text(encoding="utf-8")
+missing = []
+for yml in sorted((skill / "references/semantic").glob("*.yml")):
+    text = yml.read_text(encoding="utf-8")
+    ops = re.findall(r"source_operations?:\s*\n((?:\s+-\s+.+\n)+)|source_operation:\s*(.+)", text)
+    found = []
+    for block, single in ops:
+        if single:
+            found.append(single.strip())
+        if block:
+            found.extend(re.findall(r"-\s*(.+)", block))
+    for op in found:
+        name = op.split("/")[-1].strip()
+        if name and name not in cmds:
+            missing.append(f"{yml.name}: {name}")
+if missing:
+    print("\n".join(missing), file=sys.stderr)
+    sys.exit(1)
+print(f"semantic routing ok: {len(list((skill / 'references/semantic').glob('*.yml')))} entities")
+PY
+}
+
+# skill-scanner：阻断 CRITICAL/HIGH 发现
 run_scanner() {
   need_cmd skill-scanner
   local report
@@ -111,6 +174,7 @@ PY
   rm -f "$report"
 }
 
+# 模拟 npx skills add，确认安装包纯净
 run_npx_install_check() {
   need_cmd npx
   local tmp_home tmp_project
@@ -120,6 +184,7 @@ run_npx_install_check() {
     --skill huawei-cloud-billing-scout --agent cursor --yes --copy)
 }
 
+# 可选：真实 BSS 只读调用（需本机 hcloud 凭据）
 run_real_smoke() {
   [[ "${HUAWEICLOUD_BILLING_SCOUT_REAL:-0}" == "1" ]] || return 0
   need_cmd hcloud
@@ -134,6 +199,13 @@ need_cmd rg
 check_skill_layout
 check_eval_schema
 check_semantic_consistency
+check_semantic_routing
+check_eval_entity_coverage
+run_verify_ops
+if [[ "${HUAWEICLOUD_BILLING_SCOUT_VERIFY_HELP:-0}" == "1" ]]; then
+  run_verify_ops --with-help
+fi
+# 命令文档中不得出现可变 BSS 写操作示例
 check_rg "forbidden mutable KooCLI operations found" \
   'hcloud[[:space:]]+[A-Za-z0-9/-]+[[:space:]]+(Pay|Renewal|Cancel|Reclaim|Update|Create|Delete|Set|Change|Send|Claim|AutoRenewal)[A-Za-z0-9/-]*'
 check_rg "ECS diagnosis residue found" \

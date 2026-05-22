@@ -5,10 +5,10 @@
       "id": 1,
       "name": "continuous-deduction-attribution",
       "prompt": "我这个月为什么一直扣钱，帮我看看还有哪些资源在计费。",
-      "expected_output": "识别为持续扣费归因；使用只读 BSS 资源消费记录和详单；表格优先；不删除资源。",
+      "expected_output": "识别为持续扣费归因；抽取时间、资源、金额等事实槽位；使用只读 BSS 资源消费记录和详单；表格优先；不删除资源。",
       "files": [],
       "assertions": [
-        "回答将用户意图归类为持续扣费或资源费用归因。",
+        "回答将用户意图归类为持续扣费或资源费用归因，并选择资源账务事实而不是 FAQ 命中。",
         "回答只提出或执行 BSS/KooCLI 只读查询，不包含创建、修改、删除、关闭、支付、退款类动作。",
         "回答优先要求或展示资源级表格证据，并包含账期、资源、服务、区域、企业项目或金额等关键列。",
         "回答用用户可读说明交代时间范围、账号范围和结果行数或 TopN 限制。",
@@ -19,11 +19,11 @@
       "id": 2,
       "name": "obs-region-enterprise-project-cost",
       "prompt": "上个月华南一区 OBS 花了多少钱，按企业项目拆一下。",
-      "expected_output": "识别为多维成本查询；使用最近完整月、region、OBS 服务、企业项目维度。",
+      "expected_output": "识别为多维成本查询；抽取最近完整月、region、OBS 服务、企业项目维度。",
       "files": [],
       "assertions": [
         "回答把“上个月”解析为最近完整账期或自然月，并在用户可读说明中说明。",
-        "回答包含 OBS、华南一区/region、企业项目三个过滤或分组条件。",
+        "回答包含 OBS、华南一区/region、企业项目三个过滤或分组条件，并把它们作为维度或筛选条件处理。",
         "回答优先使用月汇总或成本分析等 BSS 只读查询，再按需钻取明细。",
         "回答要求表格输出按企业项目列出金额、占比或合计。",
         "回答不把控制台猜测当作结论，结论必须依赖查询或官方口径。"
@@ -33,7 +33,7 @@
       "id": 3,
       "name": "resource-package-deduction-gap",
       "prompt": "我买了资源包，为什么按需还在扣费？",
-      "expected_output": "识别为资源包抵扣归因；查询资源包、余量、抵扣记录和按需详单。",
+      "expected_output": "识别为资源包抵扣归因；围绕资源包事实、抵扣记录和按需详单组织证据链。",
       "files": [],
       "assertions": [
         "回答识别为资源包抵扣与按需账单差异排查。",
@@ -83,6 +83,48 @@
         "回答不包含 Delete、Update、Create、Set、Pay、Renewal、Cancel、Reclaim 等写操作命令；只读 List*ChangeRecords 流水查询不应被误拒。",
         "回答建议用户在控制台、工单或账号经理路径处理停用、退款或商务动作。",
         "回答仍给出可执行的只读下一步，而不是只做泛泛安全拒绝。"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "account-balance-smoke",
+      "prompt": "查看华为云上有多少钱",
+      "expected_output": "选择 AccountBalance 事实；直接 ShowCustomerAccountBalances；表格含余额/欠费；不先 BSS --help 探索。",
+      "files": [],
+      "assertions": [
+        "回答识别为余额或账户余额查询，选择账户余额事实，而非月账单或资源扣费归因。",
+        "回答提出或执行 ShowCustomerAccountBalances 只读查询，不使用 ListCustomersBalancesDetail 等错误 Operation。",
+        "回答不依赖 hcloud BSS --help 或盲目猜测 Operation 名作为首要步骤。",
+        "回答以表格或结构化方式呈现余额、欠费或账户类型金额。",
+        "回答用用户可读说明交代账号范围与金额口径。"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "coupon-deduction-gap",
+      "prompt": "代金券没抵扣",
+      "expected_output": "选择 CouponChangeRecord 事实；查询 ListCustomerCouponChangeRecords 及月汇总/详单构成；表格优先。",
+      "files": [],
+      "assertions": [
+        "回答识别为代金券抵扣或未抵扣排查，而非余额或资源包问题。",
+        "回答包含 ListCustomerCouponChangeRecords 或等价只读 BSS 代金券流水查询。",
+        "回答只提出或执行只读 BSS/KooCLI 查询，不包含支付、退款或修改类动作。",
+        "回答用自然语言说明可能原因，如适用范围、失效时间、账单类型或抵扣时延。",
+        "回答以表格或结构化方式呈现代金券收支或抵扣证据，ID 脱敏。"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "account-topup-balance-gap",
+      "prompt": "充值没到账",
+      "expected_output": "选择 AccountChangeRecord 事实；查询 ListCustomerAccountChangeRecords 与 ShowCustomerAccountBalances；解释充值与余额关系。",
+      "files": [],
+      "assertions": [
+        "回答识别为现金/储值充值与余额差异排查，而非月账单或资源扣费归因。",
+        "回答包含 ListCustomerAccountChangeRecords 或等价只读 BSS 账户流水查询。",
+        "回答结合 ShowCustomerAccountBalances 或余额快照说明当前账户状态。",
+        "回答只提出或执行只读 BSS/KooCLI 查询，不包含支付、退款或修改类动作。",
+        "回答用用户可读说明交代时间范围、账号范围与金额口径，交易 ID 脱敏。"
       ]
     }
   ]
