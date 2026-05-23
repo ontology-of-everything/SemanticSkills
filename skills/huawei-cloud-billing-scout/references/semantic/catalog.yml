@@ -1,12 +1,10 @@
 name: HuaweiCloudBillingSemanticCatalog
 type: semantic_catalog
-description: 薄路由层，只负责把用户问题映射到本体实体；实体细节见 billing-ontology.yml。
+description: 薄路由；映射到 billing-ontology.yml 实体。
 workflow:
-  - 用户问题
-  - 识别范围、时间窗、金额口径和问题类型
-  - 路由到 billing-ontology.yml 中的相关实体
-  - 选择只读命令取证
-  - 输出事实表、小结和必要的下一步
+  - 识别范围、时间窗、金额口径与问题类型
+  - 路由实体并只读取证
+  - 输出事实表、小结与必要下一步
 entry_points:
   balance_and_debt:
     questions: [余额, 欠费, 账户余额, 可用额度, 储值卡]

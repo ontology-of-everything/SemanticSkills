@@ -1,10 +1,10 @@
 name: BillingOntology
 type: semantic_ontology
-description: 单一语义本体，负责把用户问题映射到事实、范围、金额口径和只读 BSS 查询操作。
+description: 语义本体：事实、范围、金额口径与只读 BSS operation。
 workflow:
-  - 先识别问题要确认的事实，不把“余额、账单、成本、使用量、订单、权益、范围”混成一类。
-  - 再确定账号范围、时间窗、金额口径、服务/资源维度，然后选择只读命令取证。
-  - 输出事实表、小结和必要的下一步，不外发原始命令过程。
+  - 先分事实类型，不混余额/账单/成本/用量/订单/权益/范围。
+  - 定范围、时间窗、金额口径与维度后只读取证。
+  - 输出事实表与小结，不外发命令过程。
 default_scope:
   account: 当前 KooCLI profile
   method: oneself

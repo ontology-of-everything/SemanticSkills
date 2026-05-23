@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.5 - 2026-05-23
+
+### Changed
+
+- **huawei-cloud-billing-scout**: lean `SKILL.md`, `catalog.yml`, and ontology
+  headers (~1% noise trim); same semantics, output contract, and 21 evals
+
 ## 1.0.4 - 2026-05-23
 
 ### Changed
