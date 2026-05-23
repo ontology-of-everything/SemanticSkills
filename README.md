@@ -25,7 +25,7 @@ Commands ───────► related-commands.md templates → execute (no 
 Playbook (if multi-step) ──► query order + output structure
      │
      ▼
-Same YAML ───────► parse dimensions/measures → evidence table → summary
+Same YAML ───────► parse dimensions/measures → conclusion → evidence facts
 ```
 
 | Layer | What it holds | Typical files |
@@ -33,7 +33,7 @@ Same YAML ───────► parse dimensions/measures → evidence table 
 | Ontology | Fact definitions + response parsing | `references/semantic/*.yml` |
 | Commands | API/CLI templates | `related-commands.md`, IAM, install notes |
 | Playbook | Multi-step flows, user-readable output | `*-playbook.md` |
-| Catalog / terms | Domain routing, semantic model and optional glossary | `semantic/Catalog.yml`, `*-semantics.md` |
+| Catalog / terms | Domain routing, semantic model and optional glossary | `semantic/catalog.yml`, `*-semantics.md` |
 
 `skills/<name>/` is the installable runtime bundle; `qa/<name>/` holds evals and validation and is never copied by `npx skills add`. Listed on [skills.sh](https://www.skills.sh/), indexed by [SkillsMP](https://skillsmp.com/), and publishable to [ClawHub](https://clawhub.ai/).
 

@@ -1,710 +1,282 @@
-# BSS 查询命令目录
+# 命令合同附录
 
-命令层只记录事实：Operation、用途、必填、关键筛选、限制、前置依赖。意图路由看
-`semantic/*.yml`；账务判断看 `billing-playbook.md`。本文件来自 KooCLI 7.2.2
-`hcloud BSS --help` 与 `hcloud BSS <Operation> --help`。
+本文件只保留 operation 合同：用途、必填、模板和限制。问题路由看 `semantic/catalog.yml`，语义边界看 `semantic/billing-ontology.yml`。
+
+## 命令格式标准
+
+**核心格式**：`hcloud BSS <Operation> --param=value --cli-region=<region> --cli-output=json`
+
+### 格式规则
+
+| 元素 | 格式 | 示例 |
+| --- | --- | --- |
+| 服务名 | 固定 `BSS` | `hcloud BSS ShowCustomerAccountBalances` |
+| 操作名 | `List*` / `Show*` | `ListCosts`, `ShowCustomerMonthlySum` |
+| 普通参数 | `--key=value` | `--bill_cycle=2024-12`, `--limit=10` |
+| 数组参数 | `--key.1=value1` | `--resource_ids.1=<resource_id>` |
+| 嵌套对象 | `--key.sub_key=value` | `--time_condition.begin_time=2024-12-01` |
 
 ## 全局约束
 
+- 只执行 `List*` / `Show*`；拒绝支付、续费、退款、退订、回收、创建、更新、删除、发送验证码、改余额或资源。
+- 默认 `limit<=10`、`offset=0`；找前置 ID 最多近 3 个账期、每命令 3 页、每页 `limit<=50`。
+- 数组和对象参数只用已验证的 dot notation；没有模板就停下，不试 JSON 字符串。
+- 账号、客户、资源、订单、交易、券、卡、伙伴 ID 默认脱敏。
+
+## customer_billing
+
+| 操作 | 用途 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `ShowCustomerAccountBalances` | 余额、欠费、账户构成快照 | - | 当前 profile；只回答当前时点快照 |
+| `ShowCustomerMonthlySum` | 月度消费汇总 | `bill_cycle` | 适合总览；多账号前先确认范围 |
+| `ListCustomerBillsFeeRecords` | 账期流水、支付状态、交易对账 | `bill_cycle` | 账期日期必须同月 |
+| `ListCustomerselfResourceRecords` | 定位持续扣费资源 | `cycle` | 资源 ID 默认脱敏 |
+| `ListCustomerselfResourceRecordDetails` | 资源详单日级 | `cycle` | 明细与汇总可能有精度差 |
+| `ListCustomerBillsMonthlyBreakDown` | 月度摊销 | `shared_month` | 近 18 月；非现金扣费口径 |
+| `ListCustomerAccountChangeRecords` | 账户流水 | `balance_type` | 只读；伙伴转售客户不适用 |
+| `ListStoredValueCards` | 储值卡状态和面额 | `status` | 卡 ID 默认脱敏 |
+
+## cost_and_usage
+
+| 操作 | 用途 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `ListCosts` | 成本分析聚合、TopN、趋势 | 见模板 | dot notation；`operator=0` 包含、`1` 排除 |
+| `ListResourceUsageSummary` | CDN/OBS/IEC/VPC 用量汇总 | 见模板 | 95 计费与用量核验 |
+| `ListResourceUsage` | 资源使用量明细 | 见模板 | 先汇总或详单拿资源与用量类型 |
+
+### cost_and_usage 示例模板
+
+#### `ListCosts`
+
 ```bash
-hcloud BSS <Operation> --cli-region=<region> --cli-output=json
+hcloud BSS ListCosts \
+  --amount_type=<amount_type> \
+  --cost_type=<cost_type> \
+  --time_condition.begin_time=YYYY-MM-DD \
+  --time_condition.end_time=YYYY-MM-DD \
+  --time_condition.time_measure_id=1 \
+  --groupby.1.key=CLOUD_SERVICE_TYPE \
+  --groupby.1.type=dimension \
+  --filters.1.filter_factor.key=REGION_CODE \
+  --filters.1.filter_factor.value.1=cn-north-1 \
+  --filters.1.operator=0 \
+  --cli-region=<region> \
+  --cli-output=json
 ```
 
-- 只执行 `List*` / `Show*`。拒绝 `Pay*`、`Create*`、`Update*`、`Cancel*`、`Renewal*`、`Reclaim*`、`Set*`、`Send*`、`Change*`。
-- 探索默认 `limit<=10`、`offset=0`；为找前置 ID 最多近 3 个账期、每命令 3 页、每页 `limit<=50`。
-- 账号、客户、资源、订单、交易、券 ID 默认脱敏；用户明确确认后才可用完整 ID 做本机核验。
-- KooCLI help 与官方 API Explorer 不一致时，标出分歧，不猜参数。
-
-## 普通客户账务事实
-
-### `ShowCustomerAccountBalances`
-
-- 事实：余额、欠费、账户构成
-- 必填：无
-- 筛选：无
-- 备注：当前 profile；余额是快照，不解释扣费原因
-
-### `ShowCustomerMonthlySum`
-
-- 事实：月度消费汇总
-- 必填：
-  - `bill_cycle`
-- 筛选：
-  - `service_type_code`
-  - `enterprise_project_id`
-  - `method`
-  - `sub_customer_id`
-  - `limit`
-  - `offset`
-- 备注：适合总览；多账号需明确范围
-
-### `ListCustomerBillsFeeRecords`
-
-- 事实：消费流水账单
-- 必填：
-  - `bill_cycle`
-- 筛选：
-  - `bill_date_begin/end`
-  - `service_type_code`
-  - `resource_type_code`
-  - `region_code`
-  - `enterprise_project_id`
-  - `method`
-  - `sub_customer_id`
-  - `trade_id`
-  - `status`
-  - `limit`
-  - `offset`
-- 备注：适合对账；账期日期必须同月
-
-### `ListCustomerselfResourceRecords`
-
-- 事实：资源消费记录
-- 必填：
-  - `cycle`
-- 筛选：
-  - `bill_date_begin/end`
-  - `cloud_service_type`
-  - `resource_type`
-  - `resource_id`
-  - `region`
-  - `enterprise_project_id`
-  - `charge_mode`
-  - `bill_type`
-  - `trade_id`
-  - `method`
-  - `sub_customer_id`
-  - `limit`
-  - `offset`
-- 备注：定位持续扣费资源；资源 ID 脱敏
-
-### `ListCustomerselfResourceRecordDetails`
-
-- 事实：资源详单
-- 必填：
-  - `cycle`
-- 筛选：
-  - `query_type`
-  - `bill_cycle_begin/end`
-  - `cloud_service_type`
-  - `resource_type`
-  - `res_instance_id`
-  - `region`
-  - `enterprise_project_id`
-  - `charge_mode`
-  - `bill_type`
-  - `payer_account_id`
-  - `method`
-  - `sub_customer_id`
-  - `limit`
-  - `offset`
-- 备注：明细金额可能保留多位小数，不宜逐行硬对汇总
-
-### `ListCustomerBillsMonthlyBreakDown`
-
-- 事实：月度摊销成本
-- 必填：
-  - `shared_month`
-- 筛选：
-  - `service_type_code`
-  - `resource_type_code`
-  - `resource_id`
-  - `region_code`
-  - `enterprise_project_id`
-  - `method`
-  - `sub_customer_id`
-  - `limit`
-  - `offset`
-- 备注：近 18 个月；摊销口径不同于现金扣费
-
-### `ListCustomerAccountChangeRecords`
-
-- 事实：现金/授信/储值流水
-- 必填：
-  - `balance_type`
-- 筛选：
-  - `trade_time_begin/end`
-  - `trade_type`
-  - `revenue_expense_type`
-  - `trade_id`
-  - `payment_channel_id`
-  - `limit`
-  - `offset`
-- 备注：只读流水；不适用于伙伴转售类客户
-
-### `ListCustomerCouponChangeRecords`
-
-- 事实：代金券流水
-- 必填：
-  - `balance_type`
-- 筛选：
-  - `trade_time_begin/end`
-  - `coupon_id`
-  - `trade_type`
-  - `revenue_expense_type`
-  - `trade_id`
-  - `limit`
-  - `offset`
-- 备注：只读流水；券 ID/交易 ID 脱敏
-
-### `ListStoredValueCards`
-
-- 事实：储值卡列表
-- 必填：
-  - `status`
-- 筛选：
-  - `card_id`
-  - `limit`
-  - `offset`
-- 备注：储值卡 ID 脱敏
-
-## 成本、用量、抵扣
-
-### `ListCosts`
-
-- 事实：成本分析聚合
-- 必填：
-  - `amount_type`
-  - `cost_type`
-  - `time_condition.begin_time`
-  - `time_condition.end_time`
-  - `time_condition.time_measure_id`
-- 筛选：
-  - `groupby.*`
-  - `filters.*`
-  - `limit`
-  - `offset`
-- 备注：大结果先用它聚合；`operator=0` 包含，`1` 排除
-
-### `ListResourceUsageSummary`
-
-- 事实：资源使用量汇总
-- 必填：
-  - `bill_cycle`
-  - `service_type_code`
-  - `resource_type_code`
-  - `usage_type`
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：仅 CDN/OBS/IEC/VPC，主要 95 计费场景
-
-### `ListResourceUsage`
-
-- 事实：资源使用量明细
-- 必填：
-  - `bill_cycle`
-  - `resource_id`
-  - `service_type_code`
-  - `resource_type_code`
-  - `usage_type`
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：先用汇总或详单拿资源与用量类型
-
-### `ListFreeResourceInfos`
-
-- 事实：资源包列表
-- 必填：无
-- 筛选：
-  - `product_id`
-  - `product_name`
-  - `status`
-  - `region_code`
-  - `enterprise_project_id`
-  - `order_id`
-  - `service_type_code_list.*`
-  - `limit`
-  - `offset`
-- 备注：抵扣排查入口
-
-### `ListFreeResourceUsages`
-
-- 事实：资源包余量
-- 必填：无
-- 筛选：
-  - `free_resource_ids.*`
-- 备注：先从资源包列表拿资源项 ID；通常不分页
-
-### `ListFreeResourcesUsageRecords`
-
-- 事实：资源包抵扣明细
-- 必填：
-  - `deduct_time_begin`
-  - `deduct_time_end`
-- 筛选：
-  - `free_resource_id`
-  - `product_id`
-  - `resource_type_code`
-  - `limit`
-  - `offset`
-- 备注：时间跨度不超过 90 天
-
-## 订单与退款证据
-
-### `ListCustomerOrders`
-
-- 事实：订单列表
-- 必填：无
-- 筛选：
-  - `order_id`
-  - `customer_id`
-  - `service_type_code`
-  - `status`
-  - `method`
-  - `create_time_begin/end`
-  - `limit`
-  - `offset`
-- 备注：仅查证据，不引导支付
-
-### `ShowCustomerOrderDetails`
-
-- 事实：订单详情
-- 必填：
-  - `order_id`
-- 筛选：
-  - `indirect_partner_id`
-  - `limit`
-  - `offset`
-- 备注：订单 ID 默认脱敏
-
-### `ShowRefundOrderDetails`
-
-- 事实：退订/降配退款详情
-- 必填：
-  - `order_id`
-- 筛选：
-  - `customer_id`
-  - `indirect_partner_id`
-- 备注：只解释退款证据，不执行退订退款
-
-### `ListOrderCouponsByOrderId`
-
-- 事实：订单可用券
-- 必填：
-  - `order_id`
-- 筛选：无
-- 备注：靠近支付，只读解释
-
-### `ListOrderDiscounts`
-
-- 事实：订单可用折扣
-- 必填：
-  - `order_id`
-- 筛选：无
-- 备注：靠近支付，只读解释
-
-## 企业、多账号、伙伴
-
-### `ListEnterpriseOrganizations`
-
-- 事实：企业组织结构
-- 必填：无
-- 筛选：
-  - `parent_id`
-  - `recursive_query`
-- 备注：企业主账号场景
-
-### `ListEnterpriseSubCustomers`
-
-- 事实：企业子账号列表
-- 必填：无
-- 筛选：
-  - `org_id`
-  - `fuzzy_query`
-  - `sub_customer_account_name`
-  - `sub_customer_display_name`
-  - `limit`
-  - `offset`
-- 备注：子账号 ID 脱敏
-
-### `ListEnterpriseMultiAccount`
-
-- 事实：企业子账号可回收余额
-- 必填：
-  - `balance_type`
-  - `sub_customer_id`
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：只读查询；不执行回收
-
-### `ShowMultiAccountTransferAmount`
-
-- 事实：企业主可拨款余额
-- 必填：
-  - `balance_type`
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：只读查询；不执行划拨
-
-### `ListMultiAccountTransferCoupons`
-
-- 事实：企业主可拨款优惠券
-- 必填：无
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：只读查询；不执行发放
-
-### `ListMultiAccountRetrieveCoupons`
-
-- 事实：企业子账号可回收优惠券
-- 必填：
-  - `sub_customer_id`
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：只读查询；不执行回收
-
-### `ListConsumeSubCustomers`
-
-- 事实：有消费的子客户
-- 必填：
-  - `bill_cycle`
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：伙伴/企业消费入口
-
-### `ListSubcustomerMonthlyBills`
-
-- 事实：子客户月度账单
-- 必填：
-  - `cycle`
-  - `charge_mode`
-- 筛选：
-  - `customer_id`
-  - `indirect_partner_id`
-  - `bill_type`
-  - `cloud_service_type`
-  - `limit`
-  - `offset`
-- 备注：伙伴视角；客户 ID 脱敏
-
-### `ListSubCustomerBillDetail`
-
-- 事实：子客户消费明细
-- 必填：
-  - `bill_cycle`
-  - `customer_id`
-- 筛选：
-  - `bill_date_begin/end`
-  - `service_type_code`
-  - `region_code`
-  - `resource_id`
-  - `limit`
-  - `offset`
-- 备注：伙伴视角；先确认授权关系
-
-### `ListSubCustomers`
-
-- 事实：伙伴客户列表
-- 必填：无
-- 筛选：
-  - `customer_id`
-  - `account_name`
-  - `associated_on_begin/end`
-  - `association_type`
-  - `limit`
-  - `offset`
-- 备注：客户信息敏感，默认摘要
-
-### `ListSubCustomerNewTag`
-
-- 事实：客户新客标签
-- 必填：无
-- 筛选：
-  - `indirect_partner_id`
-  - `limit`
-  - `offset`
-- 备注：只读标签，不做资格承诺
-
-### `ListCustomerOnDemandResources`
-
-- 事实：代售客户按需资源
-- 必填：
-  - `customer_id`
-- 筛选：
-  - `service_type_code`
-  - `region_code`
-  - `status`
-  - `limit`
-  - `offset`
-- 备注：伙伴/代售；资源 ID 脱敏
-
-### `ListPayPerUseCustomerResources`
-
-- 事实：包年包月资源
-- 必填：无
-- 筛选：
-  - `customer_id`
-  - `order_id`
-  - `service_type_code`
-  - `limit`
-  - `offset`
-- 备注：命名历史原因，实际查包年包月资源
-
-### `ListCustomersBalancesDetail`
-
-- 事实：代售客户余额
-- 必填：无
-- 筛选：
-  - `indirect_partner_id`
-- 备注：伙伴视角；客户余额敏感
-
-### `ListPartnerBalances`
-
-- 事实：伙伴/经销商余额
-- 必填：无
-- 筛选：
-  - `indirect_partner_id`
-- 备注：伙伴视角
-
-### `ListPartnerAccountChangeRecords`
-
-- 事实：伙伴收支流水
-- 必填：
-  - `balance_type`
-- 筛选：
-  - `trade_time_begin/end`
-  - `trade_type`
-  - `revenue_expense_type`
-  - `limit`
-  - `offset`
-- 备注：只读流水
-
-### `ListPartnerAdjustRecords`
-
-- 事实：伙伴调账记录
-- 必填：无
-- 筛选：
-  - `customer_id`
-  - `indirect_partner_id`
-  - `operation_time_begin/end`
-  - `limit`
-  - `offset`
-- 备注：只读记录；不执行拨款/回收
-
-### `ListIndirectPartners`
-
-- 事实：二级经销商列表
-- 必填：无
-- 筛选：
-  - `indirect_partner_id`
-  - `account_name`
-  - `associated_on_begin/end`
-  - `limit`
-  - `offset`
-- 备注：总经销商场景
-
-## 券、额度、伙伴营销
-
-### `ListSubCustomerCoupons`
-
-- 事实：伙伴自身优惠券
-- 必填：无
-- 筛选：
-  - `order_id`
-  - `status`
-  - `limit`
-  - `offset`
-- 备注：只读
-
-### `ListIssuedPartnerCoupons`
-
-- 事实：已发放优惠券
-- 必填：无
-- 筛选：
-  - `customer_id`
-  - `order_id`
-  - `status`
-  - `limit`
-  - `offset`
-- 备注：只读；券/客户 ID 脱敏
-
-### `ListPartnerCouponsRecord`
-
-- 事实：优惠券发放/回收记录
-- 必填：无
-- 筛选：
-  - `customer_id`
-  - `indirect_partner_id`
-  - `operation_time_begin/end`
-  - `limit`
-  - `offset`
-- 备注：只读记录
-
-### `ListQuotaCoupons`
-
-- 事实：伙伴优惠券额度
-- 必填：无
-- 筛选：
-  - `create_time_begin/end`
-  - `effective_time_begin/end`
-  - `expire_time_begin/end`
-  - `limit`
-  - `offset`
-- 备注：只读额度
-
-### `ListIssuedCouponQuotas`
-
-- 事实：已发放券额度
-- 必填：无
-- 筛选：
-  - `quota_id`
-  - `parent_quota_id`
-  - `indirect_partner_id`
-  - `limit`
-  - `offset`
-- 备注：总经销商场景
-
-### `ListCouponQuotasRecords`
-
-- 事实：券额度操作记录
-- 必填：无
-- 筛选：
-  - `indirect_partner_id`
-  - `operation_time_begin/end`
-  - `operation_type`
-  - `limit`
-  - `offset`
-- 备注：只读记录
-
-## 字典、地域、价格、实名
-
-### `ListServiceTypes`
-
-- 用途：云服务类型字典
-- 必填：无
-- 筛选：
-  - `service_type_name`
-  - `limit`
-  - `offset`
-- 备注：翻译 `service_type_code`
-
-### `ListResourceTypes`
-
-- 用途：资源类型字典
-- 必填：无
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：翻译 `resource_type_code`
-
-### `ListUsageTypes`
-
-- 用途：使用量类型字典
-- 必填：无
-- 筛选：
-  - `resource_type_code`
-  - `limit`
-  - `offset`
-- 备注：翻译 `usage_type`
-
-### `ListMeasureUnits`
-
-- 用途：计量单位字典
-- 必填：无
-- 筛选：无
-- 备注：翻译金额/用量单位
-
-### `ListConversions`
-
-- 用途：计量单位进制换算
-- 必填：无
-- 筛选：
-  - `measure_type`
-- 备注：用于单位换算
-
-### `ListServiceResources`
-
-- 用途：服务到资源类型关系
-- 必填：
-  - `service_type_code`
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：价格试算前置字典
-
-### `ListProvinces`
-
-- 用途：省份字典
-- 必填：无
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：伙伴销售平台地域
-
-### `ListCities`
-
-- 用途：城市字典
-- 必填：
-  - `province_code`
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：伙伴销售平台地域
-
-### `ListCounties`
-
-- 用途：区县字典
-- 必填：
-  - `city_code`
-- 筛选：
-  - `limit`
-  - `offset`
-- 备注：伙伴销售平台地域
-
-### `ListOnDemandResourceRatings`
-
-- 用途：按需产品价格试算
-- 必填：
-  - `project_id`
-- 筛选：
-  - `inquiry_precision`
-- 备注：只读报价，不等于实际账单
-
-### `ListRateOnPeriodDetail`
-
-- 用途：包年包月开通价格试算
-- 必填：
-  - `project_id`
-- 筛选：无
-- 备注：只读报价，不引导下单
-
-### `ListRenewRateOnPeriod`
-
-- 用途：包年包月续订价格试算
-- 必填：
-  - `period_num`
-  - `period_type`
-- 筛选：
-  - `include_relative_resources`
-- 备注：只读报价，不引导续订
-
-### `ListIncentiveDiscountPolicies`
-
-- 用途：产品折扣/激励策略
-- 必填：
-  - `time`
-- 筛选：
-  - `service_type_code`
-  - `limit`
-  - `offset`
-- 备注：伙伴视角；不承诺客户最终价
-
-### `ShowRealnameAuthenticationReviewResult`
-
-- 用途：实名认证审核结果
-- 必填：
-  - `customer_id`
-- 筛选：无
-- 备注：只读结果，不提交/变更实名
+## discount_entitlement
+
+| 操作 | 用途 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `ListFreeResourceInfos` | 资源包列表 | - | 数组参数只用 `.1`、`.2` 递增；见下方模板 |
+| `ListFreeResourceUsages` | 资源包余量 | `free_resource_ids.1` | 通常不分页；见下方模板 |
+| `ListFreeResourcesUsageRecords` | 包抵扣明细 | 见模板 | 跨度 ≤90 天 |
+| `ListCustomerCouponChangeRecords` | 代金券流水 | `balance_type` | 券 ID、交易 ID 默认脱敏 |
+| `ListQuotaCoupons` | 伙伴优惠券额度 | - | 只读额度；见下方模板 |
+| `ListIssuedCouponQuotas` | 已发放券额度 | - | 总经销商场景 |
+| `ListCouponQuotasRecords` | 券额度操作记录 | - | 只读记录 |
+| `ListIssuedPartnerCoupons` | 已发放优惠券 | - | 券 ID、客户 ID 默认脱敏 |
+| `ListPartnerCouponsRecord` | 优惠券发放/回收记录 | - | 只读记录；见下方模板 |
+| `ListSubCustomerCoupons` | 伙伴自身优惠券 | - | 只读 |
+| `ListOrderCouponsByOrderId` | 订单可用券 | `order_id` | 靠近支付，只读解释 |
+
+### discount_entitlement 示例模板
+
+#### `ListFreeResourceInfos`
+
+```bash
+hcloud BSS ListFreeResourceInfos \
+  --service_type_code_list.1=hws.service.type.obs \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+#### `ListFreeResourceUsages`
+
+```bash
+hcloud BSS ListFreeResourceUsages \
+  --free_resource_ids.1=<free_resource_id> \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+#### `ListQuotaCoupons`
+
+```bash
+hcloud BSS ListQuotaCoupons \
+  --quota_ids.1=<quota_id> \
+  --quota_status_list.1=0 \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+#### `ListPartnerCouponsRecord`
+
+```bash
+hcloud BSS ListPartnerCouponsRecord \
+  --coupon_ids.1=<coupon_id> \
+  --operation_types.1=1 \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+## order_evidence
+
+| 操作 | 用途 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `ListCustomerOrders` | 订单列表 | - | 仅查证据，不引导支付 |
+| `ShowCustomerOrderDetails` | 订单详情 | `order_id` | 订单 ID 默认脱敏 |
+| `ShowRefundOrderDetails` | 退订/降配退款详情 | `order_id` | 只解释退款证据，不执行退订退款 |
+| `ListOrderDiscounts` | 订单可用折扣 | `order_id` | 靠近支付，只读解释 |
+
+## enterprise_multi_account
+
+| 操作 | 用途 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `ListEnterpriseOrganizations` | 企业组织结构 | - | 企业主账号场景 |
+| `ListEnterpriseSubCustomers` | 企业子账号列表 | - | 子账号 ID 默认脱敏 |
+| `ListEnterpriseMultiAccount` | 子账号可回收余额 | 见模板 | 只读；不回收 |
+| `ShowMultiAccountTransferAmount` | 主账号可拨款 | `balance_type` | 只读；不划拨 |
+| `ListMultiAccountTransferCoupons` | 主账号可拨券 | - | 只读；不发放 |
+| `ListMultiAccountRetrieveCoupons` | 子账号可回收券 | `sub_customer_id` | 只读；不回收 |
+| `ListConsumeSubCustomers` | 有消费子客户 | `bill_cycle` | 企业/伙伴入口 |
+| `ListSubcustomerMonthlyBills` | 子客户月账单 | `cycle`, `charge_mode` | 客户 ID 脱敏 |
+| `ListSubCustomerBillDetail` | 子客户明细 | `bill_cycle`, `customer_id` | 先确认授权 |
+
+## partner_resale
+
+| 操作 | 用途 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `ListSubCustomers` | 伙伴客户列表 | - | 客户信息敏感，默认摘要 |
+| `ListSubCustomerNewTag` | 新客标签 | - | 只读；见模板 |
+| `ListCustomerOnDemandResources` | 代售按需资源 | `customer_id` | 资源 ID 脱敏；见模板 |
+| `ListPayPerUseCustomerResources` | 包年包月资源 | - | 历史命名；见模板 |
+| `ListCustomersBalancesDetail` | 代售余额 | 见模板 | 敏感；见模板 |
+| `ListPartnerBalances` | 伙伴/经销商余额 | - | 伙伴视角 |
+| `ListPartnerAccountChangeRecords` | 伙伴收支流水 | `balance_type` | 只读流水 |
+| `ListPartnerAdjustRecords` | 伙伴调账记录 | - | 只读记录；不执行拨款或回收 |
+| `ListIndirectPartners` | 二级经销商列表 | - | 总经销商场景 |
+
+### partner_resale 示例模板
+
+#### `ListSubCustomerNewTag`
+
+```bash
+hcloud BSS ListSubCustomerNewTag \
+  --customer_ids.1=<customer_id> \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+#### `ListCustomerOnDemandResources`
+
+```bash
+hcloud BSS ListCustomerOnDemandResources \
+  --customer_id=<customer_id> \
+  --resource_ids.1=<resource_id> \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+#### `ListPayPerUseCustomerResources`
+
+```bash
+hcloud BSS ListPayPerUseCustomerResources \
+  --resource_ids.1=<resource_id> \
+  --status_list.1=2 \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+#### `ListCustomersBalancesDetail`
+
+```bash
+hcloud BSS ListCustomersBalancesDetail \
+  --customer_infos.1.customer_id=<customer_id> \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+## reference_dimensions
+
+| 操作 | 用途 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `ListServiceTypes` | 云服务类型字典 | - | 翻译 `service_type_code` |
+| `ListResourceTypes` | 资源类型字典 | - | 翻译 `resource_type_code` |
+| `ListUsageTypes` | 使用量类型字典 | - | 翻译 `usage_type` |
+| `ListMeasureUnits` | 计量单位字典 | - | 翻译金额和用量单位 |
+| `ListConversions` | 计量单位进制换算 | - | 用于单位换算 |
+| `ListServiceResources` | 服务到资源类型关系 | `service_type_code` | 价格试算前置字典 |
+| `ListProvinces` | 省份字典 | - | 伙伴销售平台地域 |
+| `ListCities` | 城市字典 | `province_code` | 伙伴销售平台地域 |
+| `ListCounties` | 区县字典 | `city_code` | 伙伴销售平台地域 |
+
+## quote_and_identity
+
+| 操作 | 用途 | 必填 | 说明 |
+| --- | --- | --- | --- |
+| `ListOnDemandResourceRatings` | 按需价格试算 | 见模板 | 只读报价，不等于账单 |
+| `ListRateOnPeriodDetail` | 包年包月开通试算 | 见模板 | 只读报价，不引导下单 |
+| `ListRenewRateOnPeriod` | 包年包月续订试算 | 见模板 | 只读报价，不引导续订 |
+| `ListIncentiveDiscountPolicies` | 产品折扣/激励策略 | `time` | 伙伴视角；不承诺客户最终价 |
+| `ShowRealnameAuthenticationReviewResult` | 实名审核 | `customer_id` | 只读；不提交变更 |
+
+### quote_and_identity 示例模板
+
+#### `ListOnDemandResourceRatings`
+
+```bash
+hcloud BSS ListOnDemandResourceRatings \
+  --project_id=<project_id> \
+  --product_infos.1.id=item-1 \
+  --product_infos.1.cloud_service_type=<service> \
+  --product_infos.1.resource_type=<resource> \
+  --product_infos.1.resource_spec=<spec> \
+  --product_infos.1.region=<region> \
+  --product_infos.1.subscription_num=1 \
+  --product_infos.1.usage_factor=Duration \
+  --product_infos.1.usage_measure_id=4 \
+  --product_infos.1.usage_value=1 \
+  --product_infos.1.available_zone=<az> \
+  --product_infos.1.resource_size=10 \
+  --product_infos.1.size_measure_id=17 \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+#### `ListRateOnPeriodDetail`
+
+```bash
+hcloud BSS ListRateOnPeriodDetail \
+  --project_id=<project_id> \
+  --product_infos.1.id=item-1 \
+  --product_infos.1.cloud_service_type=<service> \
+  --product_infos.1.resource_type=<resource> \
+  --product_infos.1.resource_spec=<spec> \
+  --product_infos.1.region=<region> \
+  --product_infos.1.period_num=1 \
+  --product_infos.1.period_type=2 \
+  --product_infos.1.subscription_num=1 \
+  --product_infos.1.available_zone=<az> \
+  --product_infos.1.fee_installment_mode=NA \
+  --product_infos.1.resource_size=10 \
+  --product_infos.1.size_measure_id=17 \
+  --cli-region=<region> \
+  --cli-output=json
+```
+
+#### `ListRenewRateOnPeriod`
+
+```bash
+hcloud BSS ListRenewRateOnPeriod \
+  --period_num=1 \
+  --period_type=2 \
+  --resource_ids.1=<resource_id> \
+  --cli-region=<region> \
+  --cli-output=json
+```
 
 ## 产品侧只读交叉验证
 
-BSS 是账务事实源。产品 API 只回答“当前资源侧能否查到”，不能推翻历史账单。
-仅在 BSS 已给出服务和资源线索后，查相应服务的 `List` / `Show` / `Get`。
+BSS 是账务事实源。产品 API 只答「当前能否查到资源」，不推翻历史账单；
+仅在 BSS 已有线索后，再查产品侧 `List` / `Show` / `Get`。

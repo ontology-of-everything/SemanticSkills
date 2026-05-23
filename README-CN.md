@@ -25,7 +25,7 @@ English: [README.md](README.md).
 协作手册（多步时）──► 查询顺序 + 输出结构
      │
      ▼
-同一 yml ────────► 解析 dimensions/measures → 证据表 → 小结
+同一 yml ────────► 解析 dimensions/measures → 结论 → 事实依据
 ```
 
 
@@ -34,7 +34,7 @@ English: [README.md](README.md).
 | 本体语义 | 事实定义 + 响应解析 | `references/semantic/*.yml` |
 | 命令   | API/CLI 模板      | `related-commands.md`、IAM、安装说明               |
 | 协作手册 | 多步编排、用户可读输出 | `*-playbook.md`                              |
-| 目录/术语 | 领域路由、语义模型和可选术语口径 | `semantic/Catalog.yml`、`*-semantics.md` |
+| 目录/术语 | 领域路由、语义模型和可选术语口径 | `semantic/catalog.yml`、`*-semantics.md` |
 
 
 `skills/<name>/` 是可安装运行时包；`qa/<name>/` 放 eval 与验证脚本，不会被 `npx skills add` 复制。可出现在 [skills.sh](https://www.skills.sh/)、由 [SkillsMP](https://skillsmp.com/) 抓取，并可发布到 [ClawHub](https://clawhub.ai/)。

@@ -21,4 +21,5 @@ study/.tmp-clones/
 # Generated skill-evaluation workspaces
 .workspaces/
 skills/*-workspace/
+qa/*-workspace/
 skills/skill-gate-report-*.txt

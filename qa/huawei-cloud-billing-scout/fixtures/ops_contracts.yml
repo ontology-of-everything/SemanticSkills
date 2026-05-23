@@ -1,5 +1,5 @@
 # Cross-layer contract for huawei-cloud-billing-scout.
-# Keep this file in sync with references/semantic/Catalog.yml and related-commands.md.
+# Keep this file in sync with references/semantic/catalog.yml and related-commands.md.
 
 coverage:
   expected_query_operations: 58
@@ -39,7 +39,8 @@ operations:
   ListCosts:
     domain: cost_and_usage
     entity: CostAnalysis
-    required: [amount_type, cost_type, time_condition.begin_time, time_condition.end_time, time_condition.time_measure_id]
+    required: [amount_type, cost_type, time_condition.begin_time, time_condition.end_time, time_condition.time_measure_id, groupby.1.key, groupby.1.type]
+    templates: [time_condition.begin_time, time_condition.end_time, time_condition.time_measure_id, groupby.1.key, groupby.1.type, filters.1.filter_factor.key, filters.1.filter_factor.value.1, filters.1.operator]
   ListCustomerBillsMonthlyBreakDown:
     domain: cost_and_usage
     entity: AmortizedCost
@@ -57,10 +58,12 @@ operations:
     domain: discount_entitlement
     entity: FreeResourcePackage
     required: []
+    templates: [service_type_code_list.1]
   ListFreeResourceUsages:
     domain: discount_entitlement
     entity: FreeResourcePackage
-    required: []
+    required: [free_resource_ids.1]
+    templates: [free_resource_ids.1]
   ListFreeResourcesUsageRecords:
     domain: discount_entitlement
     entity: FreeResourcePackage
@@ -73,6 +76,7 @@ operations:
     domain: discount_entitlement
     entity: CouponQuota
     required: []
+    templates: [quota_ids.1, quota_status_list.1]
   ListIssuedCouponQuotas:
     domain: discount_entitlement
     entity: CouponQuota
@@ -89,6 +93,7 @@ operations:
     domain: discount_entitlement
     entity: CouponQuota
     required: []
+    templates: [coupon_ids.1, operation_types.1]
   ListSubCustomerCoupons:
     domain: discount_entitlement
     entity: CouponQuota
@@ -160,18 +165,22 @@ operations:
     domain: partner_resale
     entity: PartnerAccountContext
     required: []
+    templates: [customer_ids.1]
   ListCustomerOnDemandResources:
     domain: partner_resale
     entity: PartnerAccountContext
     required: [customer_id]
+    templates: [resource_ids.1]
   ListPayPerUseCustomerResources:
     domain: partner_resale
     entity: PartnerAccountContext
     required: []
+    templates: [resource_ids.1, status_list.1]
   ListCustomersBalancesDetail:
     domain: partner_resale
     entity: PartnerAccountContext
-    required: []
+    required: [customer_infos.1.customer_id]
+    templates: [customer_infos.1.customer_id]
   ListPartnerBalances:
     domain: partner_resale
     entity: PartnerAccountContext
@@ -229,15 +238,18 @@ operations:
   ListOnDemandResourceRatings:
     domain: quote_and_identity
     entity: PricingQuote
-    required: [project_id]
+    required: [project_id, product_infos.1.cloud_service_type, product_infos.1.id, product_infos.1.region, product_infos.1.resource_spec, product_infos.1.resource_type, product_infos.1.subscription_num, product_infos.1.usage_factor, product_infos.1.usage_measure_id, product_infos.1.usage_value]
+    templates: [product_infos.1.cloud_service_type, product_infos.1.id, product_infos.1.region, product_infos.1.resource_spec, product_infos.1.resource_type, product_infos.1.subscription_num, product_infos.1.usage_factor, product_infos.1.usage_measure_id, product_infos.1.usage_value, product_infos.1.available_zone, product_infos.1.resource_size, product_infos.1.size_measure_id]
   ListRateOnPeriodDetail:
     domain: quote_and_identity
     entity: PricingQuote
-    required: [project_id]
+    required: [project_id, product_infos.1.cloud_service_type, product_infos.1.id, product_infos.1.period_num, product_infos.1.period_type, product_infos.1.region, product_infos.1.resource_spec, product_infos.1.resource_type, product_infos.1.subscription_num]
+    templates: [product_infos.1.cloud_service_type, product_infos.1.id, product_infos.1.period_num, product_infos.1.period_type, product_infos.1.region, product_infos.1.resource_spec, product_infos.1.resource_type, product_infos.1.subscription_num, product_infos.1.available_zone, product_infos.1.fee_installment_mode, product_infos.1.resource_size, product_infos.1.size_measure_id]
   ListRenewRateOnPeriod:
     domain: quote_and_identity
     entity: PricingQuote
-    required: [period_num, period_type]
+    required: [period_num, period_type, resource_ids.1]
+    templates: [resource_ids.1]
   ListIncentiveDiscountPolicies:
     domain: quote_and_identity
     entity: PricingQuote

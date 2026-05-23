@@ -9,11 +9,21 @@ Read-only **Huawei Cloud / 华为云** billing scout via KooCLI/BSS. Community e
 | Capability | Typical questions |
 | --- | --- |
 | Account facts | Balance, debt, stored-value cards, monthly spend, cash/credit/coupon ledgers |
-| Attribution | Top spenders, resource-level charges, usage, amortized cost, why charges continue after delete |
+| Charge attribution | Top spenders, resource-level charges, charges after delete, usage and amortized cost |
 | Reconciliation | Console vs export, summary vs detail, order vs usage, billed vs paid vs amortized |
-| Entitlements | Resource packages, package usage records, coupon ledgers, partner coupon quotas |
+| Entitlements | Resource packages, coupon ledgers, partner coupon quotas, deduction gaps |
 | Scope | Current account, enterprise/sub-account, partner/reseller and indirect partner views |
-| Consulting | Export rules, billing cycle, pricing estimates, discounts, identity-review status |
+| Consulting | Pricing estimates, discount policies, billing-cycle interpretation, identity-review status |
+
+## ClawHub-first layout
+
+The runtime bundle now follows a ClawHub-first split:
+
+- `SKILL.md` is the single runtime entry: when to use, core rules, the semantic-ontology workflow, and the output contract.
+- `references/README.md` is the lightweight navigation file for the reference bundle.
+- `references/semantic/catalog.yml` is a thin router from user questions to ontology entities.
+- `references/semantic/billing-ontology.yml` is the single ontology file covering facts, scope, money basis, evidence boundaries, and 58 read-only query operations.
+- `references/related-commands.md` is a thin command-contract appendix for maintainers and QA.
 
 ## In-skill flow
 
@@ -21,35 +31,27 @@ Read-only **Huawei Cloud / 华为云** billing scout via KooCLI/BSS. Community e
 User question
      │
      ▼
-┌─────────────┐     semantic/Catalog.yml
-│  Catalog    │──── domain → fact/dimensions/measures → source_operation(s)
-└──────┬──────┘
-       ▼
-┌─────────────┐     semantic/*.yml
-│  Facts      │──── grain, dimensions, measures, evidence boundary
-└──────┬──────┘
-       ▼
-┌─────────────┐     related-commands.md (+ iam, cli-installation)
-│  Commands   │──── execute read-only hcloud BSS (no --help first)
-└──────┬──────┘
-       ▼
- billing-playbook.md → evidence table → short conclusion → caveats
+catalog.yml ─── route to ontology entities
+     │
+     ▼
+billing-ontology.yml ─── pick fact, scope, money basis, evidence boundary
+     │
+     ▼
+related-commands.md ─── execute the smallest read-only hcloud BSS query set
+     │
+     ▼
+fact table ─── summary ─── optional next step
 ```
 
-## Semantic Coverage
+## Ontology Coverage
 
-`references/semantic/Catalog.yml` routes user intent across 8 domains and 58 unique read-only BSS query operations from KooCLI 7.2.2.
+`references/semantic/catalog.yml` plus `references/semantic/billing-ontology.yml` cover 58 unique read-only BSS query operations from KooCLI 7.2.2.
 
-| Domain | Fact files / entities | Representative operations |
+| Layer | What it owns | Examples |
 | --- | --- | --- |
-| `customer_billing` | `AccountBalance`, `StoredValueCard`, `MonthlyBillSummary`, `BillingStatement`, `ResourceBillRecord`, `ResourceBillDetail`, `AccountChangeRecord` | `ShowCustomerAccountBalances`, `ListCustomerBillsFeeRecords`, `ListStoredValueCards` |
-| `cost_and_usage` | `CostAnalysis`, `AmortizedCost`, `ResourceUsage` | `ListCosts`, `ListCustomerBillsMonthlyBreakDown`, `ListResourceUsageSummary`, `ListResourceUsage` |
-| `discount_entitlement` | `FreeResourcePackage`, `CouponChangeRecord`, `CouponQuota` | `ListFreeResourceInfos`, `ListFreeResourceUsages`, `ListQuotaCoupons`, `ListIssuedPartnerCoupons` |
-| `order_evidence` | `OrderEvidence` | `ListCustomerOrders`, `ShowCustomerOrderDetails`, `ShowRefundOrderDetails` |
-| `enterprise_multi_account` | `EnterpriseAccountContext`, `EnterpriseBilling` | `ListEnterpriseSubCustomers`, `ListConsumeSubCustomers`, `ListSubCustomerBillDetail` |
-| `partner_resale` | `PartnerAccountContext`, `PartnerBilling` | `ListSubCustomers`, `ListCustomersBalancesDetail`, `ListPartnerAdjustRecords` |
-| `reference_dimensions` | `ReferenceDimensions` | `ListServiceTypes`, `ListResourceTypes`, `ListUsageTypes`, `ListConversions` |
-| `quote_and_identity` | `PricingQuote`, `IdentityReview` | `ListOnDemandResourceRatings`, `ListRenewRateOnPeriod`, `ShowRealnameAuthenticationReviewResult` |
+| `catalog.yml` | Question routing | balance/debt, charge attribution, reconciliation, entitlements, account scope |
+| `billing-ontology.yml` | Facts, dimensions, scope, money basis, evidence boundaries | `AccountBalance`, `BillingStatement`, `ResourceBillDetail`, `EnterpriseAndPartnerContext`, `PricingQuote` |
+| `related-commands.md` | Operation contract | required parameters, verified dot-notation templates, safety limits |
 
 ## Safety Boundary
 
@@ -58,19 +60,23 @@ Allowed: BSS List* / Show* query operations, plus product-side List/Show/Get onl
 Refused: payment, renewal, refund execution, unsubscribe/cancel, create, update, delete, reclaim, transfer, send-code, or any balance/resource mutation.
 ```
 
+## Output Contract
+
+Final answers use a compact fact table (`事实项 | 结果 | 状态`; `proven` / `needs verification` only), a 1-2 sentence summary, and an optional smallest read-only next step when verification is still needed. Unproven but plausible explanations stay in the summary with qualifiers such as "more likely", never as table status. Raw command output, JSON, traces, profile/region details, and internal IDs stay out of the final answer; 0 or low amounts must not be used to infer free-tier coverage, no usage, no future charges, final billing, or all-service completeness unless the queried evidence directly proves that scope.
+
 ## Runtime bundle
 
 ```text
 skills/huawei-cloud-billing-scout/
 ├── SKILL.md
 └── references/
-    ├── billing-playbook.md
+    ├── README.md
     ├── related-commands.md
     ├── iam-policies.md
     ├── cli-installation.md
     └── semantic/
-        ├── Catalog.yml
-        └── *.yml
+        ├── catalog.yml
+        └── billing-ontology.yml
 ```
 
 No `evals/`, `scripts/`, `analysis/`, or workspaces inside the skill directory.
@@ -127,8 +133,8 @@ ClawHub publish command (run only after explicit release approval):
 clawhub skill publish ./skills/huawei-cloud-billing-scout \
   --slug huawei-cloud-billing-scout \
   --name "Huawei Cloud Billing Scout" \
-  --version 2.1.0 \
-  --changelog "58-operation Huawei Cloud BSS semantic coverage" \
+  --version 2.3.0 \
+  --changelog "Remove playbook, lower-case catalog, and simplify output contract" \
   --clawscan-note "Read-only hcloud BSS List/Show queries; no writes" \
   --tags latest
 ```
@@ -139,4 +145,4 @@ clawhub skill publish ./skills/huawei-cloud-billing-scout \
 ./qa/huawei-cloud-billing-scout/validate.sh
 ```
 
-The QA gate checks install purity, YAML parseability, Catalog/semantic/command/contract consistency, 58-operation coverage, eval schema and safety wording. It does not run real BSS calls unless explicitly enabled by maintainers outside the default gate.
+The QA gate checks install purity, YAML parseability, Catalog/ontology/command/contract consistency, verified KooCLI dot-notation templates, 58-operation coverage, eval schema, and safety wording. It does not run real BSS calls unless explicitly enabled by maintainers outside the default gate.

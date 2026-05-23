@@ -1,0 +1,42 @@
+name: HuaweiCloudBillingSemanticCatalog
+type: semantic_catalog
+description: 薄路由层，只负责把用户问题映射到本体实体；实体细节见 billing-ontology.yml。
+workflow:
+  - 用户问题
+  - 识别范围、时间窗、金额口径和问题类型
+  - 路由到 billing-ontology.yml 中的相关实体
+  - 选择只读命令取证
+  - 输出事实表、小结和必要的下一步
+entry_points:
+  balance_and_debt:
+    questions: [余额, 欠费, 账户余额, 可用额度, 储值卡]
+    ontology_entities: [AccountBalance, AccountChangeRecord, StoredValueCard]
+  monthly_spend:
+    questions: [本月花费, 上月花费, 月度汇总, 服务排行, 企业项目费用]
+    ontology_entities: [MonthlyBillSummary, CostAnalysis, AmortizedCost]
+  charge_attribution:
+    questions: [为什么扣钱, 一直扣费, 删除后扣费, 哪个资源在扣费]
+    ontology_entities: [ResourceBillRecord, ResourceBillDetail, OrderEvidence]
+  reconciliation:
+    questions: [对账, 导出对不上, 汇总和明细不一致, 订单和消费对不上]
+    ontology_entities: [BillingStatement, MonthlyBillSummary, ResourceBillDetail, OrderEvidence]
+  entitlement_and_deduction:
+    questions: [资源包, 代金券, 优惠券, 券额度, 抵扣, 没抵扣]
+    ontology_entities: [FreeResourcePackage, CouponChangeRecord, CouponQuota, StoredValueCard]
+  account_scope:
+    questions: [企业主, 子账号, 伙伴, 代售, 客户账单, 客户余额, 调账]
+    ontology_entities:
+      - EnterpriseAndPartnerContext
+      - EnterpriseAccountContext
+      - EnterpriseBilling
+      - PartnerAccountContext
+      - PartnerBilling
+  quote_and_identity:
+    questions: [价格试算, 续订金额, 折扣策略, 实名审核结果]
+    ontology_entities: [PricingAndIdentity, PricingQuote, IdentityReview]
+  reference_dimensions:
+    questions: [服务编码, 资源类型, usage_type, 计量单位, 地域, 单位换算]
+    ontology_entities: [ReferenceDimensions]
+coverage:
+  expected_query_operations: 58
+  source_version: KooCLI 7.2.2

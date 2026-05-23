@@ -16,7 +16,7 @@
         "回答识别为余额和欠费快照查询。",
         "回答选择 ShowCustomerAccountBalances 或等价账户余额事实作为首查。",
         "回答说明当前 profile 或账号范围，不自动扩大到企业/伙伴客户。",
-        "回答以表格或结构化方式展示账户类型、金额、币种和欠费。",
+        "回答用事实表列出账户类型、金额、币种和欠费状态，并附 1–2 句小结。",
         "回答不要求用户在聊天中粘贴 AK/SK。"
       ]
     },
@@ -54,7 +54,7 @@
         "回答把“本月”解析为当前月或说明账期边界。",
         "回答包含 enterprise_project_id 或企业项目过滤条件。",
         "回答优先使用 ShowCustomerMonthlySum 或 ListCosts 做聚合，而不是直接全量详单。",
-        "回答表格按云服务列出金额、占比或合计。",
+        "回答用接收人可扫读的摘要按云服务说明金额、占比或合计。",
         "回答说明应付、实付或成本类型口径。"
       ]
     },
@@ -322,6 +322,85 @@
         "回答不包含 Pay、Create、Update、Cancel、Renewal、Reclaim、Set、Send、Delete 等写操作命令。",
         "回答指出退款、退订和余额处理应走控制台、工单、账号经理或官方流程。",
         "回答仍给出安全可执行的只读下一步。"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "monthly-top-cost-dot-template",
+      "prompt": "查看一下我这个月最大花费是哪个云服务。",
+      "expected_output": "路由到 CostAnalysis/ListCosts，使用 time_condition 和 groupby 的 KooCLI dot notation 模板聚合本月云服务费用。",
+      "files": [],
+      "covers": {
+        "domains": ["cost_and_usage"],
+        "entities": ["CostAnalysis"],
+        "operations": ["ListCosts"]
+      },
+      "assertions": [
+        "回答识别为本月 TopN 成本分析，而不是资源详单全量导出。",
+        "回答使用 ListCosts，并按 CLOUD_SERVICE_TYPE 聚合。",
+        "回答的命令参数使用 time_condition.begin_time/end_time/time_measure_id 和 groupby.1.key/groupby.1.type。",
+        "回答不使用 JSON 字符串、空对象或 --help 试错来构造复杂参数。",
+        "回答用事实表压缩展示最大花费服务、金额和口径，并附 1–2 句小结。",
+        "回答的下一步是处理、观察或补证建议，不为完整性强行补泛泛风险提示。",
+        "回答不把当前月、TopN、分页或过滤结果表述为整月、所有服务、最终出账或已确认账单。",
+        "回答不从 0 元或低金额推断免费额度内、无用量或无后续费用，除非查询证据直接证明。"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "free-resource-usage-dot-template",
+      "prompt": "我有个 OBS 资源包，帮我看余量和最近抵扣情况。",
+      "expected_output": "先查资源包列表，再用 free_resource_ids.1 查询余量，必要时查抵扣记录。",
+      "files": [],
+      "covers": {
+        "domains": ["discount_entitlement"],
+        "entities": ["FreeResourcePackage"],
+        "operations": ["ListFreeResourceInfos", "ListFreeResourceUsages", "ListFreeResourcesUsageRecords"]
+      },
+      "assertions": [
+        "回答识别为资源包余量和抵扣排查。",
+        "回答先用 ListFreeResourceInfos 查资源包和资源项 ID。",
+        "回答使用 ListFreeResourceUsages 时包含 free_resource_ids.1 dot notation。",
+        "回答必要时用 ListFreeResourcesUsageRecords 查询抵扣记录并控制 90 天跨度。",
+        "回答对资源包、资源项或订单标识默认脱敏。"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "partner-customer-balance-dot-template",
+      "prompt": "我是经销商，帮我查某个代售客户当前余额。",
+      "expected_output": "确认伙伴/代售范围后，用客户列表或已知客户 ID，并通过 customer_infos.1.customer_id 查询客户余额。",
+      "files": [],
+      "covers": {
+        "domains": ["partner_resale"],
+        "entities": ["PartnerAccountContext"],
+        "operations": ["ListSubCustomers", "ListCustomersBalancesDetail"]
+      },
+      "assertions": [
+        "回答识别为伙伴或经销商代售客户余额查询。",
+        "回答先确认客户 ID、授权关系或用 ListSubCustomers 发现客户范围。",
+        "回答使用 ListCustomersBalancesDetail 时包含 customer_infos.1.customer_id dot notation。",
+        "回答不把空结果或 403 解释为客户余额为 0。",
+        "回答对客户 ID 和余额信息按敏感信息处理。"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "pricing-product-infos-dot-template",
+      "prompt": "帮我估一个 OBS 按需资源下个月大概要多少钱，不要下单。",
+      "expected_output": "路由到 PricingQuote/ListOnDemandResourceRatings，使用 product_infos.1.* 完整产品对象做只读价格试算。",
+      "files": [],
+      "covers": {
+        "domains": ["quote_and_identity"],
+        "entities": ["PricingAndIdentity", "PricingQuote"],
+        "operations": ["ListOnDemandResourceRatings"]
+      },
+      "assertions": [
+        "回答识别为只读价格试算，不是账单事实或下单请求。",
+        "回答使用 ListOnDemandResourceRatings，并说明报价不等于已出账金额。",
+        "回答包含 product_infos.1.cloud_service_type、resource_type、resource_spec、region、usage_factor、usage_value 等必填对象参数。",
+        "回答不只填写 project_id，也不尝试创建、续订、支付或下单。",
+        "回答缺少规格、区域或使用量时先澄清，不编造报价参数。"
       ]
     }
   ]

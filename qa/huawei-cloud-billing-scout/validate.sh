@@ -25,8 +25,8 @@ check_layout() {
     "$SKILL_DIR/references/cli-installation.md"
     "$SKILL_DIR/references/iam-policies.md"
     "$SKILL_DIR/references/related-commands.md"
-    "$SKILL_DIR/references/billing-playbook.md"
-    "$SKILL_DIR/references/semantic/Catalog.yml"
+    "$SKILL_DIR/references/semantic/catalog.yml"
+    "$SKILL_DIR/references/semantic/billing-ontology.yml"
     "$DOC_FILE"
     "$CATALOG_FILE"
     "$CURSOR_DOC"
@@ -39,12 +39,35 @@ check_layout() {
     "$CONTRACTS_FILE"
   )
   local forbidden=(.DS_Store .agents analysis evals qa tests .workspaces huawei-cloud-billing-scout-workspace)
+  local legacy_semantic=(
+    AccountBalance.yml
+    AccountChangeRecord.yml
+    AmortizedCost.yml
+    BillingStatement.yml
+    CostAnalysis.yml
+    CouponChangeRecord.yml
+    CouponQuota.yml
+    EnterpriseAndPartnerContext.yml
+    FreeResourcePackage.yml
+    MonthlyBillSummary.yml
+    OrderEvidence.yml
+    PricingAndIdentity.yml
+    ReferenceDimensions.yml
+    ResourceBillDetail.yml
+    ResourceBillRecord.yml
+    ResourceUsage.yml
+    StoredValueCard.yml
+  )
   local file item
 
   for file in "${required[@]}"; do
     [[ -f "$file" ]] || fail "missing file: $file"
   done
+  [[ ! -e "$SKILL_DIR/references/billing-playbook.md" ]] || fail "billing-playbook.md should be removed"
   [[ ! -e "$SKILL_DIR/references/billing-semantics.md" ]] || fail "stale billing-semantics.md still exists"
+  for file in "${legacy_semantic[@]}"; do
+    [[ ! -e "$SKILL_DIR/references/semantic/$file" ]] || fail "stale semantic shard still exists: $file"
+  done
   for item in "${forbidden[@]}"; do
     [[ ! -e "$SKILL_DIR/$item" ]] || fail "forbidden runtime bundle path: $item"
   done
@@ -54,6 +77,16 @@ check_text_guards() {
   local hits
   hits=$(rg -n 'billing-semantics|Semantic entities \(8\)' "$DOC_FILE" "$SKILL_DIR" "$ROOT/README.md" "$ROOT/README-CN.md" 2>/dev/null || true)
   [[ -z "$hits" ]] || { printf '%s\n' "$hits" >&2; fail "stale documentation text"; }
+
+  hits=$(rg -n 'billing-playbook\.md|Catalog\.yml' "$SKILL_DIR" "$DOC_FILE" "$QA_DIR/README.md" "$QA_DIR/assertions/README.md" "$QA_DIR/bin/verify_ops.py" "$QA_DIR/fixtures/ops_contracts.yml" 2>/dev/null || true)
+  [[ -z "$hits" ]] || { printf '%s\n' "$hits" >&2; fail "stale playbook or uppercase catalog reference"; }
+
+  hits=$(rg -n 'playbook_section|总体判断、分层事实' "$SKILL_DIR/references/semantic/catalog.yml" 2>/dev/null || true)
+  [[ -z "$hits" ]] || { printf '%s\n' "$hits" >&2; fail "stale catalog.yml routing text"; }
+
+  if [[ "$(rg -c '^name: HuaweiCloudBillingSemanticCatalog$' "$SKILL_DIR/references/semantic/catalog.yml" 2>/dev/null || echo 0)" -ne 1 ]]; then
+    fail "catalog.yml must contain exactly one root name block"
+  fi
 
   hits=$(rg -n '≥2 stars|repo \*\*≥2|--agent claude($|[[:space:]])' "$DOC_FILE" "$ROOT/docs" "$ROOT/README.md" "$ROOT/README-CN.md" 2>/dev/null || true)
   [[ -z "$hits" ]] || { printf '%s\n' "$hits" >&2; fail "stale marketplace guidance"; }
@@ -109,8 +142,8 @@ if not entry:
     raise SystemExit("docs/catalog.yml missing huawei-cloud-billing-scout")
 if entry.get("path") != "skills/huawei-cloud-billing-scout" or entry.get("qa") != "qa/huawei-cloud-billing-scout":
     raise SystemExit("docs/catalog.yml path/qa mismatch")
-if entry.get("version") != "2.1.0":
-    raise SystemExit("docs/catalog.yml version should be 2.1.0 for the 58-operation expansion")
+if entry.get("version") != "2.3.0":
+    raise SystemExit("docs/catalog.yml version should be 2.3.0 for the playbook removal rewrite")
 if entry.get("distribution") != "direct-skill":
     raise SystemExit("docs/catalog.yml distribution should be direct-skill")
 if "openclaw" not in entry.get("agents", []):
@@ -120,17 +153,48 @@ if "MIT-0" not in entry.get("clawhub_license", ""):
 
 doc = root.joinpath("docs/skills/huawei-cloud-billing-scout.md").read_text(encoding="utf-8")
 for needle in [
+    "ClawHub-first",
+    "billing-ontology.yml",
+    "catalog.yml",
     "58 unique read-only BSS query operations",
-    "StoredValueCard",
-    "quote_and_identity",
     "validate.sh",
     "clawhub skill publish",
     "clawscan-note",
     "claude-code-skill",
     "MIT-0",
+    "Output Contract",
+    "fact table",
+    "summary",
+    "needs verification",
 ]:
     if needle not in doc:
         raise SystemExit(f"skill docs missing: {needle}")
+
+skill_text = skill.joinpath("SKILL.md").read_text(encoding="utf-8")
+for needle in [
+    "语义本体",
+    "输出合同",
+    "不要把调查负担转交给接收人",
+    "完整业务 ID",
+    "profile/region",
+    "待核验",
+]:
+    if needle not in skill_text:
+        raise SystemExit(f"SKILL.md missing output contract guard: {needle}")
+if not any(
+    token in skill_text
+    for token in ("事实项 | 结果 | 状态", "事实数据", "事实表")
+):
+    raise SystemExit(
+        "SKILL.md missing output contract guard: fact output (事实数据 / 事实表 / 事实项 | 结果 | 状态)"
+    )
+if not any(
+    token in skill_text
+    for token in ("0 元或低金额", "不得扩大成整月", "最终出账")
+):
+    raise SystemExit(
+        "SKILL.md missing output contract guard: low-amount / scope ceiling (0 元或低金额 / 不得扩大成整月)"
+    )
 
 repo_docs = "\n".join(
     root.joinpath(path).read_text(encoding="utf-8")
@@ -151,8 +215,8 @@ data = json.loads(evals_file.read_text(encoding="utf-8"))
 if data.get("skill_name") != "huawei-cloud-billing-scout":
     raise SystemExit("eval skill_name mismatch")
 evals = data.get("evals")
-if not isinstance(evals, list) or len(evals) < 17:
-    raise SystemExit("expected at least 17 eval cases")
+if not isinstance(evals, list) or len(evals) < 21:
+    raise SystemExit("expected at least 21 eval cases")
 domains = set()
 entities = set()
 names = set()
@@ -173,17 +237,21 @@ for item in evals:
     domains.update(covers.get("domains", []))
     entities.update(covers.get("entities", []))
 
-catalog = yaml.safe_load(skill.joinpath("references/semantic/Catalog.yml").read_text(encoding="utf-8"))
-expected_domains = set(catalog["domains"])
+contracts = yaml.safe_load(root.joinpath("qa/huawei-cloud-billing-scout/fixtures/ops_contracts.yml").read_text(encoding="utf-8"))
+expected_domains = {
+    str(item.get("domain"))
+    for item in (contracts.get("operations") or {}).values()
+    if isinstance(item, dict) and item.get("domain")
+}
 if domains != expected_domains:
     raise SystemExit(f"eval domain coverage mismatch: {sorted(expected_domains - domains)}")
 
 semantic_entities = set()
 for path in sorted((skill / "references/semantic").glob("*.yml")):
-    if path.name == "Catalog.yml":
+    if path.name == "catalog.yml":
         continue
     obj = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    if obj.get("name"):
+    if obj.get("name") and obj.get("type") != "semantic_ontology":
         semantic_entities.add(obj["name"])
     for entity in obj.get("entities", []) or []:
         if isinstance(entity, dict) and entity.get("name"):

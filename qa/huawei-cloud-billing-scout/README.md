@@ -1,8 +1,8 @@
 # huawei-cloud-billing-scout QA
 
 Quality gate for the Huawei Cloud billing skill. Run it after changing `SKILL.md`,
-`references/semantic/*.yml`, `references/related-commands.md`, `billing-playbook.md`,
-or the public docs.
+`references/semantic/catalog.yml`, `references/semantic/billing-ontology.yml`,
+`references/related-commands.md`, or the public docs.
 
 ## Commands
 
@@ -12,9 +12,10 @@ or the public docs.
 ```
 
 The default gate is offline and read-only. It parses YAML, checks install purity,
-verifies the 58-operation Catalog against semantic source operations, command docs
-and `fixtures/ops_contracts.yml`, validates eval schema, and blocks mutable BSS
-operation examples.
+verifies the thin Catalog, single billing ontology, command appendix, and
+`fixtures/ops_contracts.yml` stay aligned on the same 58 read-only query
+operations, enforces verified dot-notation templates for complex KooCLI
+parameters, validates eval schema, and blocks mutable BSS operation examples.
 
 ## Layout
 
