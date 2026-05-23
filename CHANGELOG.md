@@ -1,45 +1,29 @@
 # Changelog
 
+## 2.3.2 - 2026-05-23
+
+### Documentation
+
+- Consolidate release notes: drop interim `1.0.x` ClawHub republish entries; history
+  lives under `2.3.x` only
+
 ## 2.3.1 - 2026-05-23
 
 ### Changed
 
-- **huawei-cloud-billing-scout**: resync repo semver to `2.3.x`; lean
-  `SKILL.md`, `catalog.yml`, and ontology headers (~1% noise trim); unchanged
-  semantics, fact-table output contract, and 21 evals
-
-## 1.0.5 - 2026-05-23
-
-### Changed
-
-- **huawei-cloud-billing-scout**: lean `SKILL.md`, `catalog.yml`, and ontology
-  headers (~1% noise trim); same semantics, output contract, and 21 evals
-
-## 1.0.4 - 2026-05-23
-
-### Changed
-
-- **huawei-cloud-billing-scout**: ClawHub republish on the `1.0.x` track; package
-  matches `1.0.3` skill content (semantic ontology, compact fact output, 21 evals)
-
-## 1.0.3 - 2026-05-23
-
-### Changed
-
-- **huawei-cloud-billing-scout**: consolidate semantics into `catalog.yml` +
-  `billing-ontology.yml`; remove per-entity YAML shards and `billing-playbook.md`;
-  streamline `related-commands.md` with verified KooCLI dot-notation templates
-- **Output & QA**: compact fact-based replies (`已证实` / `待核验`), 21 evals, and
-  tighter `validate.sh` / `verify_ops.py` operation contracts
+- **huawei-cloud-billing-scout**: semantic layer in `catalog.yml` +
+  `billing-ontology.yml` (removed per-entity YAML shards and `billing-playbook.md`);
+  streamlined `related-commands.md` with verified KooCLI dot-notation templates
+- Compact fact-table output (`已证实` / `待核验`), **21** evals, tighter
+  `validate.sh` / `verify_ops.py`; lean `SKILL.md` and routing headers (~1% trim)
 
 ### Documentation
 
-- README, catalog, and agent install notes (skills.sh, ClawHub, Hermes direct
-  skill symlink)
+- README, catalog, and agent install paths (skills.sh, ClawHub, Hermes direct skill)
 
-## 1.0.0 - 2026-05-22
+## 2.0.0 - 2026-05-22
 
 First public [SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills)
 release (community, not official Huawei Cloud): ontology-first billing scout with
-58 read-only BSS operations, `skills/` + `qa/` monorepo layout, read-only
+**58** read-only BSS operations, `skills/` + `qa/` monorepo layout, read-only
 guardrails.
