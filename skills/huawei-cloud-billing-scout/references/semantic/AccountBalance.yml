@@ -1,7 +1,7 @@
 name: AccountBalance
 type: api_fact
 source_operation: BSS/ShowCustomerAccountBalances
-grain: one row per account balance snapshot
+grain: 每个账户余额快照一条记录
 description: 账户余额和欠费快照。
 dimensions:
   - name: account_type

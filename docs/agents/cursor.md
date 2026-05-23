@@ -19,3 +19,7 @@ npx skills add ./skills/<skill-name> \
 ```
 
 Skills install to `./.agents/skills/` (gitignored). Review skill content before use; skills run with agent permissions.
+
+Cursor also discovers user and project skills from `~/.cursor/skills/`,
+`.cursor/skills/`, `~/.agents/skills/`, and compatible Claude/Codex skill
+directories. Keep the skill folder name equal to the `name` frontmatter field.

@@ -1,239 +1,248 @@
-# Bridges semantic entities, related-commands.md templates, and KooCLI --help.
-# Update when adding query filters, changing response shapes, or KooCLI upgrades.
+# Cross-layer contract for huawei-cloud-billing-scout.
+# Keep this file in sync with references/semantic/Catalog.yml and related-commands.md.
+
+coverage:
+  expected_query_operations: 58
+  source_version: KooCLI 7.2.2
+  allowed_prefixes: [List, Show]
 
 operations:
   ShowCustomerAccountBalances:
+    domain: customer_billing
     entity: AccountBalance
-    required_flags:
-      - --cli-region
-    documented_flags: []
-    filter_bindings: {}
-    response_roots:
-      - account_balances
-      - debt_amount
-      - currency
-
+    required: []
   ShowCustomerMonthlySum:
+    domain: customer_billing
     entity: MonthlyBillSummary
-    required_flags:
-      - --cli-region
-      - --bill_cycle
-    documented_flags:
-      - --limit
-      - --offset
-      - --service_type_code
-      - --enterprise_project_id
-      - --method
-      - --sub_customer_id
-    filter_bindings:
-      bill_cycle: --bill_cycle
-      service_type_code: --service_type_code
-      enterprise_project_id: --enterprise_project_id
-    response_roots:
-      - bill_sums
-
+    required: [bill_cycle]
+  ListCustomerBillsFeeRecords:
+    domain: customer_billing
+    entity: BillingStatement
+    required: [bill_cycle]
   ListCustomerselfResourceRecords:
+    domain: customer_billing
     entity: ResourceBillRecord
-    required_flags:
-      - --cli-region
-      - --cycle
-    documented_flags:
-      - --limit
-      - --offset
-      - --bill_date_begin
-      - --bill_date_end
-      - --bill_type
-      - --charge_mode
-      - --cloud_service_type
-      - --enterprise_project_id
-      - --region
-      - --resource_id
-      - --trade_id
-      - --statistic_type
-      - --method
-      - --sub_customer_id
-    filter_bindings:
-      cycle: --cycle
-      cloud_service_type: --cloud_service_type
-      resource_id: --resource_id
-      region: --region
-      enterprise_project_id: --enterprise_project_id
-      charge_mode: --charge_mode
-    response_roots:
-      - fee_records
-      - cycle
-
+    required: [cycle]
   ListCustomerselfResourceRecordDetails:
+    domain: customer_billing
     entity: ResourceBillDetail
-    required_flags:
-      - --cli-region
-      - --cycle
-    documented_flags:
-      - --limit
-      - --offset
-      - --statistic_type
-      - --query_type
-      - --bill_cycle_begin
-      - --bill_cycle_end
-      - --bill_type
-      - --charge_mode
-      - --cloud_service_type
-      - --enterprise_project_id
-      - --region
-      - --res_instance_id
-      - --resource_type
-      - --method
-      - --sub_customer_id
-      - --payer_account_id
-    filter_bindings:
-      cycle: --cycle
-      res_instance_id: --res_instance_id
-      cloud_service_type: --cloud_service_type
-      resource_type_code: --resource_type
-      region: --region
-      enterprise_project_id: --enterprise_project_id
-      charge_mode: --charge_mode
-    response_roots:
-      - monthly_records
+    required: [cycle]
+  ListCustomerAccountChangeRecords:
+    domain: customer_billing
+    entity: AccountChangeRecord
+    required: [balance_type]
+  ListStoredValueCards:
+    domain: customer_billing
+    entity: StoredValueCard
+    required: [status]
 
   ListCosts:
+    domain: cost_and_usage
     entity: CostAnalysis
-    required_flags:
-      - --cli-region
-      - --amount_type
-      - --cost_type
-      - --time_condition.begin_time
-      - --time_condition.end_time
-      - --time_condition.time_measure_id
-      - --groupby.1.type
-      - --groupby.1.key
-    documented_flags:
-      - --limit
-      - --offset
-      - --filters.1.filter_factor.key
-      - --filters.1.filter_factor.value.1
-      - --filters.1.operator
-      - --filters.2.filter_factor.key
-      - --filters.2.filter_factor.value.1
-      - --filters.2.operator
-    filter_bindings:
-      amount_type: --amount_type
-      cost_type: --cost_type
-      time_condition: --time_condition.begin_time
-      groupby: --groupby.1.key
-    groupby_keys:
-      - CLOUD_SERVICE_TYPE
-      - RESOURCE_TYPE
-      - REGION_CODE
-      - ENTERPRISE_PROJECT_ID
-      - CHARGING_MODE
-      - RESOURCE_ID
-    filter_dimension_keys:
-      - CLOUD_SERVICE_TYPE
-      - REGION_CODE
-      - ENTERPRISE_PROJECT_ID
-      - CHARGING_MODE
-    response_roots:
-      - costs
-      - time_condition
-
-  ListCustomerAccountChangeRecords:
-    entity: AccountChangeRecord
-    required_flags:
-      - --cli-region
-      - --balance_type
-    documented_flags:
-      - --limit
-      - --offset
-      - --trade_time_begin
-      - --trade_time_end
-      - --trade_type
-      - --revenue_expense_type
-      - --trade_id
-      - --payment_channel_id
-      - --payment_channel_no
-    filter_bindings:
-      balance_type: --balance_type
-      trade_time: --trade_time_begin
-      trade_type: --trade_type
-      revenue_expense_type: --revenue_expense_type
-      trade_id: --trade_id
-    response_roots:
-      - records
-      - balance_type
-
-  ListCustomerCouponChangeRecords:
-    entity: CouponChangeRecord
-    required_flags:
-      - --cli-region
-      - --balance_type
-    documented_flags:
-      - --limit
-      - --offset
-      - --trade_time_begin
-      - --trade_time_end
-      - --trade_type
-      - --revenue_expense_type
-      - --trade_id
-      - --coupon_id
-    filter_bindings:
-      balance_type: --balance_type
-      coupon_id: --coupon_id
-      trade_time: --trade_time_begin
-      trade_type: --trade_type
-      revenue_expense_type: --revenue_expense_type
-      trade_id: --trade_id
-    response_roots:
-      - records
-      - balance_type
+    required: [amount_type, cost_type, time_condition.begin_time, time_condition.end_time, time_condition.time_measure_id]
+  ListCustomerBillsMonthlyBreakDown:
+    domain: cost_and_usage
+    entity: AmortizedCost
+    required: [shared_month]
+  ListResourceUsageSummary:
+    domain: cost_and_usage
+    entity: ResourceUsage
+    required: [bill_cycle, service_type_code, resource_type_code, usage_type]
+  ListResourceUsage:
+    domain: cost_and_usage
+    entity: ResourceUsage
+    required: [bill_cycle, resource_id, service_type_code, resource_type_code, usage_type]
 
   ListFreeResourceInfos:
+    domain: discount_entitlement
     entity: FreeResourcePackage
-    required_flags:
-      - --cli-region
-    documented_flags:
-      - --limit
-      - --offset
-      - --product_id
-      - --product_name
-      - --status
-      - --region_code
-      - --enterprise_project_id
-      - --order_id
-      - --service_type_code_list.1
-    filter_bindings:
-      product_id: --product_id
-      product_name: --product_name
-      status: --status
-      free_resource_id: --product_id
-    response_roots:
-      - free_resource_packages
-
+    required: []
   ListFreeResourceUsages:
+    domain: discount_entitlement
     entity: FreeResourcePackage
-    required_flags:
-      - --cli-region
-      - --free_resource_ids.1
-    documented_flags: []
-    filter_bindings:
-      free_resource_id: --free_resource_ids.1
-    response_roots:
-      - free_resource_usages
-
+    required: []
   ListFreeResourcesUsageRecords:
+    domain: discount_entitlement
     entity: FreeResourcePackage
-    required_flags:
-      - --cli-region
-      - --deduct_time_begin
-      - --deduct_time_end
-    documented_flags:
-      - --limit
-      - --offset
-      - --free_resource_id
-      - --product_id
-      - --resource_type_code
-    filter_bindings:
-      product_id: --product_id
-      free_resource_id: --free_resource_id
-    response_roots:
-      - free_resource_usage_records
+    required: [deduct_time_begin, deduct_time_end]
+  ListCustomerCouponChangeRecords:
+    domain: discount_entitlement
+    entity: CouponChangeRecord
+    required: [balance_type]
+  ListQuotaCoupons:
+    domain: discount_entitlement
+    entity: CouponQuota
+    required: []
+  ListIssuedCouponQuotas:
+    domain: discount_entitlement
+    entity: CouponQuota
+    required: []
+  ListCouponQuotasRecords:
+    domain: discount_entitlement
+    entity: CouponQuota
+    required: []
+  ListIssuedPartnerCoupons:
+    domain: discount_entitlement
+    entity: CouponQuota
+    required: []
+  ListPartnerCouponsRecord:
+    domain: discount_entitlement
+    entity: CouponQuota
+    required: []
+  ListSubCustomerCoupons:
+    domain: discount_entitlement
+    entity: CouponQuota
+    required: []
+  ListOrderCouponsByOrderId:
+    domain: discount_entitlement
+    entity: OrderEvidence
+    required: [order_id]
+
+  ListCustomerOrders:
+    domain: order_evidence
+    entity: OrderEvidence
+    required: []
+  ShowCustomerOrderDetails:
+    domain: order_evidence
+    entity: OrderEvidence
+    required: [order_id]
+  ShowRefundOrderDetails:
+    domain: order_evidence
+    entity: OrderEvidence
+    required: [order_id]
+  ListOrderDiscounts:
+    domain: order_evidence
+    entity: OrderEvidence
+    required: [order_id]
+
+  ListEnterpriseOrganizations:
+    domain: enterprise_multi_account
+    entity: EnterpriseAccountContext
+    required: []
+  ListEnterpriseSubCustomers:
+    domain: enterprise_multi_account
+    entity: EnterpriseAccountContext
+    required: []
+  ListEnterpriseMultiAccount:
+    domain: enterprise_multi_account
+    entity: EnterpriseAccountContext
+    required: [balance_type, sub_customer_id]
+  ShowMultiAccountTransferAmount:
+    domain: enterprise_multi_account
+    entity: EnterpriseAccountContext
+    required: [balance_type]
+  ListMultiAccountTransferCoupons:
+    domain: enterprise_multi_account
+    entity: EnterpriseAccountContext
+    required: []
+  ListMultiAccountRetrieveCoupons:
+    domain: enterprise_multi_account
+    entity: EnterpriseAccountContext
+    required: [sub_customer_id]
+  ListConsumeSubCustomers:
+    domain: enterprise_multi_account
+    entity: EnterpriseBilling
+    required: [bill_cycle]
+  ListSubcustomerMonthlyBills:
+    domain: enterprise_multi_account
+    entity: EnterpriseBilling
+    required: [cycle, charge_mode]
+  ListSubCustomerBillDetail:
+    domain: enterprise_multi_account
+    entity: EnterpriseBilling
+    required: [bill_cycle, customer_id]
+
+  ListSubCustomers:
+    domain: partner_resale
+    entity: PartnerAccountContext
+    required: []
+  ListSubCustomerNewTag:
+    domain: partner_resale
+    entity: PartnerAccountContext
+    required: []
+  ListCustomerOnDemandResources:
+    domain: partner_resale
+    entity: PartnerAccountContext
+    required: [customer_id]
+  ListPayPerUseCustomerResources:
+    domain: partner_resale
+    entity: PartnerAccountContext
+    required: []
+  ListCustomersBalancesDetail:
+    domain: partner_resale
+    entity: PartnerAccountContext
+    required: []
+  ListPartnerBalances:
+    domain: partner_resale
+    entity: PartnerAccountContext
+    required: []
+  ListPartnerAccountChangeRecords:
+    domain: partner_resale
+    entity: PartnerBilling
+    required: [balance_type]
+  ListPartnerAdjustRecords:
+    domain: partner_resale
+    entity: PartnerBilling
+    required: []
+  ListIndirectPartners:
+    domain: partner_resale
+    entity: PartnerAccountContext
+    required: []
+
+  ListServiceTypes:
+    domain: reference_dimensions
+    entity: ReferenceDimensions
+    required: []
+  ListResourceTypes:
+    domain: reference_dimensions
+    entity: ReferenceDimensions
+    required: []
+  ListUsageTypes:
+    domain: reference_dimensions
+    entity: ReferenceDimensions
+    required: []
+  ListMeasureUnits:
+    domain: reference_dimensions
+    entity: ReferenceDimensions
+    required: []
+  ListConversions:
+    domain: reference_dimensions
+    entity: ReferenceDimensions
+    required: []
+  ListServiceResources:
+    domain: reference_dimensions
+    entity: ReferenceDimensions
+    required: [service_type_code]
+  ListProvinces:
+    domain: reference_dimensions
+    entity: ReferenceDimensions
+    required: []
+  ListCities:
+    domain: reference_dimensions
+    entity: ReferenceDimensions
+    required: [province_code]
+  ListCounties:
+    domain: reference_dimensions
+    entity: ReferenceDimensions
+    required: [city_code]
+
+  ListOnDemandResourceRatings:
+    domain: quote_and_identity
+    entity: PricingQuote
+    required: [project_id]
+  ListRateOnPeriodDetail:
+    domain: quote_and_identity
+    entity: PricingQuote
+    required: [project_id]
+  ListRenewRateOnPeriod:
+    domain: quote_and_identity
+    entity: PricingQuote
+    required: [period_num, period_type]
+  ListIncentiveDiscountPolicies:
+    domain: quote_and_identity
+    entity: PricingQuote
+    required: [time]
+  ShowRealnameAuthenticationReviewResult:
+    domain: quote_and_identity
+    entity: IdentityReview
+    required: [customer_id]

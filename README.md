@@ -33,7 +33,7 @@ Same YAML ───────► parse dimensions/measures → evidence table 
 | Ontology | Fact definitions + response parsing | `references/semantic/*.yml` |
 | Commands | API/CLI templates | `related-commands.md`, IAM, install notes |
 | Playbook | Multi-step flows, user-readable output | `*-playbook.md` |
-| Semantics | Semantic model + glossary | `*-semantics.md` |
+| Catalog / terms | Domain routing, semantic model and optional glossary | `semantic/Catalog.yml`, `*-semantics.md` |
 
 `skills/<name>/` is the installable runtime bundle; `qa/<name>/` holds evals and validation and is never copied by `npx skills add`. Listed on [skills.sh](https://www.skills.sh/), indexed by [SkillsMP](https://skillsmp.com/), and publishable to [ClawHub](https://clawhub.ai/).
 
@@ -137,10 +137,28 @@ New skill:
 
 ## Marketplaces
 
-| Platform | How it is listed | What you need |
-| --- | --- | --- |
-| [skills.sh](https://www.skills.sh/) | Install telemetry via `npx skills add` | Public GitHub repo; README install commands |
-| [SkillsMP](https://skillsmp.com/) | GitHub crawler (no submit form) | Public repo with `skills/<name>/SKILL.md`; repo **≥2 stars** |
-| [ClawHub](https://clawhub.ai/) | `clawhub publish` from skill folder | GitHub account ≥1 week; `metadata.openclaw` in frontmatter; published under **MIT-0** on ClawHub |
+- [skills.sh](https://www.skills.sh/):
+  public GitHub plus `npx skills add`; requires valid
+  `skills/<name>/SKILL.md` and README install commands.
+- [SkillsMP](https://skillsmp.com/):
+  GitHub crawler and semantic search; requires `SKILL.md` frontmatter and the
+  `claude-skills` or `claude-code-skill` GitHub topic.
+- [ClawHub](https://clawhub.ai/):
+  `clawhub skill publish <path>`; requires GitHub account age, semver version,
+  text-only bundle, and accurate `metadata.openclaw`.
+- Cursor:
+  `npx skills add ... --agent cursor`; also discovers `.cursor/skills/` and
+  `.agents/skills/`.
+- Claude Code:
+  `npx skills add ... --agent claude-code`; plugin packaging is optional here.
+- Codex:
+  `npx skills add ... --agent codex`; plugin packaging is optional for direct
+  skill installs.
 
-Each skill lives at `skills/<name>/SKILL.md` with `name`, keyword-rich `description`, and optional `license` / `compatibility` / `metadata` (including `metadata.openclaw` for ClawHub). See [docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md) for the reference skill.
+Each skill lives at `skills/<name>/SKILL.md` with `name`, a keyword-rich
+`description`, concise `compatibility`, and registry metadata when needed.
+ClawHub publishes skills under MIT-0 terms, so installable skill frontmatter must
+not declare a conflicting license even though this repository remains
+Apache-2.0. See
+[docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md)
+for the reference skill.

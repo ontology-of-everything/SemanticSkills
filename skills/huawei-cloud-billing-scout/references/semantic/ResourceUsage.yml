@@ -1,0 +1,36 @@
+name: ResourceUsage
+type: api_fact
+source_operations:
+  - BSS/ListResourceUsageSummary
+  - BSS/ListResourceUsage
+grain: 每个使用量类型汇总行或资源用量明细行一条记录
+description: CDN/OBS/IEC/VPC 使用量汇总与明细；服务于 95 计费、流量和带宽口径核验。
+intent_aliases: [使用量, 流量, 带宽, 95计费, OBS用量, CDN用量]
+required_context:
+  summary: [bill_cycle, service_type_code, resource_type_code, usage_type]
+  detail: [bill_cycle, service_type_code, resource_type_code, usage_type, resource_id]
+dimensions:
+  - name: bill_cycle
+    path: bill_cycle
+    type: time
+  - name: service_type_code
+    path: service_type_code
+    type: code
+  - name: resource_type_code
+    path: resource_type_code
+    type: code
+  - name: usage_type
+    path: usage_type
+    type: code
+  - name: resource_id
+    path: resource_id
+    type: id
+    sensitivity: redact_by_default
+measures:
+  - name: usage
+    path: records[].usage
+    type: number
+  - name: measure_id
+    path: records[].measure_id
+    type: code
+evidence_boundary: 使用量不是费用；费用需回连账单、成本或详单金额。

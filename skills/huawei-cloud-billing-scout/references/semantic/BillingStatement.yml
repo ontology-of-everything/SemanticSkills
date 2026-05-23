@@ -1,0 +1,44 @@
+name: BillingStatement
+type: api_fact
+source_operation: BSS/ListCustomerBillsFeeRecords
+grain: 每个账期流水行一条记录
+description: 消费流水账单；对账时连接订单、交易、账单类型和支付状态。
+intent_aliases: [流水账单, 消费流水, 订单对账, 支付状态, 账期内交易]
+required_context: [bill_cycle]
+dimensions:
+  - name: bill_cycle
+    path: bill_cycle
+    type: time
+    description: 流水所在账期。
+  - name: bill_date
+    path: fee_records[].bill_date
+    type: date
+    description: 流水日期。
+  - name: service_type_code
+    path: fee_records[].service_type_code
+    type: code
+    description: 云服务类型编码。
+  - name: resource_type_code
+    path: fee_records[].resource_type_code
+    type: code
+    description: 资源类型编码。
+  - name: trade_id
+    path: fee_records[].trade_id
+    type: id
+    sensitivity: redact_by_default
+    description: 订单或交易 ID。
+  - name: status
+    path: fee_records[].status
+    type: enum
+    description: 支付状态。
+measures:
+  - name: official_amount
+    path: fee_records[].official_amount
+    type: money
+  - name: consume_amount
+    path: fee_records[].consume_amount
+    type: money
+  - name: cash_amount
+    path: fee_records[].cash_amount
+    type: money
+evidence_boundary: 账期流水可解释消费和交易证据；不能单独证明资源当前仍存在。

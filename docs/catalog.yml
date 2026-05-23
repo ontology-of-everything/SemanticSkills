@@ -6,9 +6,11 @@ skills:
     qa: qa/huawei-cloud-billing-scout
     domain: cloud
     subdomains: [billing, finops]
-    summary: Read-only Huawei Cloud billing scout via KooCLI/BSS
-    summary_zh: 华为云账务只读侦察（KooCLI/BSS）
-    agents: [cursor, claude-code, codex]
-    compatibility: hcloud (KooCLI), read-only BSS IAM, outbound network; no agent auto-install
-    version: "2.0.1"
+    summary: Read-only Huawei Cloud BSS billing scout with 58 semantic query operations
+    summary_zh: 华为云 BSS 账务只读侦察（58 个语义化查询 Operation）
+    agents: [cursor, claude-code, codex, openclaw]
+    compatibility: hcloud KooCLI 7.2+, read-only BSS IAM, outbound network; no agent auto-install
+    version: "2.1.0"
     marketplaces: [skills-sh, skillsmp, clawhub]
+    distribution: direct-skill
+    clawhub_license: MIT-0 on ClawHub; repository source remains Apache-2.0

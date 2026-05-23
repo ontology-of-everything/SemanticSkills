@@ -1,0 +1,39 @@
+name: CouponQuota
+type: api_fact
+source_operations:
+  - BSS/ListQuotaCoupons
+  - BSS/ListIssuedCouponQuotas
+  - BSS/ListCouponQuotasRecords
+  - BSS/ListIssuedPartnerCoupons
+  - BSS/ListPartnerCouponsRecord
+  - BSS/ListSubCustomerCoupons
+grain: 每个券额度、已发放优惠券或券操作记录一条记录
+description: 伙伴/经销商券额度、发放、回收和客户券信息。
+intent_aliases: [券额度, 优惠券额度, 已发放代金券, 券操作记录, 客户优惠券]
+dimensions:
+  - name: coupon_id
+    path: coupon_id
+    type: id
+    sensitivity: redact_by_default
+  - name: quota_id
+    path: quota_id
+    type: id
+    sensitivity: redact_by_default
+  - name: customer_id
+    path: customer_id
+    type: id
+    sensitivity: redact_by_default
+  - name: status
+    path: status
+    type: enum
+  - name: operation_time
+    path: operation_time
+    type: time
+measures:
+  - name: quota_amount
+    path: quota_amount
+    type: money
+  - name: coupon_amount
+    path: coupon_amount
+    type: money
+evidence_boundary: 只读额度与操作记录；不执行发放、回收或支付抵扣。

@@ -23,22 +23,44 @@ IAM Action 会随账号类型、站点和服务版本变化。本文给权限设
 | --- | --- |
 | `ShowCustomerAccountBalances` | 余额、欠费金额 |
 | `ShowCustomerMonthlySum` | 月度汇总账单 |
+| `ListCustomerBillsFeeRecords` | 消费流水账单 |
 | `ListCustomerselfResourceRecords` | 资源消费记录 |
 | `ListCustomerselfResourceRecordDetails` | 资源详单、用量明细 |
+| `ListCustomerBillsMonthlyBreakDown` | 月度摊销成本 |
 | `ListCustomerAccountChangeRecords` | 现金/授信账户收支 |
 | `ListCustomerCouponChangeRecords` | 代金券收支 |
 | `ListStoredValueCards` | 储值卡列表 |
 | `ListCustomerOrders` | 订单列表 |
 | `ShowCustomerOrderDetails` | 订单详情 |
 | `ShowRefundOrderDetails` | 退订/退款订单证据 |
+| `ListOrderCouponsByOrderId` | 订单可用券 |
+| `ListOrderDiscounts` | 订单可用折扣 |
 | `ListFreeResourceInfos` | 资源包列表 |
 | `ListFreeResourceUsages` | 资源包余量 |
 | `ListFreeResourcesUsageRecords` | 资源包抵扣明细 |
 | `ListCosts` | 成本分析 |
+| `ListResourceUsageSummary` | CDN/OBS/IEC/VPC 使用量汇总 |
+| `ListResourceUsage` | CDN/OBS/IEC/VPC 资源使用量明细 |
+| `ListQuotaCoupons` | 伙伴优惠券额度 |
+| `ListIssuedCouponQuotas` | 已发放券额度 |
+| `ListCouponQuotasRecords` | 券额度操作记录 |
+| `ListIssuedPartnerCoupons` | 已发放优惠券 |
+| `ListPartnerCouponsRecord` | 优惠券发放/回收记录 |
+| `ListSubCustomerCoupons` | 伙伴自身优惠券 |
 | `ListServiceTypes` | 云服务类型字典 |
 | `ListResourceTypes` | 资源类型字典 |
 | `ListUsageTypes` | 使用量类型字典 |
 | `ListMeasureUnits` | 计量单位字典 |
+| `ListConversions` | 计量单位进制换算 |
+| `ListServiceResources` | 服务到资源类型关系 |
+| `ListProvinces` | 省份字典 |
+| `ListCities` | 城市字典 |
+| `ListCounties` | 区县字典 |
+| `ListOnDemandResourceRatings` | 按需产品价格试算 |
+| `ListRateOnPeriodDetail` | 包年包月开通价格试算 |
+| `ListRenewRateOnPeriod` | 包年包月续订价格试算 |
+| `ListIncentiveDiscountPolicies` | 产品折扣/激励策略 |
+| `ShowRealnameAuthenticationReviewResult` | 实名认证审核结果 |
 
 策略骨架（示意，落地前以 IAM 控制台/API Explorer 的实际 Action 为准）：
 
@@ -62,15 +84,28 @@ IAM Action 会随账号类型、站点和服务版本变化。本文给权限设
 
 ## 多账号只读
 
-仅在企业主/子账号关系和授权成立时使用；普通账号可能返回 403。
+仅在企业主/子账号关系和授权成立时使用；普通账号可能返回 403。伙伴/代售接口同样需要确认授权关系和账号范围，不能从当前账号自动扩大到客户列表。
 
 | 操作 | 用途 |
 | --- | --- |
+| `ListEnterpriseOrganizations` | 企业组织结构 |
 | `ListEnterpriseSubCustomers` | 企业子账号列表 |
-| `ListEnterpriseMultiAccount` | 企业多账号关系；需 `balance_type`、`sub_customer_id` |
-| `ListConsumeSubCustomers` | 有消费的子客户；部分 KooCLI 元数据可能不可用 |
+| `ListEnterpriseMultiAccount` | 企业子账号可回收余额；需 `balance_type`、`sub_customer_id` |
+| `ShowMultiAccountTransferAmount` | 企业主可拨款余额 |
+| `ListMultiAccountTransferCoupons` | 企业主可拨款优惠券 |
+| `ListMultiAccountRetrieveCoupons` | 企业子账号可回收优惠券 |
+| `ListConsumeSubCustomers` | 有消费的子客户 |
 | `ListSubcustomerMonthlyBills` | 子客户月度账单 |
-| `ListSubCustomerBillDetail` | 子客户账单明细；部分 KooCLI 元数据可能不可用 |
+| `ListSubCustomerBillDetail` | 子客户账单明细 |
+| `ListSubCustomers` | 伙伴客户列表 |
+| `ListSubCustomerNewTag` | 客户新客标签 |
+| `ListCustomerOnDemandResources` | 代售客户按需资源 |
+| `ListPayPerUseCustomerResources` | 包年包月资源 |
+| `ListCustomersBalancesDetail` | 代售客户余额 |
+| `ListPartnerBalances` | 伙伴/经销商余额 |
+| `ListPartnerAccountChangeRecords` | 伙伴收支流水 |
+| `ListPartnerAdjustRecords` | 伙伴调账记录 |
+| `ListIndirectPartners` | 二级经销商列表 |
 
 财务独立子账号、伙伴、代售类客户有额外约束。接口返回无权限时，不绕过，不扩大查询。
 

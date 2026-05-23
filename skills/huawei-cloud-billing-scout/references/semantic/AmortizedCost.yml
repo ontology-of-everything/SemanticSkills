@@ -1,0 +1,33 @@
+name: AmortizedCost
+type: api_fact
+source_operation: BSS/ListCustomerBillsMonthlyBreakDown
+grain: 每个摊销月、服务/资源/账号维度组合一条记录
+description: 月度摊销成本；用于解释成本中心、账期摊销和现金扣费口径差异。
+intent_aliases: [摊销成本, 月度摊销, 成本分摊]
+required_context: [shared_month]
+dimensions:
+  - name: shared_month
+    path: shared_month
+    type: time
+  - name: service_type_code
+    path: records[].service_type_code
+    type: code
+  - name: resource_type_code
+    path: records[].resource_type_code
+    type: code
+  - name: resource_id
+    path: records[].resource_id
+    type: id
+    sensitivity: redact_by_default
+  - name: enterprise_project_id
+    path: records[].enterprise_project_id
+    type: id
+    sensitivity: redact_by_default
+measures:
+  - name: amortized_cost
+    path: records[].amortized_cost
+    type: money
+  - name: cash_amount
+    path: records[].cash_amount
+    type: money
+evidence_boundary: 摊销解释成本归属；不能直接等同当月现金流水。

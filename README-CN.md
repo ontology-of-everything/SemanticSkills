@@ -34,7 +34,7 @@ English: [README.md](README.md).
 | 本体语义 | 事实定义 + 响应解析 | `references/semantic/*.yml` |
 | 命令   | API/CLI 模板      | `related-commands.md`、IAM、安装说明               |
 | 协作手册 | 多步编排、用户可读输出 | `*-playbook.md`                              |
-| 语义说明 | 语义模型 + 术语口径 | `*-semantics.md` |
+| 目录/术语 | 领域路由、语义模型和可选术语口径 | `semantic/Catalog.yml`、`*-semantics.md` |
 
 
 `skills/<name>/` 是可安装运行时包；`qa/<name>/` 放 eval 与验证脚本，不会被 `npx skills add` 复制。可出现在 [skills.sh](https://www.skills.sh/)、由 [SkillsMP](https://skillsmp.com/) 抓取，并可发布到 [ClawHub](https://clawhub.ai/)。
@@ -141,10 +141,25 @@ HUAWEICLOUD_BILLING_SCOUT_CYCLE=2025-04 \
 
 ## 市场收录
 
-| 平台 | 收录方式 | 你需要做的 |
-| --- | --- | --- |
-| [skills.sh](https://www.skills.sh/) | `npx skills add` 安装遥测 | 公开 GitHub 仓库；README 写清安装命令 |
-| [SkillsMP](https://skillsmp.com/) | GitHub 爬虫（无提交表单） | 公开仓库 + `skills/<name>/SKILL.md`；仓库 **≥2 stars** |
-| [ClawHub](https://clawhub.ai/) | 在技能目录执行 `clawhub publish` | GitHub 账号满 1 周；frontmatter 含 `metadata.openclaw`；在 ClawHub 上以 **MIT-0** 发布 |
+- [skills.sh](https://www.skills.sh/)：
+  公开 GitHub + `npx skills add`；需要有效的
+  `skills/<name>/SKILL.md` 与 README 安装命令。
+- [SkillsMP](https://skillsmp.com/)：
+  GitHub 爬虫和语义搜索；需要 `SKILL.md` frontmatter，并添加
+  `claude-skills` 或 `claude-code-skill` GitHub topic。
+- [ClawHub](https://clawhub.ai/)：
+  `clawhub skill publish <path>`；需要 GitHub 账号年龄、semver 版本、
+  纯文本包和准确的 `metadata.openclaw`。
+- Cursor：
+  `npx skills add ... --agent cursor`；也发现 `.cursor/skills/` 与
+  `.agents/skills/`。
+- Claude Code：
+  `npx skills add ... --agent claude-code`；本轮不需要插件市场包装。
+- Codex：
+  `npx skills add ... --agent codex`；直接技能安装不需要 Codex 插件包装。
 
-每个技能位于 `skills/<name>/SKILL.md`，包含 `name`、带触发词的 `description`，以及可选的 `license` / `compatibility` / `metadata`（含 ClawHub 用的 `metadata.openclaw`）。参考技能见 [docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md)。
+每个技能位于 `skills/<name>/SKILL.md`，包含 `name`、带触发词的
+`description`、精简的 `compatibility`，以及需要时的 registry metadata。
+ClawHub 发布版本统一按 MIT-0 授权，因此可安装技能 frontmatter 不写冲突的
+license；本仓库源码仍保留 Apache-2.0。参考技能见
+[docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md)。

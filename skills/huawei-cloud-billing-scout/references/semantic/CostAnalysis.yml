@@ -1,7 +1,7 @@
 name: CostAnalysis
 type: api_fact
 source_operation: BSS/ListCosts
-grain: one row per requested time bucket and group-by dimension set
+grain: 每个请求时间桶和分组维度组合一条记录
 description: 成本分析聚合结果。
 dimensions:
   - name: time_condition

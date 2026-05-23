@@ -35,11 +35,8 @@ Required: `name`, `description` (trigger keywords + scope).
 Recommended for marketplace discovery ([SkillsMP](https://skillsmp.com/), [skills.sh](https://www.skills.sh/), [ClawHub](https://clawhub.ai/)):
 
 ```yaml
-license: Apache-2.0
 compatibility: <bins, IAM, network; note if agent must not auto-install>
 metadata:
-  author: ontology-of-everything
-  version: "1.0.0"
   openclaw:          # ClawHub security review only
     requires:
       bins: [<cli>]
@@ -51,9 +48,14 @@ metadata:
 ```
 
 - **`description`**: English + Chinese trigger phrases, task scope, and explicit refuse rules (payment/delete/refund).
-- **SkillsMP**: public GitHub repo, `skills/<name>/SKILL.md`, repo **≥2 stars** (crawler filter).
+- **License**: keep the repository license at the repo root. Do not put a
+  conflicting `license` field in installable skill frontmatter when targeting
+  ClawHub, because ClawHub-published skills are MIT-0.
+- **SkillsMP**: public GitHub repo with `SKILL.md` frontmatter. Add GitHub
+  topic `claude-skills` or `claude-code-skill` before the next crawler sync.
 - **skills.sh**: same layout; promote `npx skills add <org>/SemanticSkills --skill <name> -y` in README; optional badge `https://skills.sh/b/<org>/SemanticSkills`.
-- **ClawHub**: publish from `skills/<name>/` with `clawhub publish`; registry license is **MIT-0** (GitHub may stay Apache-2.0); declare `metadata.openclaw` so scans match runtime behavior.
+- **ClawHub**: publish from `skills/<name>/` with `clawhub skill publish`.
+  Declare `metadata.openclaw` so scans match runtime behavior.
 
 Keep frontmatter concise; put long guidance in `references/`.
 

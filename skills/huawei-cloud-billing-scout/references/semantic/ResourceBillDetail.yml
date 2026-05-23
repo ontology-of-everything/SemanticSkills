@@ -1,7 +1,7 @@
 name: ResourceBillDetail
 type: api_fact
 source_operation: BSS/ListCustomerselfResourceRecordDetails
-grain: one row per resource bill detail line
+grain: 每条资源账单详单一条记录
 description: 资源详单，适合日级、资源级、用量级钻取。
 dimensions:
   - name: cycle

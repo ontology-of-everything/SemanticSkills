@@ -5,7 +5,7 @@ Install a skill from this repo:
 ```bash
 npx skills add ontology-of-everything/SemanticSkills \
   --skill <skill-name> \
-  --agent claude \
+  --agent claude-code \
   --copy
 ```
 

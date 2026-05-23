@@ -1,0 +1,42 @@
+name: EnterpriseAndPartnerContext
+type: context_domain
+description: 企业主、子账号、伙伴、代售和经销商视角；决定账务范围和授权边界。
+scope_rule: 未明确企业/伙伴范围时，不把当前账号查询扩大到 `all` 或客户列表。
+entities:
+  - name: EnterpriseAccountContext
+    grain: 每个组织节点、子客户、可拨款余额或可回收优惠券一条记录
+    source_operations:
+      - BSS/ListEnterpriseOrganizations
+      - BSS/ListEnterpriseSubCustomers
+      - BSS/ListEnterpriseMultiAccount
+      - BSS/ShowMultiAccountTransferAmount
+      - BSS/ListMultiAccountTransferCoupons
+      - BSS/ListMultiAccountRetrieveCoupons
+  - name: EnterpriseBilling
+    grain: 每个子客户账单汇总或明细行一条记录
+    source_operations:
+      - BSS/ListConsumeSubCustomers
+      - BSS/ListSubcustomerMonthlyBills
+      - BSS/ListSubCustomerBillDetail
+  - name: PartnerAccountContext
+    grain: 每个伙伴客户、二级经销商、标签、资源或余额一条记录
+    source_operations:
+      - BSS/ListSubCustomers
+      - BSS/ListSubCustomerNewTag
+      - BSS/ListIndirectPartners
+      - BSS/ListCustomerOnDemandResources
+      - BSS/ListPayPerUseCustomerResources
+      - BSS/ListCustomersBalancesDetail
+      - BSS/ListPartnerBalances
+  - name: PartnerBilling
+    grain: 每个伙伴账户流水或调账记录一条记录
+    source_operations:
+      - BSS/ListPartnerAccountChangeRecords
+      - BSS/ListPartnerAdjustRecords
+sensitive_dimensions:
+  - customer_id
+  - sub_customer_id
+  - indirect_partner_id
+  - account_name
+  - resource_id
+evidence_boundary: 这些事实证明关系、范围或伙伴账务记录；权限失败不证明账务不存在。

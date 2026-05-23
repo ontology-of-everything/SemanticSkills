@@ -1,7 +1,7 @@
 name: MonthlyBillSummary
 type: api_fact
 source_operation: BSS/ShowCustomerMonthlySum
-grain: one row per bill cycle, service type, resource type, charge mode, bill type
+grain: 每个账期、云服务、资源类型、计费模式和账单类型组合一条记录
 description: 月度消费汇总账单。
 dimensions:
   - name: bill_cycle

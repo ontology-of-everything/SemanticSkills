@@ -1,0 +1,24 @@
+name: PricingAndIdentity
+type: auxiliary_fact_domain
+description: 报价、折扣策略和实名认证审核结果；只读咨询，不替代账单事实。
+entities:
+  - name: PricingQuote
+    source_operations:
+      - BSS/ListOnDemandResourceRatings
+      - BSS/ListRateOnPeriodDetail
+      - BSS/ListRenewRateOnPeriod
+      - BSS/ListIncentiveDiscountPolicies
+    grain: 每个产品价格、续订报价或折扣策略结果一条记录
+    required_context:
+      on_demand: [project_id]
+      period: [project_id]
+      renewal: [period_num, period_type]
+    measures: [official_amount, discount_amount, final_amount]
+    evidence_boundary: 报价不是已出账金额；实际费用以账单、订单和合同口径为准。
+  - name: IdentityReview
+    source_operations:
+      - BSS/ShowRealnameAuthenticationReviewResult
+    grain: 每个客户实名认证审核结果一条记录
+    required_context: [customer_id]
+    evidence_boundary: 只查审核结果；不提交或变更实名认证。
+safety_rule: 靠近下单、续费、支付或实名变更时，只读说明，拒绝代操作。

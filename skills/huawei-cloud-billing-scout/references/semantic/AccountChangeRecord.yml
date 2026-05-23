@@ -1,7 +1,7 @@
 name: AccountChangeRecord
 type: api_fact
 source_operation: BSS/ListCustomerAccountChangeRecords
-grain: one row per cash or credit account transaction
+grain: 每条现金、授信或储值账户交易一条记录
 description: 现金、授信、储值类收支流水。
 dimensions:
   - name: balance_type

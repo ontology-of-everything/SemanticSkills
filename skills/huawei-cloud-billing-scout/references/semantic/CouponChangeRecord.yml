@@ -1,7 +1,7 @@
 name: CouponChangeRecord
 type: api_fact
 source_operation: BSS/ListCustomerCouponChangeRecords
-grain: one row per coupon transaction
+grain: 每条代金券交易一条记录
 description: 代金券收入、消费、退券、过期、回收流水。
 dimensions:
   - name: balance_type

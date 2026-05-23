@@ -1,7 +1,7 @@
 name: ResourceBillRecord
 type: api_fact
 source_operation: BSS/ListCustomerselfResourceRecords
-grain: one row per resource consumption record
+grain: 每条资源消费记录一条记录
 description: 资源维度消费记录，适合定位持续扣费资源。
 dimensions:
   - name: cycle

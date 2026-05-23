@@ -4,8 +4,8 @@ source_operations:
   - BSS/ListFreeResourceInfos
   - BSS/ListFreeResourceUsages
   - BSS/ListFreeResourcesUsageRecords
-grain: one row per resource package, usage snapshot, or deduction record
-description: 资源包库存、余量和抵扣明细；多步查询顺序见 billing-playbook.md §3。
+grain: 每个资源包、余量快照或抵扣记录一条记录
+description: 资源包库存、余量和抵扣明细；多步查询顺序见 billing-playbook.md。
 dimensions:
   - name: product_id
     path: free_resource_packages[].product_id
