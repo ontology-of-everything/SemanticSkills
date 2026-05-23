@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.3.0 - 2026-05-23
+## 1.0.3 - 2026-05-23
 
 ### Changed
 
@@ -15,13 +15,9 @@
 - README, catalog, and agent install notes (skills.sh, ClawHub, Hermes direct
   skill symlink)
 
-## 2.1.0 - 2026-05-23
-
-- Expand to **58** read-only BSS query operations; rebuild QA verifier, eval
-  suite, and marketplace-ready skill docs
-
-## 2.0.0 - 2026-05-22
+## 1.0.0 - 2026-05-22
 
 First public [SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills)
-release (community, not official Huawei Cloud): ontology-first billing scout,
-`skills/` + `qa/` monorepo layout, read-only BSS guardrails.
+release (community, not official Huawei Cloud): ontology-first billing scout with
+58 read-only BSS operations, `skills/` + `qa/` monorepo layout, read-only
+guardrails.

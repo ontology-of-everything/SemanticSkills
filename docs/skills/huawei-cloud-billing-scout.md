@@ -133,8 +133,8 @@ ClawHub publish command (run only after explicit release approval):
 clawhub skill publish ./skills/huawei-cloud-billing-scout \
   --slug huawei-cloud-billing-scout \
   --name "Huawei Cloud Billing Scout" \
-  --version 2.3.0 \
-  --changelog "Remove playbook, lower-case catalog, and simplify output contract" \
+  --version 1.0.3 \
+  --changelog "Consolidate catalog.yml + billing-ontology.yml; compact fact output; 21 evals" \
   --clawscan-note "Read-only hcloud BSS List/Show queries; no writes" \
   --tags latest
 ```

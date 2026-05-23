@@ -142,8 +142,8 @@ if not entry:
     raise SystemExit("docs/catalog.yml missing huawei-cloud-billing-scout")
 if entry.get("path") != "skills/huawei-cloud-billing-scout" or entry.get("qa") != "qa/huawei-cloud-billing-scout":
     raise SystemExit("docs/catalog.yml path/qa mismatch")
-if entry.get("version") != "2.3.0":
-    raise SystemExit("docs/catalog.yml version should be 2.3.0 for the playbook removal rewrite")
+if entry.get("version") != "1.0.3":
+    raise SystemExit("docs/catalog.yml version should match VERSION (1.0.3)")
 if entry.get("distribution") != "direct-skill":
     raise SystemExit("docs/catalog.yml distribution should be direct-skill")
 if "openclaw" not in entry.get("agents", []):
