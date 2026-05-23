@@ -10,7 +10,7 @@ skills:
     summary_zh: ClawHub-first 华为云 BSS 账务只读侦察（语义路由、精简事实表输出 + 58 个只读查询 Operation）
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, read-only BSS IAM, outbound network; no agent auto-install
-    version: "1.0.5"
+    version: "2.3.1"
     marketplaces: [skills-sh, skillsmp, clawhub]
     distribution: direct-skill
     clawhub_license: MIT-0 on ClawHub; repository source remains Apache-2.0

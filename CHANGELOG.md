@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.1 - 2026-05-23
+
+### Changed
+
+- **huawei-cloud-billing-scout**: resync repo semver to `2.3.x`; lean
+  `SKILL.md`, `catalog.yml`, and ontology headers (~1% noise trim); unchanged
+  semantics, fact-table output contract, and 21 evals
+
 ## 1.0.5 - 2026-05-23
 
 ### Changed
