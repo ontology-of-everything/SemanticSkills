@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4 - 2026-05-23
+
+### Changed
+
+- **huawei-cloud-billing-scout**: ClawHub republish on the `1.0.x` track; package
+  matches `1.0.3` skill content (semantic ontology, compact fact output, 21 evals)
+
 ## 1.0.3 - 2026-05-23
 
 ### Changed
