@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.1.0 - 2026-05-23
+
+### Features
+
+- `huawei-cloud-billing-scout`: expand Huawei Cloud BSS semantic coverage to
+  58 read-only query operations across customer billing, cost and usage,
+  discount entitlement, order evidence, enterprise, partner, reference
+  dimensions, pricing, and identity review domains
+- Add `StoredValueCard` and other new semantic fact files so routing covers
+  stored-value cards, amortized cost, usage, billing statements, order evidence,
+  enterprise/partner context, pricing quotes, and reference dimensions
+
+### Documentation
+
+- Refresh README, skill docs, authoring guidance, catalog metadata, and agent
+  install docs for skills.sh, SkillsMP, ClawHub, Cursor, Claude Code, Codex, and
+  Hermes Agent direct skill installs
+- Document ClawHub MIT-0 publishing behavior while keeping the repository source
+  license under Apache-2.0
+
+### Tests
+
+- Rebuild `qa/huawei-cloud-billing-scout` around the 58-operation contract,
+  semantic/doc consistency checks, eval schema validation, marketplace readiness
+  checks, and mutable BSS operation guards
+- Replace stale iteration helper scripts with the current offline verifier and
+  17 objective eval cases covering all semantic domains
+
 ## 2.0.1 - 2026-05-22
 
 ### Documentation

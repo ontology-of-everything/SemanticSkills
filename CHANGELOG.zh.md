@@ -1,5 +1,28 @@
 # 更新日志
 
+## 2.1.0 - 2026-05-23
+
+### 新功能
+
+- `huawei-cloud-billing-scout`：扩展华为云 BSS 语义覆盖到 58 个只读查询
+  Operation，覆盖客户账务、成本用量、优惠权益、订单证据、企业、伙伴、
+  参考维度、报价和实名审核等领域
+- 新增 `StoredValueCard` 等语义事实文件，支持储值卡、摊销成本、用量、
+  账单流水、订单证据、企业/伙伴上下文、报价和参考维度路由
+
+### 文档
+
+- 更新 README、技能文档、编写规范、catalog metadata 和 agent 安装说明，
+  覆盖 skills.sh、SkillsMP、ClawHub、Cursor、Claude Code、Codex 与
+  Hermes Agent 直接技能安装
+- 说明 ClawHub 发布版本按 MIT-0 处理，同时仓库源码继续保留 Apache-2.0
+
+### 测试
+
+- 围绕 58 个 Operation 重建 `qa/huawei-cloud-billing-scout`，加入语义/文档
+  一致性、eval schema、市场发布就绪和可变 BSS 操作拦截检查
+- 用当前离线 verifier 和 17 个覆盖全语义域的客观 eval case 替换旧迭代脚本
+
 ## 2.0.1 - 2026-05-22
 
 ### 文档
