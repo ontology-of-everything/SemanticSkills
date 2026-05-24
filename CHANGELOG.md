@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.5 - 2026-05-24
+
+### Changed
+
+- **huawei-cloud-billing-scout**: English-first marketplace title
+  **Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation**; longer
+  English `description` for search and skill routing (Chinese display name unchanged)
+
 ## 2.3.4 - 2026-05-24
 
 ### Changed

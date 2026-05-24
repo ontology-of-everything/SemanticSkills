@@ -1,5 +1,13 @@
 # 更新日志
 
+## 2.3.5 - 2026-05-24
+
+### 变更
+
+- **huawei-cloud-billing-scout**：ClawHub 以英文展示名为主
+  **Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation**；加长英文
+  `description` 便于搜索与技能路由（中文展示名 **华为云 · 花多少为何扣 · 只读对账** 不变）
+
 ## 2.3.4 - 2026-05-24
 
 ### 变更

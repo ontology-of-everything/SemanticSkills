@@ -1,10 +1,10 @@
 # 华为云 · 花多少为何扣 · 只读对账
 
-`huawei-cloud-billing-scout` · **Huawei Cloud: Spend, Charges & Reconcile (Read-Only)**
+`huawei-cloud-billing-scout` · **Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation**
 
-Read-only **Huawei Cloud / 华为云** BSS via KooCLI (**hcloud ≥7.2**). One-page briefing: how much, why charged, what differs, what evidence is still missing. Community edition, not official Huawei Cloud.
+Read-only **Huawei Cloud / 华为云** BSS FinOps via KooCLI (**hcloud ≥7.2**): balance, monthly spend, charge attribution, reconciliation, coupons, enterprise and partner billing. One-page briefing—how much, why charged, what differs, what evidence is still missing. Community edition, not official Huawei Cloud.
 
-**Version:** 2.3.4 · 中文仓库说明：[README-CN.md](../../README-CN.md)
+**Version:** 2.3.5 · 中文仓库说明：[README-CN.md](../../README-CN.md)
 
 ## What it does
 
@@ -143,9 +143,9 @@ ClawHub publish (only after explicit release approval):
 ```bash
 clawhub skill publish ./skills/huawei-cloud-billing-scout \
   --slug huawei-cloud-billing-scout \
-  --name "华为云 · 花多少为何扣 · 只读对账" \
-  --version 2.3.4 \
-  --changelog "2.3.4: 方案 C 展示名; security-audit alignment; gate.py QA" \
+  --name "Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation" \
+  --version 2.3.5 \
+  --changelog "2.3.5: English marketplace title and searchable description" \
   --clawscan-note "Read-only hcloud BSS List/Show; no writes" \
   --tags latest
 ```

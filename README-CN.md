@@ -35,7 +35,7 @@ related-commands.md ► 最小只读 CLI（禁止先 --help）
 
 `skills/<name>/` 是**安装载荷**（`npx skills add` 只复制此目录）。`qa/<name>/` 放 `validate.sh`、eval 与审计配置（`bin/gate.py`、`skillcheck.toml` 等），**不会**随技能安装。
 
-示例技能：[huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md)（**v2.3.4**）。编写规范：[docs/authoring.md](docs/authoring.md)。
+示例技能：[huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md)（**v2.3.5**）。编写规范：[docs/authoring.md](docs/authoring.md)。
 
 ## 仓库布局
 
@@ -55,7 +55,7 @@ SemanticSkills/
 
 | 技能 | 版本 | 摘要 | 文档 |
 | --- | --- | --- | --- |
-| `huawei-cloud-billing-scout` | 2.3.4 | **华为云 · 花多少为何扣 · 只读对账** — KooCLI BSS 一页简报 | [详情](docs/skills/huawei-cloud-billing-scout.md) |
+| `huawei-cloud-billing-scout` | 2.3.5 | **华为云 · 花多少为何扣 · 只读对账** — KooCLI BSS 一页简报 | [详情](docs/skills/huawei-cloud-billing-scout.md) |
 
 机器可读索引：[docs/catalog.yml](docs/catalog.yml)。
 
