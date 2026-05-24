@@ -57,8 +57,9 @@ metadata:
 - **License**: keep the repository license at the repo root. Do not put a
   conflicting `license` field in installable skill frontmatter when targeting
   ClawHub, because ClawHub-published skills are MIT-0.
-- **SkillsMP**: public GitHub repo with `SKILL.md` frontmatter. Add GitHub
-  topic `claude-skills` or `claude-code-skill` before the next crawler sync.
+- **SkillsMP**: public GitHub repo with `SKILL.md` frontmatter. Keep GitHub
+  topics `claude-skills` and `claude-code-skill` on the monorepo; indexing is
+  crawler-driven (no submit API)—recheck search after push.
 - **skills.sh**: same layout; promote `npx skills add <org>/SemanticSkills --skill <name> -y` in README; optional badge `https://skills.sh/b/<org>/SemanticSkills`.
 - **ClawHub**: publish from `skills/<name>/` with `clawhub skill publish`.
   Declare `metadata.openclaw` so scans match runtime behavior.
