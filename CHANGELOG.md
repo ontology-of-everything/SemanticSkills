@@ -16,8 +16,9 @@
 
 ### Added
 
-- `skillgate.sh` and `policy.skill-scanner.yaml` for local skill-targeted audit
-  (ClawHub-compatible: no `license` in frontmatter)
+- `qa/huawei-cloud-billing-scout/bin/skillgate.sh` plus `skillcheck.toml`,
+  `.markdownlint.json`, and `policy.skill-scanner.yaml` for local audit (not copied
+  by `npx skills add`; ClawHub-compatible: no `license` in frontmatter)
 
 ### Documentation
 

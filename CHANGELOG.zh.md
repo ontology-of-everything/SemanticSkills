@@ -13,7 +13,8 @@
 
 ### 新增
 
-- `skillgate.sh`、`policy.skill-scanner.yaml` 用于本地 skill 审计（ClawHub 兼容：frontmatter 不含 `license`）
+- `qa/huawei-cloud-billing-scout/bin/skillgate.sh` 及 `skillcheck.toml`、`.markdownlint.json`、
+  `policy.skill-scanner.yaml`（本地审计，不随 `npx skills add` 安装；ClawHub 兼容：frontmatter 不含 `license`）
 
 ### 文档
 

@@ -71,6 +71,9 @@ check_layout() {
   for item in "${forbidden[@]}"; do
     [[ ! -e "$SKILL_DIR/$item" ]] || fail "forbidden runtime bundle path: $item"
   done
+  for item in skillgate.sh skillcheck.toml policy.skill-scanner.yaml .markdownlint.json; do
+    [[ ! -e "$SKILL_DIR/$item" ]] || fail "QA gate file must not live in skills/: $item (use qa/$item)"
+  done
 }
 
 check_text_guards() {
@@ -281,7 +284,17 @@ PY
 }
 
 check_style_gates() {
-  local ml_config="$SKILL_DIR/.markdownlint.json"
+  if [[ -x "$QA_DIR/bin/skillgate.sh" ]]; then
+    if command -v skillcheck >/dev/null 2>&1 \
+      && command -v markdownlint-cli2 >/dev/null 2>&1 \
+      && command -v skill-scanner >/dev/null 2>&1; then
+      "$QA_DIR/bin/skillgate.sh" || fail "skillgate failed"
+      printf 'style: skillgate ok\n'
+      return
+    fi
+  fi
+
+  local ml_config="$QA_DIR/.markdownlint.json"
   if command -v markdownlint-cli2 >/dev/null 2>&1; then
     if [[ -f "$ml_config" ]]; then
       markdownlint-cli2 --config "$ml_config" "$SKILL_DIR/SKILL.md" "$SKILL_DIR/references/**/*.md" \
@@ -296,7 +309,7 @@ check_style_gates() {
   fi
 
   if command -v skillcheck >/dev/null 2>&1; then
-    local sc_config="$SKILL_DIR/skillcheck.toml"
+    local sc_config="$QA_DIR/skillcheck.toml"
     local sc_args=()
     [[ -f "$sc_config" ]] && sc_args=(--config "$sc_config")
     python3 - "${sc_args[@]}" "$SKILL_DIR/SKILL.md" <<'PY' || fail "skillcheck failed"
@@ -334,6 +347,21 @@ PY
     printf 'style: skillcheck ok\n'
   else
     printf 'style: skip skillcheck (not installed)\n'
+  fi
+
+  if command -v skill-scanner >/dev/null 2>&1 && [[ -f "$QA_DIR/policy.skill-scanner.yaml" ]]; then
+    skill-scanner scan "$SKILL_DIR" --policy "$QA_DIR/policy.skill-scanner.yaml" --format json 2>/dev/null \
+      | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+bad = [f for f in d.get('findings', []) if f.get('severity') in ('CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'WARNING')]
+if bad:
+    print('skill-scanner findings:', bad, file=sys.stderr)
+    sys.exit(1)
+" || fail "skill-scanner failed"
+    printf 'style: skill-scanner ok\n'
+  else
+    printf 'style: skip skill-scanner (not installed)\n'
   fi
 }
 

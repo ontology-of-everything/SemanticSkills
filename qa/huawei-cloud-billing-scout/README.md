@@ -8,6 +8,7 @@ Quality gate for the Huawei Cloud billing skill. Run it after changing `SKILL.md
 
 ```bash
 ./qa/huawei-cloud-billing-scout/validate.sh
+./qa/huawei-cloud-billing-scout/bin/skillgate.sh   # skillcheck + markdownlint + skill-scanner only
 ./tools/validate-all.sh
 
 # Skill-creator iteration-1 (offline with_skill vs naive baseline, benchmark + HTML viewer):
@@ -30,9 +31,13 @@ assertions, and blocks mutable BSS operation examples.
 ```text
 qa/huawei-cloud-billing-scout/
 ├── validate.sh
+├── skillcheck.toml
+├── .markdownlint.json
+├── policy.skill-scanner.yaml
 ├── README.md
 ├── evals/evals.json
 ├── evals/llm-rubric.yml
+├── bin/skillgate.sh
 ├── bin/export_llm_eval.py
 ├── bin/run_protocol_eval.py
 ├── assertions/README.md
