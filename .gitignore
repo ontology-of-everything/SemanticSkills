@@ -1,11 +1,12 @@
+# OS
 .DS_Store
 
-# Installed local agent copies
+# Local agent installs (never the publishable skill source)
 .agents/
 .hermes/
 skills-lock.json
-dev/
-# Cloud credentials — never commit real secrets
+
+# Secrets
 .credentials/
 credentials/*.csv
 credentials/*.json
@@ -15,12 +16,20 @@ credentials/*.json
 .env
 .env.*
 
-# Local study clones
-study/.tmp-clones/
-
-# Generated skill-evaluation workspaces
+# Skill Creator / protocol eval output (repo root or under skills|qa)
 .workspaces/
 *-workspace/
-skills/*-workspace/
-qa/*-workspace/
-skills/skill-gate-report-*.txt
+
+# skill-targeted-audit reports (repo root or skills/)
+skill-gate-report-*.txt
+
+# Maintainer sandboxes
+dev/
+study/.tmp-clones/
+
+# Python (qa/bin, tools)
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
