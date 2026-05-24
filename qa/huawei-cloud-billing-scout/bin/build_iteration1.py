@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Build skill-creator iteration-1 workspace, grade runs, aggregate benchmark, static viewer."""
+"""Build skill-creator iteration-1 workspace, grade runs, aggregate benchmark, static viewer.
+
+Offline protocol eval: timings are wall-clock for golden-answer generation + grading only,
+not LLM or hcloud latency. For real end-to-end time, run live agent evals separately.
+"""
 
 from __future__ import annotations
 
@@ -7,7 +11,7 @@ import importlib.util
 import json
 import subprocess
 import sys
-from datetime import datetime, timezone
+import time
 from pathlib import Path
 
 QA_DIR = Path(__file__).resolve().parents[1]
@@ -80,21 +84,28 @@ def eval_dir_name(eval_item: dict) -> str:
     return f"eval-{eval_item['id']}"
 
 
+def estimate_tokens(text: str) -> int:
+    """Rough output size proxy (not model usage)."""
+    return max(1, len(text) // 4)
+
+
 def write_run(
     mod,
     eval_item: dict,
     config: str,
     text: str,
     global_assertions: list[str],
-    duration_s: float = 1.0,
+    duration_s: float | None = None,
 ) -> None:
+    started = time.perf_counter()
     name = eval_dir_name(eval_item)
     run_dir = WORKSPACE / name / config / "run-1"
     outputs = run_dir / "outputs"
     outputs.mkdir(parents=True, exist_ok=True)
     (outputs / "answer.md").write_text(text, encoding="utf-8")
     grading = grade_run(mod, eval_item, text, global_assertions)
-    grading["timing"]["total_duration_seconds"] = duration_s
+    elapsed = duration_s if duration_s is not None else time.perf_counter() - started
+    grading["timing"]["total_duration_seconds"] = round(elapsed, 4)
     (run_dir / "grading.json").write_text(
         json.dumps(grading, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
@@ -102,9 +113,10 @@ def write_run(
     (run_dir / "timing.json").write_text(
         json.dumps(
             {
-                "total_tokens": int(800 if config == "with_skill" else 400),
-                "duration_ms": int(duration_s * 1000),
-                "total_duration_seconds": duration_s,
+                "total_tokens": estimate_tokens(text),
+                "duration_ms": int(elapsed * 1000),
+                "total_duration_seconds": round(elapsed, 4),
+                "offline_protocol": True,
             },
             indent=2,
         )
@@ -139,10 +151,26 @@ def main() -> int:
             + "\n",
             encoding="utf-8",
         )
+        t0 = time.perf_counter()
         skill_text = mod.build_answer(item)
+        skill_gen_s = time.perf_counter() - t0
+        t0 = time.perf_counter()
         naive_text = build_naive_answer(item)
-        write_run(mod, item, "with_skill", skill_text, global_assertions, duration_s=2.5)
-        write_run(mod, item, "without_skill", naive_text, global_assertions, duration_s=1.2)
+        naive_gen_s = time.perf_counter() - t0
+        write_run(mod, item, "with_skill", skill_text, global_assertions, duration_s=skill_gen_s)
+        write_run(mod, item, "without_skill", naive_text, global_assertions, duration_s=naive_gen_s)
+
+    (WORKSPACE / "benchmark-mode.json").write_text(
+        json.dumps(
+            {
+                "mode": "offline_protocol",
+                "timing_note": "Seconds are golden-answer + assertion grading only, not LLM or BSS API.",
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
     agg = SKILL_CREATOR / "scripts/aggregate_benchmark.py"
     if not agg.is_file():

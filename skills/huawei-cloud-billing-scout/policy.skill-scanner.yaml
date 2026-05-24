@@ -1,0 +1,4 @@
+name: huawei-cloud-billing-scout
+description: Repo validate omits SKILL license (ClawHub MIT-0); Apache-2.0 in docs/catalog.
+disabled_rules:
+  - MANIFEST_MISSING_LICENSE

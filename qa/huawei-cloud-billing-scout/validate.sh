@@ -142,8 +142,8 @@ if not entry:
     raise SystemExit("docs/catalog.yml missing huawei-cloud-billing-scout")
 if entry.get("path") != "skills/huawei-cloud-billing-scout" or entry.get("qa") != "qa/huawei-cloud-billing-scout":
     raise SystemExit("docs/catalog.yml path/qa mismatch")
-if entry.get("version") != "2.3.3":
-    raise SystemExit("docs/catalog.yml version should match VERSION (2.3.3)")
+if entry.get("version") != "2.3.2":
+    raise SystemExit("docs/catalog.yml version should match VERSION (2.3.2)")
 if entry.get("distribution") != "direct-skill":
     raise SystemExit("docs/catalog.yml distribution should be direct-skill")
 if "openclaw" not in entry.get("agents", []):
@@ -173,7 +173,7 @@ for needle in [
 skill_text = skill.joinpath("SKILL.md").read_text(encoding="utf-8")
 for needle in [
     "语义本体",
-    "输出合同",
+    "答复格式",
     "不要把调查负担转交给接收人",
     "完整业务 ID",
     "profile/region",

@@ -62,7 +62,7 @@ Refused: payment, renewal, refund execution, unsubscribe/cancel, create, update,
 
 ## Output Contract
 
-Final answers follow the skill **输出合同** in `SKILL.md` (briefing-style: conclusion-first summary with scope/cycle/basis, then concise fact bullets from queries only; uncertainty in summary; chat-safe formatting; redaction; one read-only follow-up). See `qa/huawei-cloud-billing-scout/evals/llm-rubric.yml` for eval grading dimensions.
+Final answers follow the skill **答复格式** in `SKILL.md` (briefing-style: conclusion-first summary with scope/cycle/basis, then concise fact bullets from queries only; uncertainty in summary; chat-safe formatting; redaction; one read-only follow-up). See `qa/huawei-cloud-billing-scout/evals/llm-rubric.yml` for eval grading dimensions.
 
 ## Runtime bundle
 
@@ -133,7 +133,7 @@ ClawHub publish command (run only after explicit release approval):
 clawhub skill publish ./skills/huawei-cloud-billing-scout \
   --slug huawei-cloud-billing-scout \
   --name "Huawei Cloud Billing Scout" \
-  --version 2.3.3 \
+  --version 2.3.2 \
   --changelog "Consolidate catalog.yml + billing-ontology.yml; compact fact output; 21 evals" \
   --clawscan-note "Read-only hcloud BSS List/Show queries; no writes" \
   --tags latest

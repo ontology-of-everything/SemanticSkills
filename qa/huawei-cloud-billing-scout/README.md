@@ -13,6 +13,7 @@ Quality gate for the Huawei Cloud billing skill. Run it after changing `SKILL.md
 # Skill-creator iteration-1 (offline with_skill vs naive baseline, benchmark + HTML viewer):
 python3 qa/huawei-cloud-billing-scout/bin/build_iteration1.py
 # Open: huawei-cloud-billing-scout-workspace/iteration-1/benchmark-review.html
+# Timing in benchmark is local golden-answer generation only (see benchmark-mode.json), not live agent latency.
 ```
 
 The default gate is offline and read-only. It parses YAML, checks install purity,

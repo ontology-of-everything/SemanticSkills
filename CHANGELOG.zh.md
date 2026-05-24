@@ -1,24 +1,23 @@
 # 更新日志
 
-## 2.3.3 - 2026-05-24
+## 2.3.2 - 2026-05-24
 
 ### 变更
 
-- **huawei-cloud-billing-scout**：YAGNI **简报式输出合同**（小结 + 事实要点 + 一条补证）；
-  移除僵硬三列表头；**易懂的事实称呼**（与对话/控制台一致，正文不写 API 名）；
-  聊天类消息禁用 GFM 管道表
-- **qa/huawei-cloud-billing-scout**：新增/对齐 `llm-rubric.yml`、`run_protocol_eval.py`、
-  `export_llm_eval.py` 与 eval 断言；`validate.sh` 门禁同步
+- **huawei-cloud-billing-scout**：**修复 IM 交付** — 聊天单条消息禁用 GFM 管道表
+  （`|...|`），适配飞书、微信等渠道；改为简短小结 + 事实要点（`·` 或分段）
+- YAGNI **答复格式** 取代僵硬三列表头；**易懂的事实称呼**（与对话/控制台一致，正文不写 API 名）
+- **SKILL.md** 按 FinOps 重组：工作准则 / 安全红线 / 查证路径 / 答复格式
+- **qa/huawei-cloud-billing-scout**：对齐 `llm-rubric.yml`、协议 eval 金答案与
+  `validate.sh` 门禁；离线 benchmark 记录金答案生成的真实耗时（非占位 LLM 时间）
+
+### 新增
+
+- `skillgate.sh`、`policy.skill-scanner.yaml` 用于本地 skill 审计（ClawHub 兼容：frontmatter 不含 `license`）
 
 ### 文档
 
-- 更新 `CLAUDE.md`、`docs/skills/huawei-cloud-billing-scout.md` 与 QA README
-
-## 2.3.2 - 2026-05-23
-
-### 文档
-
-- 合并版本记录：移除 interim `1.0.x` ClawHub 重发条目；发布历史统一在 `2.3.x`
+- 更新 `docs/skills/huawei-cloud-billing-scout.md` 与 QA README；发布记录合并至 `2.3.x`（移除 interim `1.0.x` ClawHub 重发条目）
 
 ## 2.3.1 - 2026-05-23
 
