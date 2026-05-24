@@ -179,7 +179,8 @@ def _require_needles(text: str, needles: list[str], label: str) -> None:
 def _check_frontmatter(frontmatter: dict) -> None:
     if frontmatter.get("name") != "huawei-cloud-billing-scout":
         raise SystemExit("FAIL: SKILL.md name mismatch")
-    if "储值卡" not in frontmatter.get("description", ""):
+    desc = str(frontmatter.get("description", ""))
+    if "储值卡" not in desc and "stored-value" not in desc.lower():
         raise SystemExit("FAIL: SKILL.md description missing stored-value card trigger")
     if "license" in frontmatter:
         raise SystemExit("FAIL: SKILL.md must omit license to avoid ClawHub MIT-0 conflict")
