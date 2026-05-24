@@ -55,7 +55,7 @@ SemanticSkills/
 
 | 技能 | 版本 | 摘要 | 文档 |
 | --- | --- | --- | --- |
-| `huawei-cloud-billing-scout` | 2.3.4 | 华为云 BSS 只读 FinOps（KooCLI）；语义路由；**IM 友好简报式**答复 | [详情](docs/skills/huawei-cloud-billing-scout.md) |
+| `huawei-cloud-billing-scout` | 2.3.4 | **华为云 · 花多少为何扣 · 只读对账** — KooCLI BSS 一页简报 | [详情](docs/skills/huawei-cloud-billing-scout.md) |
 
 机器可读索引：[docs/catalog.yml](docs/catalog.yml)。
 
@@ -139,8 +139,8 @@ HUAWEICLOUD_BILLING_SCOUT_CYCLE=2025-04 \
 
 | 渠道 | 说明 |
 | --- | --- |
-| [skills.sh](https://www.skills.sh/) | 公开 GitHub + `npx skills add` |
-| [SkillsMP](https://skillsmp.com/) | `SKILL.md` frontmatter；GitHub topic `claude-skills` 或 `claude-code-skill` |
+| [skills.sh](https://www.skills.sh/ontology-of-everything/SemanticSkills) | 已收录；`npx skills add ontology-of-everything/SemanticSkills --skill <name>` |
+| [SkillsMP](https://skillsmp.com/) | 仓库已设 topic `claude-skills`、`claude-code-skill`；`SKILL.md` frontmatter；爬虫同步有周期 |
 | [ClawHub](https://clawhub.ai/) | `clawhub skill publish`；`metadata.openclaw`；ClawHub 发布包为 **MIT-0**（仓库源码 Apache-2.0） |
 | Cursor / Claude Code / Codex | `npx skills add ... --agent <agent>` |
 | Hermes | `hermes skills install` 或复制 `skills/<name>/` — 见 [docs/agents/hermes.md](docs/agents/hermes.md) |

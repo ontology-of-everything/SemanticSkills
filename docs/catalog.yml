@@ -4,10 +4,12 @@ skills:
   - id: huawei-cloud-billing-scout
     path: skills/huawei-cloud-billing-scout
     qa: qa/huawei-cloud-billing-scout
+    display_name: "Huawei Cloud: Spend, Charges & Reconcile (Read-Only)"
+    display_name_zh: "华为云 · 花多少为何扣 · 只读对账"
     domain: cloud
     subdomains: [billing, finops]
-    summary: Huawei Cloud BSS read-only FinOps scout; semantic routing; IM-safe briefing delivery; 58 read-only query operations
-    summary_zh: 华为云 BSS 只读 FinOps 侦察；语义路由；IM 友好简报式答复；58 个只读查询 Operation
+    summary: Huawei Cloud read-only BSS—spend, charge attribution, reconciliation; one-page briefing; 58 read-only ops
+    summary_zh: 华为云 · 花多少为何扣 · 只读对账；余额/扣费归因/对账/券包/企业账；一页简报；58 个只读 Operation
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, read-only BSS IAM, outbound network; no agent auto-install
     version: "2.3.4"

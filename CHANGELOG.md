@@ -4,6 +4,9 @@
 
 ### Changed
 
+- **huawei-cloud-billing-scout**: marketplace display name **华为云 · 花多少为何扣 · 只读对账**
+  (English: *Huawei Cloud: Spend, Charges & Reconcile (Read-Only)*); slug unchanged;
+  `description` and `docs/catalog.yml` `display_name*` aligned to user intent keywords
 - **huawei-cloud-billing-scout**: ClawHub security-audit alignment — Huawei Cloud-only
   description; enterprise/partner and read-only quote scope; reply language follows user;
   tighter catalog triggers; CLI install doc is user-manual-only (Agent must not run

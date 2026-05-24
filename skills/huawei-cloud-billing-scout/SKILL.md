@@ -1,6 +1,6 @@
 ---
 name: huawei-cloud-billing-scout
-description: Huawei Cloud BSS read-only only—not other clouds/vendors. Use for 华为云余额/账单/对账/储值卡/coupons, enterprise/partner billing, read-only quote & identity. Refuse pay,refund,delete.
+description: 华为云只读：花多少、为何扣、对账；Huawei Cloud BSS only—not other clouds. 余额/账单/储值卡/coupons, enterprise billing. Refuse pay,refund,delete.
 metadata:
   openclaw:
     requires:
@@ -13,7 +13,7 @@ metadata:
       - {name: HUAWEICLOUD_SDK_REGION, required: false}
 ---
 
-# 华为云 FinOps 账务助手
+# 华为云 · 花多少为何扣 · 只读对账
 
 社区技能，非华为云官方。需 **hcloud ≥7.2** 与 BSS 只读 IAM。单轮答复完成账务判断：花了多少、为何扣、差在哪、还缺什么证据——只读查询，不代替用户动账。
 

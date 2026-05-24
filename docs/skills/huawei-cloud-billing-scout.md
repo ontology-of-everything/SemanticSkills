@@ -1,6 +1,8 @@
-# huawei-cloud-billing-scout
+# 华为云 · 花多少为何扣 · 只读对账
 
-Read-only **Huawei Cloud / 华为云** FinOps billing assistant via KooCLI/BSS (**hcloud ≥7.2**). Delivers one-page, **briefing-style** answers: how much, why charged, what differs, what evidence is still missing. Community edition, not official Huawei Cloud.
+`huawei-cloud-billing-scout` · **Huawei Cloud: Spend, Charges & Reconcile (Read-Only)**
+
+Read-only **Huawei Cloud / 华为云** BSS via KooCLI (**hcloud ≥7.2**). One-page briefing: how much, why charged, what differs, what evidence is still missing. Community edition, not official Huawei Cloud.
 
 **Version:** 2.3.4 · 中文仓库说明：[README-CN.md](../../README-CN.md)
 
@@ -133,7 +135,7 @@ npx skills add ./skills/huawei-cloud-billing-scout \
 ## Marketplaces
 
 - [skills.sh](https://www.skills.sh/ontology-of-everything/SemanticSkills/huawei-cloud-billing-scout)
-- [SkillsMP](https://skillsmp.com/) — topic `claude-skills` or `claude-code-skill`
+- [SkillsMP](https://skillsmp.com/) — repo topics `claude-skills`, `claude-code-skill`; verify with `curl "https://skillsmp.com/api/v1/skills/search?q=huawei-cloud-billing-scout"`
 - [ClawHub](https://clawhub.ai/) — publish from `skills/huawei-cloud-billing-scout/` after `./qa/.../validate.sh`
 
 ClawHub publish (only after explicit release approval):
@@ -141,9 +143,9 @@ ClawHub publish (only after explicit release approval):
 ```bash
 clawhub skill publish ./skills/huawei-cloud-billing-scout \
   --slug huawei-cloud-billing-scout \
-  --name "Huawei Cloud Billing Scout" \
+  --name "华为云 · 花多少为何扣 · 只读对账" \
   --version 2.3.4 \
-  --changelog "IM-safe briefing delivery; 答复格式; qa skillgate; 58 read-only BSS ops" \
+  --changelog "2.3.4: 方案 C 展示名; security-audit alignment; gate.py QA" \
   --clawscan-note "Read-only hcloud BSS List/Show; no writes" \
   --tags latest
 ```

@@ -55,7 +55,7 @@ SemanticSkills/
 
 | Skill | Version | Summary | Docs |
 | --- | --- | --- | --- |
-| `huawei-cloud-billing-scout` | 2.3.4 | Read-only Huawei Cloud BSS FinOps via KooCLI; semantic routing; **IM-safe briefing** answers | [details](docs/skills/huawei-cloud-billing-scout.md) |
+| `huawei-cloud-billing-scout` | 2.3.4 | **Huawei Cloud: Spend, Charges & Reconcile (Read-Only)** — one-page BSS briefing via KooCLI | [details](docs/skills/huawei-cloud-billing-scout.md) |
 
 Index: [docs/catalog.yml](docs/catalog.yml).
 
@@ -139,8 +139,8 @@ Sync on every skill change: `skills/`, `qa/`, `docs/catalog.yml`, `docs/skills/<
 
 | Channel | Notes |
 | --- | --- |
-| [skills.sh](https://www.skills.sh/) | Public GitHub + `npx skills add` |
-| [SkillsMP](https://skillsmp.com/) | `SKILL.md` frontmatter; topic `claude-skills` or `claude-code-skill` |
+| [skills.sh](https://www.skills.sh/ontology-of-everything/SemanticSkills) | Listed; install via `npx skills add ontology-of-everything/SemanticSkills --skill <name>` |
+| [SkillsMP](https://skillsmp.com/) | Repo topics `claude-skills`, `claude-code-skill`; `SKILL.md` frontmatter; crawler sync is periodic |
 | [ClawHub](https://clawhub.ai/) | `clawhub skill publish`; `metadata.openclaw`; skill bundle is **MIT-0** on ClawHub (repo source Apache-2.0) |
 | Cursor / Claude Code / Codex | `npx skills add ... --agent <agent>` |
 | Hermes | `hermes skills install` or copy `skills/<name>/` — see [docs/agents/hermes.md](docs/agents/hermes.md) |

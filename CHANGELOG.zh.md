@@ -4,6 +4,9 @@
 
 ### 变更
 
+- **huawei-cloud-billing-scout**：ClawHub 展示名 **华为云 · 花多少为何扣 · 只读对账**
+  （英文：*Huawei Cloud: Spend, Charges & Reconcile (Read-Only)*）；slug 不变；
+  `description` 与 `docs/catalog.yml` 的 `display_name*` 对齐用户意图词
 - **huawei-cloud-billing-scout**：对齐 ClawHub 安全审计 — 仅华为云边界、description 与
   catalog 范围一致、答复语言跟随用户、收紧触发词；安装文档仅用户执行（Agent 禁止安装/`sudo`）
 - **qa/huawei-cloud-billing-scout**：离线门禁统一为 `bin/gate.py`（`validate.sh` → full；
