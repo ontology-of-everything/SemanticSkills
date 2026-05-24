@@ -1,29 +1,37 @@
 # huawei-cloud-billing-scout
 
-Read-only **Huawei Cloud / 华为云** FinOps billing assistant via KooCLI/BSS: one-page, conclusion-first answers for cost, attribution, and reconciliation. Community edition, not official Huawei Cloud.
+Read-only **Huawei Cloud / 华为云** FinOps billing assistant via KooCLI/BSS (**hcloud ≥7.2**). Delivers one-page, **briefing-style** answers: how much, why charged, what differs, what evidence is still missing. Community edition, not official Huawei Cloud.
 
-中文摘要见 [README-CN.md](../../README-CN.md#技能).
+**Version:** 2.3.2 · 中文仓库说明：[README-CN.md](../../README-CN.md)
 
-## Capabilities
+## What it does
 
 | Capability | Typical questions |
 | --- | --- |
-| Account facts | Balance, debt, stored-value cards, monthly spend, cash/credit/coupon ledgers |
-| Charge attribution | Top spenders, resource-level charges, charges after delete, usage and amortized cost |
-| Reconciliation | Console vs export, summary vs detail, order vs usage, billed vs paid vs amortized |
-| Entitlements | Resource packages, coupon ledgers, partner coupon quotas, deduction gaps |
-| Scope | Current account, enterprise/sub-account, partner/reseller and indirect partner views |
-| Consulting | Pricing estimates, discount policies, billing-cycle interpretation, identity-review status |
+| Account facts | Balance, debt, stored-value cards, monthly spend, ledgers |
+| Charge attribution | Top spenders, resource charges, charges after delete, usage and amortized cost |
+| Reconciliation | Console vs export, summary vs detail, order vs usage |
+| Entitlements | Resource packages, coupons, partner quotas, deduction gaps |
+| Scope | Enterprise/sub-account, partner/reseller views |
+| Consulting | Pricing estimates, billing-cycle interpretation (read-only) |
 
-## ClawHub-first layout
+## Runtime bundle (install payload)
 
-The runtime bundle now follows a ClawHub-first split:
+Only this tree is copied by `npx skills add` or Hermes local sync:
 
-- `SKILL.md` is the single runtime entry: FinOps north star, Constitution, hard constraints, one-page workflow, IM-friendly output contract; CLI install detail in `cli-installation.md`.
-- `references/README.md` is the lightweight navigation file for the reference bundle.
-- `references/semantic/catalog.yml` routes by `required_context` (scope/time/money_basis) and `triggers` to ontology entities.
-- `references/semantic/billing-ontology.yml` is the single ontology file covering facts, scope, money basis, evidence boundaries, and 58 read-only query operations.
-- `references/related-commands.md` is a thin command-contract appendix for maintainers and QA.
+```text
+skills/huawei-cloud-billing-scout/
+├── SKILL.md                 # 工作准则 · 安全红线 · 查证路径 · 答复格式
+└── references/
+    ├── related-commands.md
+    ├── cli-installation.md
+    ├── iam-policies.md
+    └── semantic/
+        ├── catalog.yml
+        └── billing-ontology.yml
+```
+
+No `evals/`, `qa/`, `skillgate.sh`, lint configs, or `*-workspace/` under `skills/`.
 
 ## In-skill flow
 
@@ -31,61 +39,79 @@ The runtime bundle now follows a ClawHub-first split:
 User question
      │
      ▼
-catalog.yml ─── route to ontology entities
+catalog.yml ─── triggers → ontology_entities
      │
      ▼
-billing-ontology.yml ─── pick fact, scope, money basis, evidence boundary
+billing-ontology.yml ─── fact, scope, money_basis, evidence_boundary
      │
      ▼
-related-commands.md ─── execute the smallest read-only hcloud BSS query set
+related-commands.md ─── smallest read-only hcloud BSS query set
      │
      ▼
-summary (conclusion first) ─── fact items ─── optional next step
+答复格式 ─── 小结 → 事实要点 → 一条只读下一步（如有）
 ```
 
-## Ontology Coverage
+58 unique read-only BSS query operations (KooCLI 7.2.2), aligned across ontology, commands, and `qa/.../fixtures/ops_contracts.yml`.
 
-`references/semantic/catalog.yml` plus `references/semantic/billing-ontology.yml` cover 58 unique read-only BSS query operations from KooCLI 7.2.2.
+## SKILL.md structure
 
-| Layer | What it owns | Examples |
-| --- | --- | --- |
-| `catalog.yml` | Process routing (`required_context` + `triggers`) | balance/debt, charge attribution, reconciliation, entitlements, account scope |
-| `billing-ontology.yml` | Facts, dimensions, scope, money basis, evidence boundaries | `AccountBalance`, `BillingStatement`, `ResourceBillDetail`, `EnterpriseAndPartnerContext`, `PricingQuote` |
-| `related-commands.md` | Operation contract | required parameters, verified dot-notation templates, safety limits |
+| Section | Purpose |
+| --- | --- |
+| North star | One-page: 花、因、差；有据则证 |
+| 工作准则 | Scope/口径、对账分列、不甩锅调查、只读相伴 |
+| 安全红线 | 只读、不泄密、不越界推断、非官方 |
+| 查证路径 | 定口径 → 选入口 → 取证 → 交付 |
+| 答复格式 | Briefing delivery contract (see below) |
 
-## Safety Boundary
+## 答复格式 (briefing-style output contract)
+
+Answers follow **答复格式** in `SKILL.md` (conclusion-first summary, then fact bullets):
+
+1. **Briefing summary** (1–3 sentences) — scope, billing period, money basis; spend / cause / delta / gaps.
+2. **Fact bullets** — only **queried** facts; **易懂的事实称呼** (console-aligned; no API names in user text).
+3. **Delivery floor** — no JSON walls, command logs, full business IDs, credentials, or `profile/region`; at most **one** read-only next step in plain language; never「请自行对账」.
+
+**IM-safe:** single chat messages must **not** use GFM pipe tables (`|...|`). Use `·` or short paragraphs (Feishu, WeChat, and similar channels).
+
+Grading: `qa/huawei-cloud-billing-scout/evals/llm-rubric.yml` (merged into all **21** eval cases).
+
+## Safety boundary
 
 ```text
-Allowed: BSS List* / Show* query operations, plus product-side List/Show/Get only after BSS identifies a resource.
-Refused: payment, renewal, refund execution, unsubscribe/cancel, create, update, delete, reclaim, transfer, send-code, or any balance/resource mutation.
+Allowed: BSS List* / Show* queries; product List/Show/Get only after BSS identifies a resource.
+Refused: pay, renew, refund, unsubscribe, create, update, delete, reclaim, transfer, or any mutation.
 ```
 
-## Output Contract
+`ListCustomer*ChangeRecords` are **read** ledgers (`Change` ≠ write). No auto-install of `hcloud`. Real BSS only when maintainers set `HUAWEICLOUD_BILLING_SCOUT_REAL=1`.
 
-Final answers follow the skill **答复格式** in `SKILL.md` (briefing-style: conclusion-first summary with scope/cycle/basis, then concise fact bullets from queries only; uncertainty in summary; chat-safe formatting; redaction; one read-only follow-up). See `qa/huawei-cloud-billing-scout/evals/llm-rubric.yml` for eval grading dimensions.
-
-## Runtime bundle
+## QA (not installed with skill)
 
 ```text
-skills/huawei-cloud-billing-scout/
-├── SKILL.md
-└── references/
-    ├── README.md
-    ├── related-commands.md
-    ├── iam-policies.md
-    ├── cli-installation.md
-    └── semantic/
-        ├── catalog.yml
-        └── billing-ontology.yml
+qa/huawei-cloud-billing-scout/
+├── validate.sh
+├── skillcheck.toml
+├── .markdownlint.json
+├── policy.skill-scanner.yaml
+├── evals/evals.json
+├── evals/llm-rubric.yml
+├── fixtures/ops_contracts.yml
+└── bin/
+    ├── skillgate.sh
+    ├── run_protocol_eval.py
+    ├── build_iteration1.py
+    └── verify_ops.py
 ```
 
-No `evals/`, `scripts/`, `analysis/`, or workspaces inside the skill directory.
+```bash
+./qa/huawei-cloud-billing-scout/validate.sh
+./qa/huawei-cloud-billing-scout/bin/skillgate.sh   # optional style-only
+```
+
+Default gate is offline. It does not call BSS unless `HUAWEICLOUD_BILLING_SCOUT_REAL=1` is set for maintainer smoke tests.
 
 ## Install
 
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
-
-Cursor:
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills \
@@ -94,55 +120,33 @@ npx skills add ontology-of-everything/SemanticSkills \
   --copy -y
 ```
 
-Claude Code:
+Agents: `cursor`, `claude-code`, `codex` — see [docs/agents/](../../docs/agents/). **Hermes:** [hermes.md](../agents/hermes.md).
+
+Local development:
 
 ```bash
-npx skills add ontology-of-everything/SemanticSkills \
+npx skills add ./skills/huawei-cloud-billing-scout \
   --skill huawei-cloud-billing-scout \
-  --agent claude-code \
+  --agent cursor \
   --copy -y
-```
-
-Codex:
-
-```bash
-npx skills add ontology-of-everything/SemanticSkills \
-  --skill huawei-cloud-billing-scout \
-  --agent codex \
-  --copy -y
-```
-
-```bash
-npx skills add ontology-of-everything/SemanticSkills --list
 ```
 
 ## Marketplaces
 
-- [skills.sh](https://www.skills.sh/ontology-of-everything/SemanticSkills/huawei-cloud-billing-scout):
-  public GitHub repo plus `npx skills add`.
-- [SkillsMP](https://skillsmp.com/):
-  auto-indexes public GitHub skills with `SKILL.md` frontmatter. Add the
-  `claude-skills` or `claude-code-skill` GitHub topic before the next sync.
-- [ClawHub](https://clawhub.ai/):
-  publish from the skill directory after local validation. ClawHub publishes
-  skills under MIT-0 terms; this repo's source license remains Apache-2.0.
+- [skills.sh](https://www.skills.sh/ontology-of-everything/SemanticSkills/huawei-cloud-billing-scout)
+- [SkillsMP](https://skillsmp.com/) — topic `claude-skills` or `claude-code-skill`
+- [ClawHub](https://clawhub.ai/) — publish from `skills/huawei-cloud-billing-scout/` after `./qa/.../validate.sh`
 
-ClawHub publish command (run only after explicit release approval):
+ClawHub publish (only after explicit release approval):
 
 ```bash
 clawhub skill publish ./skills/huawei-cloud-billing-scout \
   --slug huawei-cloud-billing-scout \
   --name "Huawei Cloud Billing Scout" \
   --version 2.3.2 \
-  --changelog "Consolidate catalog.yml + billing-ontology.yml; compact fact output; 21 evals" \
-  --clawscan-note "Read-only hcloud BSS List/Show queries; no writes" \
+  --changelog "IM-safe briefing delivery; 答复格式; qa skillgate; 58 read-only BSS ops" \
+  --clawscan-note "Read-only hcloud BSS List/Show; no writes" \
   --tags latest
 ```
 
-## Validate
-
-```bash
-./qa/huawei-cloud-billing-scout/validate.sh
-```
-
-The QA gate checks install purity, YAML parseability, Catalog/ontology/command/contract consistency, verified KooCLI dot-notation templates, 58-operation coverage, eval schema, and safety wording. It does not run real BSS calls unless explicitly enabled by maintainers outside the default gate.
+ClawHub skill bundle is **MIT-0**; repository source remains **Apache-2.0**. Installable `SKILL.md` must not declare a conflicting `license` in frontmatter.

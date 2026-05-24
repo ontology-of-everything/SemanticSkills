@@ -2,74 +2,68 @@
 
 > 社区版本，非华为云官方。
 
-云场景里 Agent 出错方式很固定：账期粒度选错、对账步骤跳过、表格没出来就敢下结论。SemanticSkills 用 [Agent Skills](https://agentskills.io/) 把领域语义放进可版本化的 `references/`，而不是堆在 `SKILL.md` 里——先对齐「查什么事实」，再决定「怎么查命令」。
+云场景里 Agent 常犯同类错误：账期粒度选错、对账步骤跳过、没有证据就下结论，或在飞书/微信里用 Markdown 管道表导致排版错乱。SemanticSkills 用 [Agent Skills](https://agentskills.io/) 把领域语义放进可版本化的 `references/`，而不是堆在臃肿的 `SKILL.md` 里——先对齐「查什么事实」，再执行 CLI。
 
 English: [README.md](README.md).
 
 ## 设计思路
 
-**本体语义先行。** 每个技能在 `references/semantic/*.yml` 里定义事实实体（粒度、维度、指标、来源 Operation）；命令参数单独一层。`SKILL.md` 写执行协议；协作手册负责多步编排与输出形态。
-
-运行时一条问题走这条链：
+**本体语义先行。** 在 `references/semantic/*.yml` 定义事实、粒度、维度、指标与只读 Operation；命令模板在 `related-commands.md`。`SKILL.md` 写安全边界、查证路径与**答复格式**（如简报式、聊天渠道禁用 `|...|` 表）。
 
 ```text
 用户问题
      │
      ▼
-语义层 ────────► 抽取事实/维度/指标 → source_operation(s)
+catalog.yml ──────► 按 scope / 账期 / 金额口径路由
      │
      ▼
-命令层 ──────────► related-commands.md 取模板 → 直接执行（禁止先 --help）
+billing-ontology.yml ► 事实 + evidence_boundary + source_operation(s)
      │
      ▼
-协作手册（多步时）──► 查询顺序 + 输出结构
+related-commands.md ► 最小只读 CLI（禁止先 --help）
      │
      ▼
-同一 yml ────────► 解析 dimensions/measures → 结论 → 事实依据
+答复格式 ► 先结论，后事实要点，一条只读补证
 ```
 
+| 层 | 作用 | 典型文件 |
+| --- | --- | --- |
+| 路由 | 入口与 triggers | `references/semantic/catalog.yml` |
+| 本体 | 事实、范围、口径、证据边界 | `references/semantic/billing-ontology.yml` |
+| 命令 | 参数模板与安全上限 | `related-commands.md`、`cli-installation.md`、`iam-policies.md` |
+| 协议 | North star、工作流、答复格式 | `SKILL.md` |
 
-| 层    | 放什么               | 典型文件                                         |
-| ---- | ----------------- | -------------------------------------------- |
-| 本体语义 | 事实定义 + 响应解析 | `references/semantic/*.yml` |
-| 命令   | API/CLI 模板      | `related-commands.md`、IAM、安装说明               |
-| 协作手册 | 多步编排、用户可读输出 | `*-playbook.md`                              |
-| 目录/术语 | 领域路由、语义模型和可选术语口径 | `semantic/catalog.yml`、`*-semantics.md` |
+`skills/<name>/` 是**安装载荷**（`npx skills add` 只复制此目录）。`qa/<name>/` 放 `validate.sh`、eval 与审计配置（`skillgate.sh`、`skillcheck.toml` 等），**不会**随技能安装。
 
-
-`skills/<name>/` 是可安装运行时包；`qa/<name>/` 放 eval 与验证脚本，不会被 `npx skills add` 复制。可出现在 [skills.sh](https://www.skills.sh/)、由 [SkillsMP](https://skillsmp.com/) 抓取，并可发布到 [ClawHub](https://clawhub.ai/)。
-
-示例：[huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md)。编写规范：[docs/authoring.md](docs/authoring.md)。
+示例技能：[huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md)（**v2.3.2**）。编写规范：[docs/authoring.md](docs/authoring.md)。
 
 ## 仓库布局
 
 ```text
 SemanticSkills/
-├── skills/              # 可安装运行时包（SKILL.md + references/）
-├── qa/                  # 各技能验证（evals、assertions、validate.sh）
-├── docs/                # 贡献指南、编写规范、catalog、各 agent 安装说明
+├── skills/<name>/       # SKILL.md + references/（安装包）
+├── qa/<name>/           # validate.sh、evals/、bin/skillgate.sh、lint 配置
+├── docs/                # catalog.yml、编写规范、各 Agent 安装说明
 ├── tools/               # validate-all.sh、skill-scaffold.sh
-├── template/skill/      # 新技能脚手架（不可安装）
-├── .workspaces/         # Skill Creator 运行结果（不入库）
+├── template/{skill,qa}/
+├── *-workspace/         # Skill Creator 评测输出（不入库）
 ├── .agents/             # 本地 npx skills add 副本（不入库）
 └── .credentials/        # 本地凭据样例（不入库）
 ```
 
 ## 技能
 
+| 技能 | 版本 | 摘要 | 文档 |
+| --- | --- | --- | --- |
+| `huawei-cloud-billing-scout` | 2.3.2 | 华为云 BSS 只读 FinOps（KooCLI）；语义路由；**IM 友好简报式**答复 | [详情](docs/skills/huawei-cloud-billing-scout.md) |
 
-| 技能                           | 路径                                   | 摘要                    | 文档                                              |
-| ---------------------------- | ------------------------------------ | --------------------- | ----------------------------------------------- |
-| `huawei-cloud-billing-scout` | `skills/huawei-cloud-billing-scout/` | 华为云账务只读侦察（KooCLI/BSS） | [详情](docs/skills/huawei-cloud-billing-scout.md) |
-
-
-机器可读索引：[docs/catalog.yml](docs/catalog.yml).
+机器可读索引：[docs/catalog.yml](docs/catalog.yml)。
 
 ## 安装
 
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
-从 GitHub 安装（[Cursor 说明](docs/agents/cursor.md)）：
+**GitHub**（[Cursor](docs/agents/cursor.md)、[Claude Code](docs/agents/claude-code.md)、[Codex](docs/agents/codex.md)）：
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills \
@@ -78,27 +72,13 @@ npx skills add ontology-of-everything/SemanticSkills \
   --copy -y
 ```
 
-Claude Code 或 Codex：
-
-```bash
-npx skills add ontology-of-everything/SemanticSkills \
-  --skill huawei-cloud-billing-scout \
-  --agent claude-code \
-  --copy -y
-
-npx skills add ontology-of-everything/SemanticSkills \
-  --skill huawei-cloud-billing-scout \
-  --agent codex \
-  --copy -y
-```
-
-安装前先列出本仓库可用技能：
+将 `--agent cursor` 换成 `claude-code` 或 `codex`。列出本仓库技能：
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills --list
 ```
 
-本地路径：
+**本地路径**（开发）：
 
 ```bash
 npx skills add ./skills/huawei-cloud-billing-scout \
@@ -106,6 +86,8 @@ npx skills add ./skills/huawei-cloud-billing-scout \
   --agent cursor \
   --copy -y
 ```
+
+**Hermes**（[Hermes 说明](docs/agents/hermes.md)）：`hermes skills install ontology-of-everything/SemanticSkills/huawei-cloud-billing-scout -y`，或将本地 `skills/<name>/` rsync 到 `~/.hermes/skills/`。
 
 ## 验证
 
@@ -115,10 +97,16 @@ npx skills add ./skills/huawei-cloud-billing-scout \
 ./tools/validate-all.sh
 ```
 
-单个技能：
+单技能（布局、契约、eval、可选风格门禁）：
 
 ```bash
 ./qa/huawei-cloud-billing-scout/validate.sh
+```
+
+仅风格审计（skillcheck + markdownlint + skill-scanner）：
+
+```bash
+./qa/huawei-cloud-billing-scout/bin/skillgate.sh
 ```
 
 可选真实 BSS 烟测：
@@ -129,9 +117,16 @@ HUAWEICLOUD_BILLING_SCOUT_CYCLE=2025-04 \
 ./qa/huawei-cloud-billing-scout/validate.sh
 ```
 
+离线协议评测（Skill Creator 目录）：
+
+```bash
+python3 qa/huawei-cloud-billing-scout/bin/build_iteration1.py
+# 查看器：huawei-cloud-billing-scout-workspace/iteration-1/benchmark-review.html
+```
+
 ## 贡献
 
-见 [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) 与 [docs/authoring.md](docs/authoring.md).
+[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) · [docs/authoring.md](docs/authoring.md)
 
 新建技能：
 
@@ -139,27 +134,16 @@ HUAWEICLOUD_BILLING_SCOUT_CYCLE=2025-04 \
 ./tools/skill-scaffold.sh <skill-name>
 ```
 
+每次改技能须同步：`skills/`、`qa/`、`docs/catalog.yml`、`docs/skills/<name>.md`。
+
 ## 市场收录
 
-- [skills.sh](https://www.skills.sh/)：
-  公开 GitHub + `npx skills add`；需要有效的
-  `skills/<name>/SKILL.md` 与 README 安装命令。
-- [SkillsMP](https://skillsmp.com/)：
-  GitHub 爬虫和语义搜索；需要 `SKILL.md` frontmatter，并添加
-  `claude-skills` 或 `claude-code-skill` GitHub topic。
-- [ClawHub](https://clawhub.ai/)：
-  `clawhub skill publish <path>`；需要 GitHub 账号年龄、semver 版本、
-  纯文本包和准确的 `metadata.openclaw`。
-- Cursor：
-  `npx skills add ... --agent cursor`；也发现 `.cursor/skills/` 与
-  `.agents/skills/`。
-- Claude Code：
-  `npx skills add ... --agent claude-code`；本轮不需要插件市场包装。
-- Codex：
-  `npx skills add ... --agent codex`；直接技能安装不需要 Codex 插件包装。
+| 渠道 | 说明 |
+| --- | --- |
+| [skills.sh](https://www.skills.sh/) | 公开 GitHub + `npx skills add` |
+| [SkillsMP](https://skillsmp.com/) | `SKILL.md` frontmatter；GitHub topic `claude-skills` 或 `claude-code-skill` |
+| [ClawHub](https://clawhub.ai/) | `clawhub skill publish`；`metadata.openclaw`；ClawHub 发布包为 **MIT-0**（仓库源码 Apache-2.0） |
+| Cursor / Claude Code / Codex | `npx skills add ... --agent <agent>` |
+| Hermes | `hermes skills install` 或复制 `skills/<name>/` — 见 [docs/agents/hermes.md](docs/agents/hermes.md) |
 
-每个技能位于 `skills/<name>/SKILL.md`，包含 `name`、带触发词的
-`description`、精简的 `compatibility`，以及需要时的 registry metadata。
-ClawHub 发布版本统一按 MIT-0 授权，因此可安装技能 frontmatter 不写冲突的
-license；本仓库源码仍保留 Apache-2.0。参考技能见
-[docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md)。
+发布流程参考：[docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md)。

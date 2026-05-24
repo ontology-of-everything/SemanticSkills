@@ -156,19 +156,20 @@ if "MIT-0" not in entry.get("clawhub_license", ""):
 
 doc = root.joinpath("docs/skills/huawei-cloud-billing-scout.md").read_text(encoding="utf-8")
 for needle in [
-    "ClawHub-first",
+    "install payload",
     "billing-ontology.yml",
     "catalog.yml",
     "58 unique read-only BSS query operations",
     "validate.sh",
+    "skillgate.sh",
     "clawhub skill publish",
     "clawscan-note",
     "claude-code-skill",
     "MIT-0",
-    "Output Contract",
+    "答复格式",
     "briefing-style",
-    "conclusion-first summary",
-    "chat-safe formatting",
+    "IM-safe",
+    "hermes.md",
 ]:
     if needle not in doc:
         raise SystemExit(f"skill docs missing: {needle}")
@@ -206,9 +207,16 @@ repo_docs = "\n".join(
         "docs/agents/cursor.md",
         "docs/agents/claude-code.md",
         "docs/agents/codex.md",
+        "docs/agents/hermes.md",
     ]
 )
-for needle in ["clawhub skill publish", "claude-skills", "--agent claude-code", "--agent codex"]:
+for needle in [
+    "clawhub skill publish",
+    "claude-skills",
+    "--agent claude-code",
+    "--agent codex",
+    "hermes skills install",
+]:
     if needle not in repo_docs:
         raise SystemExit(f"repo docs missing marketplace guidance: {needle}")
 

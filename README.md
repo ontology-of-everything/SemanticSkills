@@ -2,70 +2,68 @@
 
 > Community edition — not official Huawei Cloud.
 
-Cloud agents get billing wrong in boring, repeatable ways: wrong grain, skipped reconciliation, answers with no table behind them. SemanticSkills packages [Agent Skills](https://agentskills.io/) where domain semantics live in versioned references—not in a fat `SKILL.md`—so the agent picks the right fact entity before it touches a CLI.
+Cloud agents get billing wrong in repeatable ways: wrong grain, skipped reconciliation, answers with no evidence—or tables that break in Feishu and WeChat. SemanticSkills packages [Agent Skills](https://agentskills.io/) where domain semantics live in `references/`, not in a bloated `SKILL.md`, so the agent picks the right fact entity before it runs a CLI.
 
 中文说明见 [README-CN.md](README-CN.md).
 
 ## Design
 
-**Build ontology-first.** Each skill defines stable domain vocabulary in `references/semantic/*.yml` (fact entities, grain, dimensions, measures, source operations) and keeps command parameters in a separate layer. `SKILL.md` holds the execution protocol; the playbook covers multi-step flows and output shape.
-
-At runtime a question flows like this:
+**Ontology-first.** Each skill defines facts, grain, dimensions, measures, and read-only operations in `references/semantic/*.yml`. Command templates stay in `related-commands.md`. `SKILL.md` holds safety rules, the query workflow, and how to deliver answers (for example briefing-style, IM-safe text—not pipe tables in chat).
 
 ```text
 User question
      │
      ▼
-Semantic layer ─► extract fact/dimensions/measures → source_operation(s)
+catalog.yml ──────► route by scope / time / money_basis
      │
      ▼
-Commands ───────► related-commands.md templates → execute (no --help first)
+billing-ontology.yml ► fact + evidence_boundary + source_operation(s)
      │
      ▼
-Playbook (if multi-step) ──► query order + output structure
+related-commands.md ► minimal read-only CLI (no --help first)
      │
      ▼
-Same YAML ───────► parse dimensions/measures → conclusion → evidence facts
+答复 / delivery format ► conclusion first, fact bullets, one follow-up
 ```
 
-| Layer | What it holds | Typical files |
+| Layer | Role | Typical files |
 | --- | --- | --- |
-| Ontology | Fact definitions + response parsing | `references/semantic/*.yml` |
-| Commands | API/CLI templates | `related-commands.md`, IAM, install notes |
-| Playbook | Multi-step flows, user-readable output | `*-playbook.md` |
-| Catalog / terms | Domain routing, semantic model and optional glossary | `semantic/catalog.yml`, `*-semantics.md` |
+| Routing | Entry points and triggers | `references/semantic/catalog.yml` |
+| Ontology | Facts, scope, money basis, evidence limits | `references/semantic/billing-ontology.yml` |
+| Commands | Parameter templates, safety limits | `related-commands.md`, `cli-installation.md`, `iam-policies.md` |
+| Protocol | North star, workflow, output contract | `SKILL.md` |
 
-`skills/<name>/` is the installable runtime bundle; `qa/<name>/` holds evals and validation and is never copied by `npx skills add`. Listed on [skills.sh](https://www.skills.sh/), indexed by [SkillsMP](https://skillsmp.com/), and publishable to [ClawHub](https://clawhub.ai/).
+`skills/<name>/` is the **install payload** (`npx skills add` copies only this tree). `qa/<name>/` holds `validate.sh`, evals, and audit configs (`skillgate.sh`, `skillcheck.toml`, etc.)—never installed with the skill.
 
-Working example: [huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md). Authoring conventions: [docs/authoring.md](docs/authoring.md).
+Example skill: [huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md) (**v2.3.2**). Authoring: [docs/authoring.md](docs/authoring.md).
 
 ## Repository layout
 
 ```text
 SemanticSkills/
-├── skills/              # Installable runtime packages (SKILL.md + references/)
-├── qa/                  # Per-skill validation (evals, assertions, validate.sh)
-├── docs/                # Contributing, authoring, catalog, agent install guides
+├── skills/<name>/       # SKILL.md + references/ (install bundle)
+├── qa/<name>/           # validate.sh, evals/, bin/skillgate.sh, lint configs
+├── docs/                # catalog.yml, authoring, per-agent install notes
 ├── tools/               # validate-all.sh, skill-scaffold.sh
-├── template/skill/      # New skill skeleton (not installable)
-├── .workspaces/         # Skill Creator outputs (gitignored)
+├── template/{skill,qa}/
+├── *-workspace/         # Skill Creator eval output (gitignored)
 ├── .agents/             # Local npx skills add copies (gitignored)
 └── .credentials/        # Local credential samples (gitignored)
 ```
 
 ## Skills
 
-| Skill | Path | Summary | Docs |
+| Skill | Version | Summary | Docs |
 | --- | --- | --- | --- |
-| `huawei-cloud-billing-scout` | `skills/huawei-cloud-billing-scout/` | Read-only Huawei Cloud billing scout via KooCLI/BSS | [details](docs/skills/huawei-cloud-billing-scout.md) |
+| `huawei-cloud-billing-scout` | 2.3.2 | Read-only Huawei Cloud BSS FinOps via KooCLI; semantic routing; **IM-safe briefing** answers | [details](docs/skills/huawei-cloud-billing-scout.md) |
 
-Machine-readable index: [docs/catalog.yml](docs/catalog.yml).
+Index: [docs/catalog.yml](docs/catalog.yml).
 
 ## Install
 
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
-From GitHub ([Cursor](docs/agents/cursor.md) example):
+**GitHub** ([Cursor](docs/agents/cursor.md), [Claude Code](docs/agents/claude-code.md), [Codex](docs/agents/codex.md)):
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills \
@@ -74,27 +72,13 @@ npx skills add ontology-of-everything/SemanticSkills \
   --copy -y
 ```
 
-Claude Code or Codex:
-
-```bash
-npx skills add ontology-of-everything/SemanticSkills \
-  --skill huawei-cloud-billing-scout \
-  --agent claude-code \
-  --copy -y
-
-npx skills add ontology-of-everything/SemanticSkills \
-  --skill huawei-cloud-billing-scout \
-  --agent codex \
-  --copy -y
-```
-
-List skills in this repo before installing:
+Replace `--agent cursor` with `claude-code` or `codex` as needed. List skills:
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills --list
 ```
 
-Local path:
+**Local path** (development):
 
 ```bash
 npx skills add ./skills/huawei-cloud-billing-scout \
@@ -102,6 +86,8 @@ npx skills add ./skills/huawei-cloud-billing-scout \
   --agent cursor \
   --copy -y
 ```
+
+**Hermes** ([Hermes agent](docs/agents/hermes.md)): `hermes skills install ontology-of-everything/SemanticSkills/huawei-cloud-billing-scout -y`, or rsync the local bundle into `~/.hermes/skills/`.
 
 ## Validate
 
@@ -111,10 +97,16 @@ All skills:
 ./tools/validate-all.sh
 ```
 
-Single skill:
+One skill (layout, contracts, evals, optional style gates):
 
 ```bash
 ./qa/huawei-cloud-billing-scout/validate.sh
+```
+
+Style-only audit (skillcheck + markdownlint + skill-scanner):
+
+```bash
+./qa/huawei-cloud-billing-scout/bin/skillgate.sh
 ```
 
 Optional real BSS smoke test:
@@ -125,9 +117,16 @@ HUAWEICLOUD_BILLING_SCOUT_CYCLE=2025-04 \
 ./qa/huawei-cloud-billing-scout/validate.sh
 ```
 
+Offline protocol benchmark (Skill Creator layout):
+
+```bash
+python3 qa/huawei-cloud-billing-scout/bin/build_iteration1.py
+# viewer: huawei-cloud-billing-scout-workspace/iteration-1/benchmark-review.html
+```
+
 ## Contributing
 
-See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) and [docs/authoring.md](docs/authoring.md).
+[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) · [docs/authoring.md](docs/authoring.md)
 
 New skill:
 
@@ -135,30 +134,16 @@ New skill:
 ./tools/skill-scaffold.sh <skill-name>
 ```
 
+Sync on every skill change: `skills/`, `qa/`, `docs/catalog.yml`, `docs/skills/<name>.md`.
+
 ## Marketplaces
 
-- [skills.sh](https://www.skills.sh/):
-  public GitHub plus `npx skills add`; requires valid
-  `skills/<name>/SKILL.md` and README install commands.
-- [SkillsMP](https://skillsmp.com/):
-  GitHub crawler and semantic search; requires `SKILL.md` frontmatter and the
-  `claude-skills` or `claude-code-skill` GitHub topic.
-- [ClawHub](https://clawhub.ai/):
-  `clawhub skill publish <path>`; requires GitHub account age, semver version,
-  text-only bundle, and accurate `metadata.openclaw`.
-- Cursor:
-  `npx skills add ... --agent cursor`; also discovers `.cursor/skills/` and
-  `.agents/skills/`.
-- Claude Code:
-  `npx skills add ... --agent claude-code`; plugin packaging is optional here.
-- Codex:
-  `npx skills add ... --agent codex`; plugin packaging is optional for direct
-  skill installs.
+| Channel | Notes |
+| --- | --- |
+| [skills.sh](https://www.skills.sh/) | Public GitHub + `npx skills add` |
+| [SkillsMP](https://skillsmp.com/) | `SKILL.md` frontmatter; topic `claude-skills` or `claude-code-skill` |
+| [ClawHub](https://clawhub.ai/) | `clawhub skill publish`; `metadata.openclaw`; skill bundle is **MIT-0** on ClawHub (repo source Apache-2.0) |
+| Cursor / Claude Code / Codex | `npx skills add ... --agent <agent>` |
+| Hermes | `hermes skills install` or copy `skills/<name>/` — see [docs/agents/hermes.md](docs/agents/hermes.md) |
 
-Each skill lives at `skills/<name>/SKILL.md` with `name`, a keyword-rich
-`description`, concise `compatibility`, and registry metadata when needed.
-ClawHub publishes skills under MIT-0 terms, so installable skill frontmatter must
-not declare a conflicting license even though this repository remains
-Apache-2.0. See
-[docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md)
-for the reference skill.
+Reference publish flow: [docs/skills/huawei-cloud-billing-scout.md](docs/skills/huawei-cloud-billing-scout.md).

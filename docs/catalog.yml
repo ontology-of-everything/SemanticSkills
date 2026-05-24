@@ -6,8 +6,8 @@ skills:
     qa: qa/huawei-cloud-billing-scout
     domain: cloud
     subdomains: [billing, finops]
-    summary: ClawHub-first Huawei Cloud BSS billing scout with semantic routing, briefing-style delivery, and 58 read-only query operations
-    summary_zh: ClawHub-first 华为云 BSS 账务只读侦察（语义路由、简报式交付 + 58 个只读查询 Operation）
+    summary: Huawei Cloud BSS read-only FinOps scout; semantic routing; IM-safe briefing delivery; 58 read-only query operations
+    summary_zh: 华为云 BSS 只读 FinOps 侦察；语义路由；IM 友好简报式答复；58 个只读查询 Operation
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, read-only BSS IAM, outbound network; no agent auto-install
     version: "2.3.2"

@@ -8,19 +8,25 @@ Conventions for skills in this monorepo. Spec baseline: [agentskills.io](https:/
 | --- | --- |
 | `skills/<name>/` | Installable runtime only (`SKILL.md` + optional `references/`, `scripts/`, `assets/`) |
 | `qa/<name>/` | Validation, evals, assertions — never copied by `npx skills add` |
+| `docs/skills/<name>.md` | Human-facing skill overview for the repo README index |
 
-QA layout (scheme A):
+QA layout (gate files stay under `qa/`, not `skills/`):
 
 ```text
 qa/<name>/
-├── validate.sh          # CI/local entry
+├── validate.sh
+├── skillcheck.toml
+├── .markdownlint.json
+├── policy.skill-scanner.yaml   # optional
 ├── README.md
 ├── evals/evals.json
+├── evals/llm-rubric.yml
 ├── assertions/README.md
-├── fixtures/            # optional contract or golden data
-└── bin/                 # optional maintainer scripts
+├── fixtures/
+└── bin/
+    ├── skillgate.sh            # optional: skillcheck + markdownlint + skill-scanner
+    └── …
 ```
-| `docs/skills/<name>.md` | Human-facing skill overview for the repo README index |
 
 ## Naming
 
@@ -92,8 +98,10 @@ New skill scaffold:
 ```text
 qa/<name>/evals/evals.json
         │
-        ├── with_skill ──► .workspaces/<name>/iteration-N/<eval>/with_skill/
+        ├── with_skill ──► <name>-workspace/iteration-N/eval-<id>/with_skill/
         └── baseline   ──► .../without_skill/
 ```
+
+`<name>-workspace/` at repo root is gitignored; do not commit it.
 
 Register the skill in `docs/catalog.yml` when adding a new package.
