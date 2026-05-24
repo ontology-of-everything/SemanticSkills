@@ -1,6 +1,6 @@
 # 命令合同附录
 
-本文件只保留 operation 合同：用途、必填、模板和限制。问题路由看 `semantic/catalog.yml`，语义边界看 `semantic/billing-ontology.yml`。
+本文件只保留 operation 合同：用途、必填、模板和限制。路由看 `semantic/catalog.yml`（`required_context` + `triggers`），语义边界看 `semantic/billing-ontology.yml`。
 
 ## 命令格式标准
 
@@ -18,7 +18,8 @@
 
 ## 全局约束
 
-- 只执行 `List*` / `Show*`；拒绝支付、续费、退款、退订、回收、创建、更新、删除、发送验证码、改余额或资源。
+- 只执行 `List*` / `Show*`；名称含 `Change` 的 `List*` / `Show*` 仍为只读查询（如账户/券流水），不是写操作。
+- 拒绝支付、续费、退款、退订、回收、创建、更新、删除、发送验证码、改余额或资源。
 - 默认 `limit<=10`、`offset=0`；找前置 ID 最多近 3 个账期、每命令 3 页、每页 `limit<=50`。
 - 数组和对象参数只用已验证的 dot notation；没有模板就停下，不试 JSON 字符串。
 - 账号、客户、资源、订单、交易、券、卡、伙伴 ID 默认脱敏。

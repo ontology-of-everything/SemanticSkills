@@ -1,28 +1,58 @@
 name: HuaweiCloudBillingSemanticCatalog
 type: semantic_catalog
-description: 薄路由；映射到 billing-ontology.yml 实体。
+description: 薄路由；按 scope/time/money_basis 映射到 billing-ontology.yml 实体。
 workflow:
-  - 识别范围、时间窗、金额口径与问题类型
-  - 路由实体并只读取证
+  - 解析 scope、time、money_basis，匹配 entry_point（可参考 triggers）
+  - 路由 ontology_entities 并只读取证
   - 输出事实表、小结与必要下一步
 entry_points:
   balance_and_debt:
-    questions: [余额, 欠费, 账户余额, 可用额度, 储值卡]
+    process: account_snapshot
+    required_context:
+      scope: [current_profile]
+      time: [point_in_time]
+      money_basis: [outstanding, billed]
+    triggers: [余额, 欠费, 账户余额, 可用额度, 储值卡]
     ontology_entities: [AccountBalance, AccountChangeRecord, StoredValueCard]
   monthly_spend:
-    questions: [本月花费, 上月花费, 月度汇总, 服务排行, 企业项目费用]
+    process: periodic_spend
+    required_context:
+      scope: [current_profile]
+      time: [bill_cycle]
+      money_basis: [billed, amortized]
+    triggers: [本月花费, 上月花费, 月度汇总, 服务排行, 企业项目费用]
     ontology_entities: [MonthlyBillSummary, CostAnalysis, AmortizedCost]
   charge_attribution:
-    questions: [为什么扣钱, 一直扣费, 删除后扣费, 哪个资源在扣费]
+    process: charge_attribution
+    required_context:
+      scope: [current_profile]
+      time: [bill_cycle, date_range]
+      money_basis: [billed]
+    triggers: [为什么扣钱, 一直扣费, 删除后扣费, 哪个资源在扣费]
     ontology_entities: [ResourceBillRecord, ResourceBillDetail, OrderEvidence]
   reconciliation:
-    questions: [对账, 导出对不上, 汇总和明细不一致, 订单和消费对不上]
+    process: reconciliation
+    required_context:
+      scope: [current_profile]
+      time: [bill_cycle]
+      money_basis: [billed, paid]
+    triggers: [对账, 导出对不上, 汇总和明细不一致, 订单和消费对不上]
     ontology_entities: [BillingStatement, MonthlyBillSummary, ResourceBillDetail, OrderEvidence]
   entitlement_and_deduction:
-    questions: [资源包, 代金券, 优惠券, 券额度, 抵扣, 没抵扣]
+    process: entitlement
+    required_context:
+      scope: [current_profile]
+      time: [bill_cycle, point_in_time]
+      money_basis: [billed, paid]
+    triggers: [资源包, 代金券, 优惠券, 券额度, 抵扣, 没抵扣]
     ontology_entities: [FreeResourcePackage, CouponChangeRecord, CouponQuota, StoredValueCard]
   account_scope:
-    questions: [企业主, 子账号, 伙伴, 代售, 客户账单, 客户余额, 调账]
+    process: multi_account
+    required_context:
+      scope: [enterprise, partner, sub_customer]
+      time: [bill_cycle, point_in_time]
+      money_basis: [billed, outstanding]
+    triggers: [企业主, 子账号, 伙伴, 代售, 客户账单, 客户余额, 调账]
     ontology_entities:
       - EnterpriseAndPartnerContext
       - EnterpriseAccountContext
@@ -30,10 +60,20 @@ entry_points:
       - PartnerAccountContext
       - PartnerBilling
   quote_and_identity:
-    questions: [价格试算, 续订金额, 折扣策略, 实名审核结果]
+    process: advisory
+    required_context:
+      scope: [current_profile, customer_id]
+      time: [point_in_time]
+      money_basis: [advisory]
+    triggers: [价格试算, 续订金额, 折扣策略, 实名审核结果]
     ontology_entities: [PricingAndIdentity, PricingQuote, IdentityReview]
   reference_dimensions:
-    questions: [服务编码, 资源类型, usage_type, 计量单位, 地域, 单位换算]
+    process: reference_lookup
+    required_context:
+      scope: [current_profile]
+      time: [not_applicable]
+      money_basis: [not_applicable]
+    triggers: [服务编码, 资源类型, usage_type, 计量单位, 地域, 单位换算]
     ontology_entities: [ReferenceDimensions]
 coverage:
   expected_query_operations: 58
