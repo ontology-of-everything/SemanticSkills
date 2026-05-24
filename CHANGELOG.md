@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.3.3 - 2026-05-24
+
+### Changed
+
+- **huawei-cloud-billing-scout**: YAGNI briefing-style **输出合同** (summary, fact
+  bullets, one follow-up); drop rigid `事实项 | 结果 | 状态` schema; **易懂的事实称呼**
+  aligned with dialogue and console wording (no user-facing API names); chat-safe
+  formatting without GFM pipe tables
+- **qa/huawei-cloud-billing-scout**: `llm-rubric.yml`, `run_protocol_eval.py`,
+  `export_llm_eval.py`, expanded eval assertions; validate guards aligned with the
+  new contract
+
+### Documentation
+
+- `CLAUDE.md`, `docs/skills/huawei-cloud-billing-scout.md`, QA READMEs
+
 ## 2.3.2 - 2026-05-23
 
 ### Documentation

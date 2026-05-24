@@ -1,5 +1,19 @@
 # 更新日志
 
+## 2.3.3 - 2026-05-24
+
+### 变更
+
+- **huawei-cloud-billing-scout**：YAGNI **简报式输出合同**（小结 + 事实要点 + 一条补证）；
+  移除僵硬三列表头；**易懂的事实称呼**（与对话/控制台一致，正文不写 API 名）；
+  聊天类消息禁用 GFM 管道表
+- **qa/huawei-cloud-billing-scout**：新增/对齐 `llm-rubric.yml`、`run_protocol_eval.py`、
+  `export_llm_eval.py` 与 eval 断言；`validate.sh` 门禁同步
+
+### 文档
+
+- 更新 `CLAUDE.md`、`docs/skills/huawei-cloud-billing-scout.md` 与 QA README
+
 ## 2.3.2 - 2026-05-23
 
 ### 文档
