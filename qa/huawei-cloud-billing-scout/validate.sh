@@ -142,8 +142,8 @@ if not entry:
     raise SystemExit("docs/catalog.yml missing huawei-cloud-billing-scout")
 if entry.get("path") != "skills/huawei-cloud-billing-scout" or entry.get("qa") != "qa/huawei-cloud-billing-scout":
     raise SystemExit("docs/catalog.yml path/qa mismatch")
-if entry.get("version") != "2.3.2":
-    raise SystemExit("docs/catalog.yml version should match VERSION (2.3.2)")
+if entry.get("version") != "2.3.3":
+    raise SystemExit("docs/catalog.yml version should match VERSION (2.3.3)")
 if entry.get("distribution") != "direct-skill":
     raise SystemExit("docs/catalog.yml distribution should be direct-skill")
 if "openclaw" not in entry.get("agents", []):
@@ -163,9 +163,9 @@ for needle in [
     "claude-code-skill",
     "MIT-0",
     "Output Contract",
-    "fact table",
-    "summary",
-    "needs verification",
+    "briefing-style",
+    "conclusion-first summary",
+    "chat-safe formatting",
 ]:
     if needle not in doc:
         raise SystemExit(f"skill docs missing: {needle}")
@@ -177,17 +177,15 @@ for needle in [
     "不要把调查负担转交给接收人",
     "完整业务 ID",
     "profile/region",
-    "待核验",
+    "未查不写",
+    "请自行对账",
 ]:
     if needle not in skill_text:
         raise SystemExit(f"SKILL.md missing output contract guard: {needle}")
-if not any(
-    token in skill_text
-    for token in ("事实项 | 结果 | 状态", "事实数据", "事实表")
-):
-    raise SystemExit(
-        "SKILL.md missing output contract guard: fact output (事实数据 / 事实表 / 事实项 | 结果 | 状态)"
-    )
+if "易懂的事实称呼" not in skill_text:
+    raise SystemExit("SKILL.md missing output contract guard: 易懂的事实称呼")
+if "业务说法" not in skill_text:
+    raise SystemExit("SKILL.md missing output contract guard: 业务说法")
 if not any(
     token in skill_text
     for token in ("0 元或低金额", "不得扩大成整月", "最终出账")
@@ -260,13 +258,103 @@ missing_entities = semantic_entities - entities
 if missing_entities:
     raise SystemExit(f"eval entity coverage missing: {sorted(missing_entities)}")
 
-print(f"yaml/docs/evals ok: {len(evals)} evals, {len(semantic_entities)} semantic entities")
+llm_eval = data.get("llm_eval") or {}
+rubric_rel = llm_eval.get("rubric")
+if rubric_rel != "evals/llm-rubric.yml":
+    raise SystemExit("evals.json llm_eval.rubric must be evals/llm-rubric.yml")
+rubric_path = root / "qa/huawei-cloud-billing-scout" / rubric_rel
+if not rubric_path.is_file():
+    raise SystemExit(f"missing LLM rubric: {rubric_path}")
+rubric = yaml.safe_load(rubric_path.read_text(encoding="utf-8")) or {}
+dims = rubric.get("dimensions") or []
+if len(dims) < 4:
+    raise SystemExit("llm-rubric.yml needs >=4 dimensions")
+global_assertions = rubric.get("global_assertions") or []
+if len(global_assertions) < 3:
+    raise SystemExit("llm-rubric.yml needs >=3 global_assertions")
+export_script = root / "qa/huawei-cloud-billing-scout" / (llm_eval.get("export") or "")
+if not export_script.is_file():
+    raise SystemExit(f"missing LLM export script: {export_script}")
+
+print(f"yaml/docs/evals ok: {len(evals)} evals, {len(semantic_entities)} semantic entities, llm rubric ok")
 PY
+}
+
+check_style_gates() {
+  local ml_config="$SKILL_DIR/.markdownlint.json"
+  if command -v markdownlint-cli2 >/dev/null 2>&1; then
+    if [[ -f "$ml_config" ]]; then
+      markdownlint-cli2 --config "$ml_config" "$SKILL_DIR/SKILL.md" "$SKILL_DIR/references/**/*.md" \
+        || fail "markdownlint-cli2 reported errors"
+    else
+      markdownlint-cli2 "$SKILL_DIR/SKILL.md" "$SKILL_DIR/references/**/*.md" \
+        || fail "markdownlint-cli2 reported errors"
+    fi
+    printf 'style: markdownlint ok\n'
+  else
+    printf 'style: skip markdownlint-cli2 (not installed)\n'
+  fi
+
+  if command -v skillcheck >/dev/null 2>&1; then
+    local sc_config="$SKILL_DIR/skillcheck.toml"
+    local sc_args=()
+    [[ -f "$sc_config" ]] && sc_args=(--config "$sc_config")
+    python3 - "${sc_args[@]}" "$SKILL_DIR/SKILL.md" <<'PY' || fail "skillcheck failed"
+import json
+import subprocess
+import sys
+
+args = sys.argv[1:]
+path = args[-1]
+cmd = ["skillcheck", "--format", "json", *args[:-1], path]
+raw = subprocess.run(cmd, capture_output=True, text=True, check=False)
+if raw.returncode not in (0, 1):
+    print(raw.stderr or raw.stdout, file=sys.stderr)
+    raise SystemExit(1)
+data = json.loads(raw.stdout)
+allowed_warnings = {"disclosure.metadata-budget"}
+failed = 0
+unexpected = []
+for result in data.get("results", []):
+    if not result.get("valid", True):
+        failed += 1
+    for diag in result.get("diagnostics", []):
+        sev = diag.get("severity")
+        rule = diag.get("rule")
+        if sev == "warning" and rule not in allowed_warnings:
+            unexpected.append(diag)
+if failed:
+    raise SystemExit("skillcheck reported invalid files")
+if unexpected:
+    for item in unexpected:
+        print(item, file=sys.stderr)
+    raise SystemExit("skillcheck reported unexpected warnings")
+print("skillcheck: pass (OpenClaw metadata-budget warning allowed)")
+PY
+    printf 'style: skillcheck ok\n'
+  else
+    printf 'style: skip skillcheck (not installed)\n'
+  fi
+}
+
+check_llm_eval_export() {
+  local count
+  count=$(python3 "$QA_DIR/bin/export_llm_eval.py" 2>/dev/null | wc -l | tr -d ' ')
+  [[ "$count" -eq 21 ]] || fail "LLM eval export expected 21 lines, got ${count:-0}"
+  printf 'llm: export_llm_eval ok (%s cases)\n' "$count"
+}
+
+check_protocol_eval() {
+  python3 "$QA_DIR/bin/run_protocol_eval.py" || fail "protocol eval (LLM assertions) failed"
+  printf 'llm: protocol eval ok\n'
 }
 
 check_layout
 check_text_guards
 check_yaml_and_docs
+check_style_gates
+check_llm_eval_export
+check_protocol_eval
 python3 "$QA_DIR/bin/verify_ops.py" "$SKILL_DIR" "$CONTRACTS_FILE"
 
 printf 'OK: huawei-cloud-billing-scout validation passed\n'

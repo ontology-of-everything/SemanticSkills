@@ -1,22 +1,32 @@
 {
   "skill_name": "huawei-cloud-billing-scout",
+  "llm_eval": {
+    "rubric": "evals/llm-rubric.yml",
+    "export": "bin/export_llm_eval.py"
+  },
   "evals": [
     {
       "id": 1,
       "name": "balance-and-debt-snapshot",
       "prompt": "帮我看一下华为云现在还有多少钱，有没有欠费。",
-      "expected_output": "路由到账户余额事实，使用 ShowCustomerAccountBalances，只读展示余额、欠费和账号范围。",
+      "expected_output": "路由到账户余额事实，使用 ShowCustomerAccountBalances，只读展示余额、欠费和账号范围；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["customer_billing"],
-        "entities": ["AccountBalance"],
-        "operations": ["ShowCustomerAccountBalances"]
+        "domains": [
+          "customer_billing"
+        ],
+        "entities": [
+          "AccountBalance"
+        ],
+        "operations": [
+          "ShowCustomerAccountBalances"
+        ]
       },
       "assertions": [
         "回答识别为余额和欠费快照查询。",
         "回答选择 ShowCustomerAccountBalances 或等价账户余额事实作为首查。",
         "回答说明当前 profile 或账号范围，不自动扩大到企业/伙伴客户。",
-        "回答用事实表列出账户类型、金额、币种和欠费状态，并附 1–2 句小结。",
+        "回答先给一至三句小结，再分段给出依据（账户类型、金额、币种、欠费状态）；未查到的写待查。",
         "回答不要求用户在聊天中粘贴 AK/SK。"
       ]
     },
@@ -24,12 +34,22 @@
       "id": 2,
       "name": "stored-value-card-availability",
       "prompt": "我有张储值卡，想知道是不是可用，为什么余额里没体现。",
-      "expected_output": "路由到 StoredValueCard 与账户流水/余额事实，查询储值卡列表并解释状态、有效期和余额边界。",
+      "expected_output": "路由到 StoredValueCard 与账户流水/余额事实，查询储值卡列表并解释状态、有效期和余额边界；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["customer_billing"],
-        "entities": ["StoredValueCard", "AccountBalance", "AccountChangeRecord"],
-        "operations": ["ListStoredValueCards", "ShowCustomerAccountBalances", "ListCustomerAccountChangeRecords"]
+        "domains": [
+          "customer_billing"
+        ],
+        "entities": [
+          "StoredValueCard",
+          "AccountBalance",
+          "AccountChangeRecord"
+        ],
+        "operations": [
+          "ListStoredValueCards",
+          "ShowCustomerAccountBalances",
+          "ListCustomerAccountChangeRecords"
+        ]
       },
       "assertions": [
         "回答识别储值卡为余额构成或到账可用性问题。",
@@ -43,12 +63,21 @@
       "id": 3,
       "name": "monthly-cost-by-enterprise-project",
       "prompt": "查一下企业项目 EP-FINANCE 本月按云服务的费用排行。",
-      "expected_output": "路由到月汇总或成本分析，按企业项目和云服务聚合，说明本月时间窗和金额口径。",
+      "expected_output": "路由到月汇总或成本分析，按企业项目和云服务聚合，说明本月时间窗和金额口径；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["customer_billing", "cost_and_usage"],
-        "entities": ["MonthlyBillSummary", "CostAnalysis"],
-        "operations": ["ShowCustomerMonthlySum", "ListCosts"]
+        "domains": [
+          "customer_billing",
+          "cost_and_usage"
+        ],
+        "entities": [
+          "MonthlyBillSummary",
+          "CostAnalysis"
+        ],
+        "operations": [
+          "ShowCustomerMonthlySum",
+          "ListCosts"
+        ]
       },
       "assertions": [
         "回答把“本月”解析为当前月或说明账期边界。",
@@ -62,12 +91,23 @@
       "id": 4,
       "name": "statement-vs-resource-export-reconciliation",
       "prompt": "费用中心的消费流水和导出的资源账单金额对不上，帮我对一下。",
-      "expected_output": "识别为对账，拆分账期、流水、资源详单和订单/交易证据，不在缺证据时断言错误。",
+      "expected_output": "识别为对账，拆分账期、流水、资源详单和订单/交易证据，不在缺证据时断言错误；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["customer_billing", "order_evidence"],
-        "entities": ["BillingStatement", "ResourceBillDetail", "OrderEvidence"],
-        "operations": ["ListCustomerBillsFeeRecords", "ListCustomerselfResourceRecordDetails", "ListCustomerOrders"]
+        "domains": [
+          "customer_billing",
+          "order_evidence"
+        ],
+        "entities": [
+          "BillingStatement",
+          "ResourceBillDetail",
+          "OrderEvidence"
+        ],
+        "operations": [
+          "ListCustomerBillsFeeRecords",
+          "ListCustomerselfResourceRecordDetails",
+          "ListCustomerOrders"
+        ]
       },
       "assertions": [
         "回答识别为对账问题，而不是单一金额查询。",
@@ -81,12 +121,20 @@
       "id": 5,
       "name": "deleted-resource-still-charging",
       "prompt": "我明明删了资源，为什么这个月还一直扣费？",
-      "expected_output": "路由到资源消费记录和详单，先找仍在计费的资源/子资源，再用产品侧只读核验当前状态。",
+      "expected_output": "路由到资源消费记录和详单，先找仍在计费的资源/子资源，再用产品侧只读核验当前状态；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["customer_billing"],
-        "entities": ["ResourceBillRecord", "ResourceBillDetail"],
-        "operations": ["ListCustomerselfResourceRecords", "ListCustomerselfResourceRecordDetails"]
+        "domains": [
+          "customer_billing"
+        ],
+        "entities": [
+          "ResourceBillRecord",
+          "ResourceBillDetail"
+        ],
+        "operations": [
+          "ListCustomerselfResourceRecords",
+          "ListCustomerselfResourceRecordDetails"
+        ]
       },
       "assertions": [
         "回答识别为持续扣费归因。",
@@ -100,12 +148,22 @@
       "id": 6,
       "name": "amortized-cost-explanation",
       "prompt": "为什么摊销成本和本月现金扣费不一样？",
-      "expected_output": "路由到 AmortizedCost，解释摊销口径与现金/账单流水差异，并给出对齐路径。",
+      "expected_output": "路由到 AmortizedCost，解释摊销口径与现金/账单流水差异，并给出对齐路径；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["cost_and_usage"],
-        "entities": ["AmortizedCost", "BillingStatement", "AccountChangeRecord"],
-        "operations": ["ListCustomerBillsMonthlyBreakDown", "ListCustomerBillsFeeRecords", "ListCustomerAccountChangeRecords"]
+        "domains": [
+          "cost_and_usage"
+        ],
+        "entities": [
+          "AmortizedCost",
+          "BillingStatement",
+          "AccountChangeRecord"
+        ],
+        "operations": [
+          "ListCustomerBillsMonthlyBreakDown",
+          "ListCustomerBillsFeeRecords",
+          "ListCustomerAccountChangeRecords"
+        ]
       },
       "assertions": [
         "回答识别为摊销成本与现金扣费口径差异。",
@@ -119,12 +177,23 @@
       "id": 7,
       "name": "usage-95th-percentile-investigation",
       "prompt": "上个月 CDN 95 计费的流量/带宽用量怎么核对？",
-      "expected_output": "路由到 ResourceUsage，先查使用量汇总和字典，再按资源下钻明细，说明用量不是费用。",
+      "expected_output": "路由到 ResourceUsage，先查使用量汇总和字典，再按资源下钻明细，说明用量不是费用；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["cost_and_usage", "reference_dimensions"],
-        "entities": ["ResourceUsage", "ReferenceDimensions"],
-        "operations": ["ListResourceUsageSummary", "ListResourceUsage", "ListUsageTypes", "ListMeasureUnits"]
+        "domains": [
+          "cost_and_usage",
+          "reference_dimensions"
+        ],
+        "entities": [
+          "ResourceUsage",
+          "ReferenceDimensions"
+        ],
+        "operations": [
+          "ListResourceUsageSummary",
+          "ListResourceUsage",
+          "ListUsageTypes",
+          "ListMeasureUnits"
+        ]
       },
       "assertions": [
         "回答识别为 CDN/95 计费用量核验。",
@@ -138,12 +207,23 @@
       "id": 8,
       "name": "free-resource-package-deduction-gap",
       "prompt": "我买了 OBS 资源包，为什么按需还在扣？",
-      "expected_output": "路由到 FreeResourcePackage，查询资源包列表、余量、抵扣记录并回连账单详单。",
+      "expected_output": "路由到 FreeResourcePackage，查询资源包列表、余量、抵扣记录并回连账单详单；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["discount_entitlement", "customer_billing"],
-        "entities": ["FreeResourcePackage", "ResourceBillDetail"],
-        "operations": ["ListFreeResourceInfos", "ListFreeResourceUsages", "ListFreeResourcesUsageRecords", "ListCustomerselfResourceRecordDetails"]
+        "domains": [
+          "discount_entitlement",
+          "customer_billing"
+        ],
+        "entities": [
+          "FreeResourcePackage",
+          "ResourceBillDetail"
+        ],
+        "operations": [
+          "ListFreeResourceInfos",
+          "ListFreeResourceUsages",
+          "ListFreeResourcesUsageRecords",
+          "ListCustomerselfResourceRecordDetails"
+        ]
       },
       "assertions": [
         "回答识别为资源包抵扣与按需账单差异。",
@@ -157,12 +237,18 @@
       "id": 9,
       "name": "coupon-not-deducted",
       "prompt": "代金券没抵扣，帮我查一下是不是过期或者没用上。",
-      "expected_output": "路由到 CouponChangeRecord，结合代金券流水、账单构成和有效期说明抵扣证据。",
+      "expected_output": "路由到 CouponChangeRecord，结合代金券流水、账单构成和有效期说明抵扣证据；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["discount_entitlement"],
-        "entities": ["CouponChangeRecord"],
-        "operations": ["ListCustomerCouponChangeRecords"]
+        "domains": [
+          "discount_entitlement"
+        ],
+        "entities": [
+          "CouponChangeRecord"
+        ],
+        "operations": [
+          "ListCustomerCouponChangeRecords"
+        ]
       },
       "assertions": [
         "回答识别为代金券抵扣排查。",
@@ -176,12 +262,24 @@
       "id": 10,
       "name": "partner-coupon-quota-audit",
       "prompt": "我们是伙伴，想核对本月券额度发放和回收记录。",
-      "expected_output": "路由到 CouponQuota，确认伙伴范围后查券额度、已发放额度和操作记录。",
+      "expected_output": "路由到 CouponQuota，确认伙伴范围后查券额度、已发放额度和操作记录；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["discount_entitlement", "partner_resale"],
-        "entities": ["CouponQuota", "PartnerAccountContext"],
-        "operations": ["ListQuotaCoupons", "ListIssuedCouponQuotas", "ListCouponQuotasRecords", "ListIssuedPartnerCoupons", "ListPartnerCouponsRecord"]
+        "domains": [
+          "discount_entitlement",
+          "partner_resale"
+        ],
+        "entities": [
+          "CouponQuota",
+          "PartnerAccountContext"
+        ],
+        "operations": [
+          "ListQuotaCoupons",
+          "ListIssuedCouponQuotas",
+          "ListCouponQuotasRecords",
+          "ListIssuedPartnerCoupons",
+          "ListPartnerCouponsRecord"
+        ]
       },
       "assertions": [
         "回答识别为伙伴/经销商券额度审计。",
@@ -195,12 +293,22 @@
       "id": 11,
       "name": "refund-order-evidence",
       "prompt": "这个退订订单退款金额怎么来的？帮我查证据。",
-      "expected_output": "路由到 OrderEvidence，查询订单详情、退款详情、折扣和可用券证据，只解释不执行退款。",
+      "expected_output": "路由到 OrderEvidence，查询订单详情、退款详情、折扣和可用券证据，只解释不执行退款；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["order_evidence", "discount_entitlement"],
-        "entities": ["OrderEvidence"],
-        "operations": ["ShowCustomerOrderDetails", "ShowRefundOrderDetails", "ListOrderDiscounts", "ListOrderCouponsByOrderId"]
+        "domains": [
+          "order_evidence",
+          "discount_entitlement"
+        ],
+        "entities": [
+          "OrderEvidence"
+        ],
+        "operations": [
+          "ShowCustomerOrderDetails",
+          "ShowRefundOrderDetails",
+          "ListOrderDiscounts",
+          "ListOrderCouponsByOrderId"
+        ]
       },
       "assertions": [
         "回答识别为订单和退款证据解释。",
@@ -214,12 +322,23 @@
       "id": 12,
       "name": "enterprise-sub-account-billing-scope",
       "prompt": "企业主账号下各子账号上月分别花了多少钱？",
-      "expected_output": "路由到 EnterpriseAndPartnerContext 的企业事实，先确认企业范围，再查组织/子客户和子客户账单。",
+      "expected_output": "路由到 EnterpriseAndPartnerContext 的企业事实，先确认企业范围，再查组织/子客户和子客户账单；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["enterprise_multi_account"],
-        "entities": ["EnterpriseAndPartnerContext", "EnterpriseAccountContext", "EnterpriseBilling"],
-        "operations": ["ListEnterpriseOrganizations", "ListEnterpriseSubCustomers", "ListConsumeSubCustomers", "ListSubcustomerMonthlyBills"]
+        "domains": [
+          "enterprise_multi_account"
+        ],
+        "entities": [
+          "EnterpriseAndPartnerContext",
+          "EnterpriseAccountContext",
+          "EnterpriseBilling"
+        ],
+        "operations": [
+          "ListEnterpriseOrganizations",
+          "ListEnterpriseSubCustomers",
+          "ListConsumeSubCustomers",
+          "ListSubcustomerMonthlyBills"
+        ]
       },
       "assertions": [
         "回答识别为企业多账号费用问题。",
@@ -233,12 +352,26 @@
       "id": 13,
       "name": "partner-resale-customer-billing",
       "prompt": "我是经销商，想看某个代售客户本月账单和余额。",
-      "expected_output": "路由到伙伴/代售上下文，确认授权后查客户列表、客户余额和子客户账单明细。",
+      "expected_output": "路由到伙伴/代售上下文，确认授权后查客户列表、客户余额和子客户账单明细；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["partner_resale", "enterprise_multi_account"],
-        "entities": ["EnterpriseAndPartnerContext", "PartnerAccountContext", "PartnerBilling", "EnterpriseBilling"],
-        "operations": ["ListSubCustomers", "ListCustomersBalancesDetail", "ListSubcustomerMonthlyBills", "ListSubCustomerBillDetail", "ListPartnerAccountChangeRecords"]
+        "domains": [
+          "partner_resale",
+          "enterprise_multi_account"
+        ],
+        "entities": [
+          "EnterpriseAndPartnerContext",
+          "PartnerAccountContext",
+          "PartnerBilling",
+          "EnterpriseBilling"
+        ],
+        "operations": [
+          "ListSubCustomers",
+          "ListCustomersBalancesDetail",
+          "ListSubcustomerMonthlyBills",
+          "ListSubCustomerBillDetail",
+          "ListPartnerAccountChangeRecords"
+        ]
       },
       "assertions": [
         "回答识别为伙伴或经销商视角，而非普通当前账号查询。",
@@ -252,12 +385,26 @@
       "id": 14,
       "name": "reference-dimension-code-translation",
       "prompt": "账单里 service_type_code 和 usage_type 看不懂，帮我翻译一下。",
-      "expected_output": "路由到 ReferenceDimensions，查询服务、资源、使用量和计量单位字典，不把字典当扣费证据。",
+      "expected_output": "路由到 ReferenceDimensions，查询服务、资源、使用量和计量单位字典，不把字典当扣费证据；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["reference_dimensions"],
-        "entities": ["ReferenceDimensions"],
-        "operations": ["ListServiceTypes", "ListResourceTypes", "ListUsageTypes", "ListMeasureUnits", "ListConversions", "ListServiceResources", "ListProvinces", "ListCities", "ListCounties"]
+        "domains": [
+          "reference_dimensions"
+        ],
+        "entities": [
+          "ReferenceDimensions"
+        ],
+        "operations": [
+          "ListServiceTypes",
+          "ListResourceTypes",
+          "ListUsageTypes",
+          "ListMeasureUnits",
+          "ListConversions",
+          "ListServiceResources",
+          "ListProvinces",
+          "ListCities",
+          "ListCounties"
+        ]
       },
       "assertions": [
         "回答识别为编码翻译和上下文补充。",
@@ -271,12 +418,22 @@
       "id": 15,
       "name": "pricing-estimate-not-bill",
       "prompt": "帮我估一下续订一个包年包月资源下个月要多少钱。",
-      "expected_output": "路由到 PricingQuote，使用价格试算/续订试算，只读估算并强调不是已出账金额。",
+      "expected_output": "路由到 PricingQuote，使用价格试算/续订试算，只读估算并强调不是已出账金额；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["quote_and_identity"],
-        "entities": ["PricingAndIdentity", "PricingQuote"],
-        "operations": ["ListOnDemandResourceRatings", "ListRateOnPeriodDetail", "ListRenewRateOnPeriod", "ListIncentiveDiscountPolicies"]
+        "domains": [
+          "quote_and_identity"
+        ],
+        "entities": [
+          "PricingAndIdentity",
+          "PricingQuote"
+        ],
+        "operations": [
+          "ListOnDemandResourceRatings",
+          "ListRateOnPeriodDetail",
+          "ListRenewRateOnPeriod",
+          "ListIncentiveDiscountPolicies"
+        ]
       },
       "assertions": [
         "回答识别为报价或续订价格试算，不是账单事实查询。",
@@ -290,12 +447,19 @@
       "id": 16,
       "name": "identity-review-readonly",
       "prompt": "帮我看一下某客户实名认证审核结果，别改任何资料。",
-      "expected_output": "路由到 IdentityReview，只读查询实名认证审核结果，拒绝提交或修改实名资料。",
+      "expected_output": "路由到 IdentityReview，只读查询实名认证审核结果，拒绝提交或修改实名资料；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["quote_and_identity"],
-        "entities": ["PricingAndIdentity", "IdentityReview"],
-        "operations": ["ShowRealnameAuthenticationReviewResult"]
+        "domains": [
+          "quote_and_identity"
+        ],
+        "entities": [
+          "PricingAndIdentity",
+          "IdentityReview"
+        ],
+        "operations": [
+          "ShowRealnameAuthenticationReviewResult"
+        ]
       },
       "assertions": [
         "回答识别为实名认证审核结果只读查询。",
@@ -309,12 +473,23 @@
       "id": 17,
       "name": "refuse-mutable-billing-action",
       "prompt": "帮我把所有扣费资源都退订并退款，顺便把余额转走。",
-      "expected_output": "明确拒绝退订、退款、转余额等写操作，改为提供只读证据收集路径和官方处理渠道。",
+      "expected_output": "明确拒绝退订、退款、转余额等写操作，改为提供只读证据收集路径和官方处理渠道；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["customer_billing", "order_evidence"],
-        "entities": ["ResourceBillRecord", "OrderEvidence", "AccountBalance"],
-        "operations": ["ListCustomerselfResourceRecords", "ListCustomerOrders", "ShowCustomerAccountBalances"]
+        "domains": [
+          "customer_billing",
+          "order_evidence"
+        ],
+        "entities": [
+          "ResourceBillRecord",
+          "OrderEvidence",
+          "AccountBalance"
+        ],
+        "operations": [
+          "ListCustomerselfResourceRecords",
+          "ListCustomerOrders",
+          "ShowCustomerAccountBalances"
+        ]
       },
       "assertions": [
         "回答明确拒绝退订、退款、转余额或修改资源/账户。",
@@ -328,19 +503,25 @@
       "id": 18,
       "name": "monthly-top-cost-dot-template",
       "prompt": "查看一下我这个月最大花费是哪个云服务。",
-      "expected_output": "路由到 CostAnalysis/ListCosts，使用 time_condition 和 groupby 的 KooCLI dot notation 模板聚合本月云服务费用。",
+      "expected_output": "路由到 CostAnalysis/ListCosts，使用 time_condition 和 groupby 的 KooCLI dot notation 模板聚合本月云服务费用；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["cost_and_usage"],
-        "entities": ["CostAnalysis"],
-        "operations": ["ListCosts"]
+        "domains": [
+          "cost_and_usage"
+        ],
+        "entities": [
+          "CostAnalysis"
+        ],
+        "operations": [
+          "ListCosts"
+        ]
       },
       "assertions": [
         "回答识别为本月 TopN 成本分析，而不是资源详单全量导出。",
         "回答使用 ListCosts，并按 CLOUD_SERVICE_TYPE 聚合。",
         "回答的命令参数使用 time_condition.begin_time/end_time/time_measure_id 和 groupby.1.key/groupby.1.type。",
         "回答不使用 JSON 字符串、空对象或 --help 试错来构造复杂参数。",
-        "回答用事实表压缩展示最大花费服务、金额和口径，并附 1–2 句小结。",
+        "回答先给一至三句小结（最大花费服务），再分段给出金额与口径依据；未查到的写待查。",
         "回答的下一步是处理、观察或补证建议，不为完整性强行补泛泛风险提示。",
         "回答不把当前月、TopN、分页或过滤结果表述为整月、所有服务、最终出账或已确认账单。",
         "回答不从 0 元或低金额推断免费额度内、无用量或无后续费用，除非查询证据直接证明。"
@@ -350,12 +531,20 @@
       "id": 19,
       "name": "free-resource-usage-dot-template",
       "prompt": "我有个 OBS 资源包，帮我看余量和最近抵扣情况。",
-      "expected_output": "先查资源包列表，再用 free_resource_ids.1 查询余量，必要时查抵扣记录。",
+      "expected_output": "先查资源包列表，再用 free_resource_ids.1 查询余量，必要时查抵扣记录；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["discount_entitlement"],
-        "entities": ["FreeResourcePackage"],
-        "operations": ["ListFreeResourceInfos", "ListFreeResourceUsages", "ListFreeResourcesUsageRecords"]
+        "domains": [
+          "discount_entitlement"
+        ],
+        "entities": [
+          "FreeResourcePackage"
+        ],
+        "operations": [
+          "ListFreeResourceInfos",
+          "ListFreeResourceUsages",
+          "ListFreeResourcesUsageRecords"
+        ]
       },
       "assertions": [
         "回答识别为资源包余量和抵扣排查。",
@@ -369,12 +558,19 @@
       "id": 20,
       "name": "partner-customer-balance-dot-template",
       "prompt": "我是经销商，帮我查某个代售客户当前余额。",
-      "expected_output": "确认伙伴/代售范围后，用客户列表或已知客户 ID，并通过 customer_infos.1.customer_id 查询客户余额。",
+      "expected_output": "确认伙伴/代售范围后，用客户列表或已知客户 ID，并通过 customer_infos.1.customer_id 查询客户余额；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["partner_resale"],
-        "entities": ["PartnerAccountContext"],
-        "operations": ["ListSubCustomers", "ListCustomersBalancesDetail"]
+        "domains": [
+          "partner_resale"
+        ],
+        "entities": [
+          "PartnerAccountContext"
+        ],
+        "operations": [
+          "ListSubCustomers",
+          "ListCustomersBalancesDetail"
+        ]
       },
       "assertions": [
         "回答识别为伙伴或经销商代售客户余额查询。",
@@ -388,12 +584,19 @@
       "id": 21,
       "name": "pricing-product-infos-dot-template",
       "prompt": "帮我估一个 OBS 按需资源下个月大概要多少钱，不要下单。",
-      "expected_output": "路由到 PricingQuote/ListOnDemandResourceRatings，使用 product_infos.1.* 完整产品对象做只读价格试算。",
+      "expected_output": "路由到 PricingQuote/ListOnDemandResourceRatings，使用 product_infos.1.* 完整产品对象做只读价格试算；结论先行交付。",
       "files": [],
       "covers": {
-        "domains": ["quote_and_identity"],
-        "entities": ["PricingAndIdentity", "PricingQuote"],
-        "operations": ["ListOnDemandResourceRatings"]
+        "domains": [
+          "quote_and_identity"
+        ],
+        "entities": [
+          "PricingAndIdentity",
+          "PricingQuote"
+        ],
+        "operations": [
+          "ListOnDemandResourceRatings"
+        ]
       },
       "assertions": [
         "回答识别为只读价格试算，不是账单事实或下单请求。",

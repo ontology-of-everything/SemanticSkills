@@ -168,9 +168,21 @@ def verify(skill_dir: Path, contracts_file: Path) -> list[str]:
     require(contract_ops == semantic_ops, f"contracts/semantic source mismatch: {sorted(contract_ops ^ semantic_ops)}", failures)
     require(catalog_entities <= semantic_entities, f"Catalog references unknown ontology entities: {sorted(catalog_entities - semantic_entities)}", failures)
 
+    CONTEXT_KEYS = ("scope", "time", "money_basis")
     for entry_name, entry in catalog_entry_points.items():
-        require(bool(entry.get("questions")), f"{entry_name} missing questions", failures)
         require(bool(entry.get("ontology_entities")), f"{entry_name} missing ontology_entities", failures)
+        require(bool(entry.get("triggers")), f"{entry_name} missing triggers", failures)
+        ctx = entry.get("required_context") or {}
+        require(isinstance(ctx, dict), f"{entry_name} required_context must be a mapping", failures)
+        for key in CONTEXT_KEYS:
+            values = ctx.get(key)
+            require(
+                isinstance(values, list) and len(values) > 0,
+                f"{entry_name} required_context.{key} must be a non-empty list",
+                failures,
+            )
+        if "questions" in entry:
+            failures.append(f"{entry_name} must use triggers, not questions")
 
     for op in sorted(contract_ops):
         require(op.startswith(("List", "Show")), f"{op} is not a List*/Show* query", failures)
