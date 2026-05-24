@@ -2,37 +2,38 @@
 
 Community Agent Skills monorepo — **not** official Huawei Cloud.
 
-## Edit targets
+## Layout
 
-- **Change** `skills/<name>/`, `qa/<name>/`, `docs/catalog.yml`, `docs/skills/<name>.md`
-- **Never** edit `.agents/`, `.workspaces/`, `skills/*-workspace/`, gate reports — all generated/gitignored
-- **Never** put `evals/`, `qa/`, `tests/`, credentials, or repo scripts inside `skills/` — `npx skills add` copies only `skills/`
+| Path | Role |
+| --- | --- |
+| `skills/<name>/` | Install payload (`npx skills add` copies **only** this) |
+| `qa/<name>/` | `validate.sh`, `evals/`, `assertions/`, `fixtures/`, `bin/` |
+| `docs/catalog.yml`, `docs/skills/<name>.md` | Index + overview |
+| `tools/` | `validate-all.sh`, `skill-scaffold.sh` |
+| `template/{skill,qa}/` | Scaffolds — not installable |
 
-## Routing (don't get this wrong)
+**Never edit:** `.agents/`, `.workspaces/`, `skills/*-workspace/`, `qa/*-workspace/`, gate reports, `.credentials/`.
 
-- Route by **fact / dimension / measure / time / scope** — not FAQ, not `common_questions` (removed from semantic YAML)
-- `SKILL.md` = protocol + hard rules | `semantic/*.yml` = grain/dimensions/measures/source_operation(s) only | `related-commands.md` = CLI templates (no `--help` first) | `*-playbook.md` = multi-step + output | `*-semantics.md` = terms only
-- kebab-case folder = `name` in frontmatter; English paths under `references/`
+**`skills/` purity:** no `evals/`, `qa/`, `tests/`, credentials, or repo scripts inside `skills/`.
 
-## Done means validated
+```text
+skills/<name>/SKILL.md              # protocol; folder name = frontmatter `name` (kebab-case)
+skills/<name>/references/
+  related-commands.md               # CLI templates
+  *-playbook.md | *-semantics.md    # steps/output | terms
+  semantic/*.yml                    # grain, dimensions, measures, source_operation(s)
 
-- Run `./qa/<name>/validate.sh` or `./tools/validate-all.sh` before claiming done
-- Skill changes: sync `skills/`, `qa/`, `docs/catalog.yml` version, `docs/skills/<name>.md`
-- New skill: `./tools/skill-scaffold.sh <name>` + catalog entry
+qa/<name>/validate.sh               # run before claiming done
+```
+
+Route by **fact / dimension / measure / time / scope** (not FAQ). Op change → sync `semantic/*.yml` + `related-commands.md` + `qa/.../fixtures/ops_contracts.yml`. Long text → `references/`, not SKILL frontmatter.
+
+Skill change: sync `skills/`, `qa/`, `docs/catalog.yml`, `docs/skills/<name>.md`. New skill: `./tools/skill-scaffold.sh <name>`.
 
 ## huawei-cloud-billing-scout
 
-- **Read-only BSS.** Refuse pay/renew/refund/delete/update/create
-- `ListCustomerAccountChangeRecords` / `ListCustomerCouponChangeRecords` **are allowed** (read-only ledger; `Change` in name ≠ write op)
-- Operation change = **3 files**: `semantic/*.yml` + `related-commands.md` + `qa/.../fixtures/ops_contracts.yml`
-- No auto `hcloud` install; no real BSS unless `HUAWEICLOUD_BILLING_SCOUT_REAL=1`
+Read-only BSS — refuse pay/renew/refund/delete/update/create. `ListCustomer*ChangeRecords` are **read** ledgers (`Change` ≠ write). No auto `hcloud`; real API only if `HUAWEICLOUD_BILLING_SCOUT_REAL=1`.
 
-## Git
+## Git & scope
 
-- **No commit** unless user asks
-- **No** `.credentials/`, `.env*`, AK/SK, credential CSV/JSON
-
-## Scope
-
-- Minimal diffs; no extra markdown unless asked
-- Long guidance → `references/`, not SKILL.md frontmatter
+No commit unless asked. No `.credentials/`, `.env*`, AK/SK. Minimal diffs; no extra markdown unless asked.

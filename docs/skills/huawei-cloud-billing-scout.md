@@ -1,6 +1,6 @@
 # huawei-cloud-billing-scout
 
-Read-only **Huawei Cloud / 华为云** billing scout via KooCLI/BSS. Community edition, not official Huawei Cloud.
+Read-only **Huawei Cloud / 华为云** FinOps billing assistant via KooCLI/BSS: one-page, conclusion-first answers for cost, attribution, and reconciliation. Community edition, not official Huawei Cloud.
 
 中文摘要见 [README-CN.md](../../README-CN.md#技能).
 
@@ -19,9 +19,9 @@ Read-only **Huawei Cloud / 华为云** billing scout via KooCLI/BSS. Community e
 
 The runtime bundle now follows a ClawHub-first split:
 
-- `SKILL.md` is the single runtime entry: when to use, core rules, the semantic-ontology workflow, and the output contract.
+- `SKILL.md` is the single runtime entry: FinOps north star, Constitution, hard constraints, one-page workflow, IM-friendly output contract; CLI install detail in `cli-installation.md`.
 - `references/README.md` is the lightweight navigation file for the reference bundle.
-- `references/semantic/catalog.yml` is a thin router from user questions to ontology entities.
+- `references/semantic/catalog.yml` routes by `required_context` (scope/time/money_basis) and `triggers` to ontology entities.
 - `references/semantic/billing-ontology.yml` is the single ontology file covering facts, scope, money basis, evidence boundaries, and 58 read-only query operations.
 - `references/related-commands.md` is a thin command-contract appendix for maintainers and QA.
 
@@ -40,7 +40,7 @@ billing-ontology.yml ─── pick fact, scope, money basis, evidence boundary
 related-commands.md ─── execute the smallest read-only hcloud BSS query set
      │
      ▼
-fact table ─── summary ─── optional next step
+summary (conclusion first) ─── fact items ─── optional next step
 ```
 
 ## Ontology Coverage
@@ -49,7 +49,7 @@ fact table ─── summary ─── optional next step
 
 | Layer | What it owns | Examples |
 | --- | --- | --- |
-| `catalog.yml` | Question routing | balance/debt, charge attribution, reconciliation, entitlements, account scope |
+| `catalog.yml` | Process routing (`required_context` + `triggers`) | balance/debt, charge attribution, reconciliation, entitlements, account scope |
 | `billing-ontology.yml` | Facts, dimensions, scope, money basis, evidence boundaries | `AccountBalance`, `BillingStatement`, `ResourceBillDetail`, `EnterpriseAndPartnerContext`, `PricingQuote` |
 | `related-commands.md` | Operation contract | required parameters, verified dot-notation templates, safety limits |
 
@@ -62,7 +62,7 @@ Refused: payment, renewal, refund execution, unsubscribe/cancel, create, update,
 
 ## Output Contract
 
-Final answers use a compact fact table (`事实项 | 结果 | 状态`; `proven` / `needs verification` only), a 1-2 sentence summary, and an optional smallest read-only next step when verification is still needed. Unproven but plausible explanations stay in the summary with qualifiers such as "more likely", never as table status. Raw command output, JSON, traces, profile/region details, and internal IDs stay out of the final answer; 0 or low amounts must not be used to infer free-tier coverage, no usage, no future charges, final billing, or all-service completeness unless the queried evidence directly proves that scope.
+Final answers follow the skill **输出合同** in `SKILL.md` (briefing-style: conclusion-first summary with scope/cycle/basis, then concise fact bullets from queries only; uncertainty in summary; chat-safe formatting; redaction; one read-only follow-up). See `qa/huawei-cloud-billing-scout/evals/llm-rubric.yml` for eval grading dimensions.
 
 ## Runtime bundle
 
@@ -133,7 +133,7 @@ ClawHub publish command (run only after explicit release approval):
 clawhub skill publish ./skills/huawei-cloud-billing-scout \
   --slug huawei-cloud-billing-scout \
   --name "Huawei Cloud Billing Scout" \
-  --version 2.3.2 \
+  --version 2.3.3 \
   --changelog "Consolidate catalog.yml + billing-ontology.yml; compact fact output; 21 evals" \
   --clawscan-note "Read-only hcloud BSS List/Show queries; no writes" \
   --tags latest
