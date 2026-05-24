@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.3.4 - 2026-05-24
+
+### Changed
+
+- **huawei-cloud-billing-scout**: ClawHub security-audit alignment — Huawei Cloud-only
+  description; enterprise/partner and read-only quote scope; reply language follows user;
+  tighter catalog triggers; CLI install doc is user-manual-only (Agent must not run
+  install/`sudo`)
+- **qa/huawei-cloud-billing-scout**: unified offline gate in `bin/gate.py`
+  (`validate.sh` → full; `gate.py style` for skillcheck/markdownlint/skill-scanner)
+
 ## 2.3.2 - 2026-05-24
 
 ### Changed

@@ -1,5 +1,14 @@
 # 更新日志
 
+## 2.3.4 - 2026-05-24
+
+### 变更
+
+- **huawei-cloud-billing-scout**：对齐 ClawHub 安全审计 — 仅华为云边界、description 与
+  catalog 范围一致、答复语言跟随用户、收紧触发词；安装文档仅用户执行（Agent 禁止安装/`sudo`）
+- **qa/huawei-cloud-billing-scout**：离线门禁统一为 `bin/gate.py`（`validate.sh` → full；
+  `gate.py style` 负责 style 工具）
+
 ## 2.3.2 - 2026-05-24
 
 ### 变更

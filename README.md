@@ -35,7 +35,7 @@ related-commands.md ► minimal read-only CLI (no --help first)
 
 `skills/<name>/` is the **install payload** (`npx skills add` copies only this tree). `qa/<name>/` holds `validate.sh`, evals, and audit configs (`bin/gate.py`, `skillcheck.toml`, etc.)—never installed with the skill.
 
-Example skill: [huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md) (**v2.3.2**). Authoring: [docs/authoring.md](docs/authoring.md).
+Example skill: [huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md) (**v2.3.4**). Authoring: [docs/authoring.md](docs/authoring.md).
 
 ## Repository layout
 
@@ -55,7 +55,7 @@ SemanticSkills/
 
 | Skill | Version | Summary | Docs |
 | --- | --- | --- | --- |
-| `huawei-cloud-billing-scout` | 2.3.2 | Read-only Huawei Cloud BSS FinOps via KooCLI; semantic routing; **IM-safe briefing** answers | [details](docs/skills/huawei-cloud-billing-scout.md) |
+| `huawei-cloud-billing-scout` | 2.3.4 | Read-only Huawei Cloud BSS FinOps via KooCLI; semantic routing; **IM-safe briefing** answers | [details](docs/skills/huawei-cloud-billing-scout.md) |
 
 Index: [docs/catalog.yml](docs/catalog.yml).
 

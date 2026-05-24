@@ -2,7 +2,7 @@
 
 Read-only **Huawei Cloud / 华为云** FinOps billing assistant via KooCLI/BSS (**hcloud ≥7.2**). Delivers one-page, **briefing-style** answers: how much, why charged, what differs, what evidence is still missing. Community edition, not official Huawei Cloud.
 
-**Version:** 2.3.2 · 中文仓库说明：[README-CN.md](../../README-CN.md)
+**Version:** 2.3.4 · 中文仓库说明：[README-CN.md](../../README-CN.md)
 
 ## What it does
 
@@ -142,7 +142,7 @@ ClawHub publish (only after explicit release approval):
 clawhub skill publish ./skills/huawei-cloud-billing-scout \
   --slug huawei-cloud-billing-scout \
   --name "Huawei Cloud Billing Scout" \
-  --version 2.3.2 \
+  --version 2.3.4 \
   --changelog "IM-safe briefing delivery; 答复格式; qa skillgate; 58 read-only BSS ops" \
   --clawscan-note "Read-only hcloud BSS List/Show; no writes" \
   --tags latest
