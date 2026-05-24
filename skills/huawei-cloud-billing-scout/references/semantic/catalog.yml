@@ -12,7 +12,7 @@ entry_points:
       scope: [current_profile]
       time: [point_in_time]
       money_basis: [outstanding, billed]
-    triggers: [余额, 欠费, 账户余额, 可用额度, 储值卡]
+    triggers: [华为云余额, 余额, 欠费, 账户余额, 可用额度, 储值卡]
     ontology_entities: [AccountBalance, AccountChangeRecord, StoredValueCard]
   monthly_spend:
     process: periodic_spend
@@ -36,7 +36,7 @@ entry_points:
       scope: [current_profile]
       time: [bill_cycle]
       money_basis: [billed, paid]
-    triggers: [对账, 导出对不上, 汇总和明细不一致, 订单和消费对不上]
+    triggers: [账单对账, 账务对账, 导出对不上, 汇总和明细不一致, 订单和消费对不上]
     ontology_entities: [BillingStatement, MonthlyBillSummary, ResourceBillDetail, OrderEvidence]
   entitlement_and_deduction:
     process: entitlement
@@ -44,7 +44,7 @@ entry_points:
       scope: [current_profile]
       time: [bill_cycle, point_in_time]
       money_basis: [billed, paid]
-    triggers: [资源包, 代金券, 优惠券, 券额度, 抵扣, 没抵扣]
+    triggers: [华为云资源包, 资源包, 代金券, 华为云优惠券, 券额度, 费用抵扣, 没抵扣]
     ontology_entities: [FreeResourcePackage, CouponChangeRecord, CouponQuota, StoredValueCard]
   account_scope:
     process: multi_account
@@ -65,7 +65,7 @@ entry_points:
       scope: [current_profile, customer_id]
       time: [point_in_time]
       money_basis: [advisory]
-    triggers: [价格试算, 续订金额, 折扣策略, 实名审核结果]
+    triggers: [华为云价格试算, 续订金额, 折扣策略, 实名审核结果]
     ontology_entities: [PricingAndIdentity, PricingQuote, IdentityReview]
   reference_dimensions:
     process: reference_lookup

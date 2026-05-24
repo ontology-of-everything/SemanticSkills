@@ -1,8 +1,11 @@
 # KooCLI 安装指南
 
+> **用户手册（非 Agent 执行）**  
+> 以下安装、`sudo`、下载脚本仅供用户在本机终端人工执行。Agent **仅**可执行 `hcloud version` 与 `hcloud configure list`；不得代为下载、安装或改凭证。
+
 ## 概述
 
-华为云 KooCLI（`hcloud`）是华为云提供的统一命令行工具，支持管理华为云所有云服务资源。
+华为云 KooCLI（`hcloud`）是华为云统一 CLI；**本技能仅使用其中 BSS 只读查询**。
 
 安装后执行 `hcloud version` 确认版本；下载包以官方
 [快速安装](https://support.huaweicloud.com/qs-hcli/hcli_02_003.html)

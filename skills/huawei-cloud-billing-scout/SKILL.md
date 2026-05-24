@@ -1,6 +1,6 @@
 ---
 name: huawei-cloud-billing-scout
-description: Validates Huawei Cloud BSS billing read-only. Use this skill whenever the user asks about 余额,账单,对账,储值卡,coupons,reconciliation; refuse pay,refund,delete.
+description: Huawei Cloud BSS read-only only—not other clouds/vendors. Use for 华为云余额/账单/对账/储值卡/coupons, enterprise/partner billing, read-only quote & identity. Refuse pay,refund,delete.
 metadata:
   openclaw:
     requires:
@@ -28,6 +28,8 @@ metadata:
 - **差得清楚** — 对账分列两侧口径；证据不足时不判断哪一方有误。
 - **决策收束** — 读完能行动或能等待补证；**不要把调查负担转交给接收人**。
 - **只读相伴** — 可指引控制台与官方流程；不代支付、退款或变更资源。
+- **语言一致** — 答复语言与用户一致；交付格式规则不变。
+- **华为云边界** — 非华为云或其他厂商账务不适用；先确认再走查证路径。
 
 ## 安全红线
 
@@ -45,7 +47,8 @@ metadata:
 3. **取证** — 在 `billing-ontology.yml` 选取 grain/度量并遵守 `evidence_boundary`；按 `related-commands.md` 执行最小只读命令（复杂参数仅用 dot notation）。**应当** 汇总/快照 → 明细 → 订单/权益；**禁止** 先拉全量详单，或在权限、账期、前置 ID 未澄清时贸然下结论。
 4. **交付** — 按 **答复格式** 输出。
 
-CLI 未就绪：阅读 `references/cli-installation.md`；**禁止** 代为安装或执行安装脚本。运行默认遵循 `related-commands.md`：`--cli-output=json`，`--limit≤10`，`--offset=0`；扩 ID 时 ≤3 账期、≤3 页/命令、`limit≤50`。
+CLI 未就绪：可将 `references/cli-installation.md` 转述给用户自行安装；**禁止** Agent 执行其中安装、`sudo` 或配置；Agent 仅 `hcloud version` / `configure list`。
+运行默认遵循 `related-commands.md`：`--cli-output=json`，`--limit≤10`，`--offset=0`；扩 ID 时 ≤3 账期、≤3 页/命令、`limit≤50`。
 
 ## 答复格式
 
