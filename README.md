@@ -33,7 +33,7 @@ related-commands.md ► minimal read-only CLI (no --help first)
 | Commands | Parameter templates, safety limits | `related-commands.md`, `cli-installation.md`, `iam-policies.md` |
 | Protocol | North star, workflow, output contract | `SKILL.md` |
 
-`skills/<name>/` is the **install payload** (`npx skills add` copies only this tree). `qa/<name>/` holds `validate.sh`, evals, and audit configs (`skillgate.sh`, `skillcheck.toml`, etc.)—never installed with the skill.
+`skills/<name>/` is the **install payload** (`npx skills add` copies only this tree). `qa/<name>/` holds `validate.sh`, evals, and audit configs (`bin/gate.py`, `skillcheck.toml`, etc.)—never installed with the skill.
 
 Example skill: [huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md) (**v2.3.2**). Authoring: [docs/authoring.md](docs/authoring.md).
 
@@ -42,7 +42,7 @@ Example skill: [huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-sco
 ```text
 SemanticSkills/
 ├── skills/<name>/       # SKILL.md + references/ (install bundle)
-├── qa/<name>/           # validate.sh, evals/, bin/skillgate.sh, lint configs
+├── qa/<name>/           # validate.sh, evals/, bin/gate.py, lint configs
 ├── docs/                # catalog.yml, authoring, per-agent install notes
 ├── tools/               # validate-all.sh, skill-scaffold.sh
 ├── template/{skill,qa}/
@@ -106,7 +106,7 @@ One skill (layout, contracts, evals, optional style gates):
 Style-only audit (skillcheck + markdownlint + skill-scanner):
 
 ```bash
-./qa/huawei-cloud-billing-scout/bin/skillgate.sh
+python3 qa/huawei-cloud-billing-scout/bin/gate.py style
 ```
 
 Optional real BSS smoke test:
@@ -120,7 +120,6 @@ HUAWEICLOUD_BILLING_SCOUT_CYCLE=2025-04 \
 Offline protocol benchmark (Skill Creator layout):
 
 ```bash
-python3 qa/huawei-cloud-billing-scout/bin/build_iteration1.py
 # viewer: huawei-cloud-billing-scout-workspace/iteration-1/benchmark-review.html
 ```
 

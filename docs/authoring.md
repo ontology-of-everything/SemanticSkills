@@ -24,7 +24,7 @@ qa/<name>/
 ├── assertions/README.md
 ├── fixtures/
 └── bin/
-    ├── skillgate.sh            # optional: skillcheck + markdownlint + skill-scanner
+    ├── gate.py                 # optional: gate.py style (skillcheck + markdownlint + skill-scanner)
     └── …
 ```
 

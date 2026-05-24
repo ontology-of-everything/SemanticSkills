@@ -4,7 +4,7 @@ Community skills monorepo — not official Huawei Cloud.
 
 ## Do not get wrong
 
-- **`skills/<name>/` = install payload only** (`npx skills add` copies this tree). Put gates, evals, scripts, and `skillcheck.toml` under **`qa/<name>/`**, never inside `skills/`.
+- **`skills/<name>/` = install payload only** (`npx skills add` copies this tree). Put gates, evals, and `skillcheck.toml` under **`qa/<name>/`** (`validate.sh` → `bin/gate.py full`); never inside `skills/`.
 - **Do not edit or commit:** `.agents/`, `*-workspace/`, `.workspaces/`, `.credentials/`, gate reports.
 - **Done means** `./qa/<name>/validate.sh` (or `./tools/validate-all.sh`) passes — say so only after running it.
 - **Skill change** syncs four places: `skills/`, `qa/`, `docs/catalog.yml`, `docs/skills/<name>.md`. New skill: `./tools/skill-scaffold.sh <name>`.

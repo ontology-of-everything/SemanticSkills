@@ -1,30 +1,20 @@
 # huawei-cloud-billing-scout QA
 
-Quality gate for the Huawei Cloud billing skill. Run it after changing `SKILL.md`,
-`references/semantic/catalog.yml`, `references/semantic/billing-ontology.yml`,
-`references/related-commands.md`, or the public docs.
+Quality gate for the Huawei Cloud billing skill. Run after changing `SKILL.md`,
+semantic YAML, `related-commands.md`, or public docs.
 
 ## Commands
 
 ```bash
-./qa/huawei-cloud-billing-scout/validate.sh
-./qa/huawei-cloud-billing-scout/bin/skillgate.sh   # skillcheck + markdownlint + skill-scanner only
+./qa/huawei-cloud-billing-scout/validate.sh              # full gate (CI / Done)
+python3 qa/huawei-cloud-billing-scout/bin/gate.py fast   # deterministic only
+python3 qa/huawei-cloud-billing-scout/bin/gate.py style  # skillcheck + markdownlint + skill-scanner
 ./tools/validate-all.sh
-
-# Skill-creator iteration-1 (offline with_skill vs naive baseline, benchmark + HTML viewer):
-python3 qa/huawei-cloud-billing-scout/bin/build_iteration1.py
-# Open: huawei-cloud-billing-scout-workspace/iteration-1/benchmark-review.html
-# Timing in benchmark is local golden-answer generation only (see benchmark-mode.json), not live agent latency.
 ```
 
-The default gate is offline and read-only. It parses YAML, checks install purity,
-verifies the thin Catalog, single billing ontology, command appendix, and
-`fixtures/ops_contracts.yml` stay aligned on the same 58 read-only query
-operations, enforces verified dot-notation templates for complex KooCLI
-parameters, validates eval schema (including `llm-rubric.yml`), runs
-markdownlint-cli2 and skillcheck when installed, exports 21 LLM eval cases, runs
-protocol eval (`bin/run_protocol_eval.py`) against merged global + per-case
-assertions, and blocks mutable BSS operation examples.
+`validate.sh` is offline and read-only: layout, ripgrep guards, YAML/docs/evals,
+58-op contracts (`verify_ops.py`), eval export, optional style tools, offline
+protocol eval (golden answers + assertion rules — no LLM API).
 
 ## Layout
 
@@ -34,16 +24,16 @@ qa/huawei-cloud-billing-scout/
 ├── skillcheck.toml
 ├── .markdownlint.json
 ├── policy.skill-scanner.yaml
-├── README.md
 ├── evals/evals.json
 ├── evals/llm-rubric.yml
-├── bin/skillgate.sh
-├── bin/export_llm_eval.py
-├── bin/run_protocol_eval.py
-├── assertions/README.md
 ├── fixtures/ops_contracts.yml
-└── bin/verify_ops.py
+└── bin/
+    ├── gate.py
+    ├── gate_checks.py
+    ├── qa_common.py
+    ├── protocol_grading.py
+    ├── export_llm_eval.py
+    └── verify_ops.py
 ```
 
-Do not store raw BSS responses, credentials, account IDs, resource IDs, order IDs,
-or agent workspaces under `qa/`.
+Do not store raw BSS responses, credentials, IDs, or agent workspaces under `qa/`.

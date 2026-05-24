@@ -33,7 +33,7 @@ related-commands.md ► 最小只读 CLI（禁止先 --help）
 | 命令 | 参数模板与安全上限 | `related-commands.md`、`cli-installation.md`、`iam-policies.md` |
 | 协议 | North star、工作流、答复格式 | `SKILL.md` |
 
-`skills/<name>/` 是**安装载荷**（`npx skills add` 只复制此目录）。`qa/<name>/` 放 `validate.sh`、eval 与审计配置（`skillgate.sh`、`skillcheck.toml` 等），**不会**随技能安装。
+`skills/<name>/` 是**安装载荷**（`npx skills add` 只复制此目录）。`qa/<name>/` 放 `validate.sh`、eval 与审计配置（`bin/gate.py`、`skillcheck.toml` 等），**不会**随技能安装。
 
 示例技能：[huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md)（**v2.3.2**）。编写规范：[docs/authoring.md](docs/authoring.md)。
 
@@ -42,7 +42,7 @@ related-commands.md ► 最小只读 CLI（禁止先 --help）
 ```text
 SemanticSkills/
 ├── skills/<name>/       # SKILL.md + references/（安装包）
-├── qa/<name>/           # validate.sh、evals/、bin/skillgate.sh、lint 配置
+├── qa/<name>/           # validate.sh、evals/、bin/gate.py、lint 配置
 ├── docs/                # catalog.yml、编写规范、各 Agent 安装说明
 ├── tools/               # validate-all.sh、skill-scaffold.sh
 ├── template/{skill,qa}/
@@ -106,7 +106,7 @@ npx skills add ./skills/huawei-cloud-billing-scout \
 仅风格审计（skillcheck + markdownlint + skill-scanner）：
 
 ```bash
-./qa/huawei-cloud-billing-scout/bin/skillgate.sh
+python3 qa/huawei-cloud-billing-scout/bin/gate.py style
 ```
 
 可选真实 BSS 烟测：
@@ -120,7 +120,6 @@ HUAWEICLOUD_BILLING_SCOUT_CYCLE=2025-04 \
 离线协议评测（Skill Creator 目录）：
 
 ```bash
-python3 qa/huawei-cloud-billing-scout/bin/build_iteration1.py
 # 查看器：huawei-cloud-billing-scout-workspace/iteration-1/benchmark-review.html
 ```
 

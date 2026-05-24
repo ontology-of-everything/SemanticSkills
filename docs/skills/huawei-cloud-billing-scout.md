@@ -31,7 +31,7 @@ skills/huawei-cloud-billing-scout/
         └── billing-ontology.yml
 ```
 
-No `evals/`, `qa/`, `skillgate.sh`, lint configs, or `*-workspace/` under `skills/`.
+No `evals/`, `qa/`, `gate.py`, lint configs, or `*-workspace/` under `skills/`.
 
 ## In-skill flow
 
@@ -96,15 +96,14 @@ qa/huawei-cloud-billing-scout/
 ├── evals/llm-rubric.yml
 ├── fixtures/ops_contracts.yml
 └── bin/
-    ├── skillgate.sh
-    ├── run_protocol_eval.py
-    ├── build_iteration1.py
-    └── verify_ops.py
+    ├── gate.py
+    ├── verify_ops.py
+    └── export_llm_eval.py
 ```
 
 ```bash
 ./qa/huawei-cloud-billing-scout/validate.sh
-./qa/huawei-cloud-billing-scout/bin/skillgate.sh   # optional style-only
+python3 qa/huawei-cloud-billing-scout/bin/gate.py style   # optional style-only
 ```
 
 Default gate is offline. It does not call BSS unless `HUAWEICLOUD_BILLING_SCOUT_REAL=1` is set for maintainer smoke tests.
