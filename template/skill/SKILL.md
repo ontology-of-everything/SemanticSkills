@@ -12,6 +12,10 @@ metadata:
 
 Brief instructions. Move detailed reference material to `references/`.
 
+## Agent discipline
+
+Path-changing ambiguity only; no re-asks on stated or settled facts; proceed when context suffices; one blocking question when user judgment is required. Mandatory domain clarifiers (scope, time, IDs) still apply—never as a questionnaire.
+
 ## References
 
 | Topic | File |

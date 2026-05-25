@@ -24,6 +24,11 @@ check_skill_layout() {
   for item in "${forbidden[@]}"; do
     [[ ! -e "$SKILL_DIR/$item" ]] || fail "forbidden in skill dir: $item"
   done
+  local sibling
+  for sibling in "$SKILL_DIR"/*-workspace; do
+    [[ -e "$sibling" ]] || continue
+    fail "Skill Creator workspace belongs at repo root, not skills/: $(basename "$sibling")"
+  done
   [[ -f "$QA_DIR/evals/evals.json" ]] || fail "missing evals file: $QA_DIR/evals/evals.json"
   [[ -f "$QA_DIR/assertions/README.md" ]] || fail "missing assertions guide"
   [[ ! -f "$QA_DIR/evals.json" ]] || fail "duplicate eval source: $QA_DIR/evals.json"
