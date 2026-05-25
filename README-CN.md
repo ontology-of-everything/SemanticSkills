@@ -35,7 +35,7 @@ related-commands.md ► 最小只读 CLI（禁止先 --help）
 
 `skills/<name>/` 是**安装载荷**（`npx skills add` 只复制此目录）。`qa/<name>/` 放 `validate.sh`、eval 与审计配置（`bin/gate.py`、`skillcheck.toml` 等），**不会**随技能安装。
 
-示例技能：[huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md)（**v2.3.5**）。编写规范：[docs/authoring.md](docs/authoring.md)。
+示例技能：[huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md)（**v2.3.6**）。编写规范：[docs/authoring.md](docs/authoring.md)。**Interaction discipline**（一次只问一事）：[authoring § Interaction discipline](docs/authoring.md#interaction-discipline-all-skills)。
 
 ## 仓库布局
 

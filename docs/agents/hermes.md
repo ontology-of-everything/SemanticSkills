@@ -37,3 +37,5 @@ Optional repo gate before sync:
 ```bash
 ./qa/huawei-cloud-billing-scout/validate.sh
 ```
+
+**Interaction discipline** (一次只问一事): [authoring.md § Interaction discipline](../authoring.md#interaction-discipline-all-skills).

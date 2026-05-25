@@ -15,3 +15,5 @@ current working directory up to the repository root.
 
 For broad reusable distribution, Codex recommends plugins, but plugin packaging
 is optional and not required for this repository's direct skill install path.
+
+**Interaction discipline** (一次只问一事): [authoring.md § Interaction discipline](../authoring.md#interaction-discipline-all-skills).

@@ -66,6 +66,20 @@ metadata:
 
 Keep frontmatter concise; put long guidance in `references/`.
 
+## Interaction discipline (all skills)
+
+One **Agent discipline** / **工作准则** bullet per `SKILL.md` (template default). Canonical line unless the domain is stricter:
+
+> 歧义仅问改查证路径者；已述/已决不重问；可自证则推进；须裁断则一次一问。
+
+| Do | Don't |
+| --- | --- |
+| One blocking ask when scope, time, money basis, or ID changes routing | Re-ask settled scope, cycle, or read-only intent |
+| Route and deliver when facts suffice | Multi-item clarification before any investigation |
+| Layer domain mandatory clarifiers (`evidence_boundary`, partner `customer_id`) | Skip evidence boundaries because “don't ask” |
+
+Evals: `proceed-without-reasking-*`, `single-clarification-*` in `qa/<name>/evals/evals.json`. Offline: `protocol_grading.py`; LLM: `interaction_discipline` in `llm-rubric.yml`.
+
 ## Install purity
 
 Do **not** place inside `skills/<name>/`:

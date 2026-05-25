@@ -17,3 +17,5 @@ Or copy `skills/<skill-name>/` to:
 Folder name must match `name` in `SKILL.md` frontmatter.
 
 See [agentskills.io](https://agentskills.io/) and Claude Code docs for skill discovery behavior.
+
+**Interaction discipline** (一次只问一事): [authoring.md § Interaction discipline](../authoring.md#interaction-discipline-all-skills).

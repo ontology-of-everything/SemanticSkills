@@ -35,7 +35,7 @@ related-commands.md ► minimal read-only CLI (no --help first)
 
 `skills/<name>/` is the **install payload** (`npx skills add` copies only this tree). `qa/<name>/` holds `validate.sh`, evals, and audit configs (`bin/gate.py`, `skillcheck.toml`, etc.)—never installed with the skill.
 
-Example skill: [huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md) (**v2.3.5**). Authoring: [docs/authoring.md](docs/authoring.md).
+Example skill: [huawei-cloud-billing-scout](docs/skills/huawei-cloud-billing-scout.md) (**v2.3.6**). Authoring: [docs/authoring.md](docs/authoring.md). **Interaction discipline** (一次只问一事): [authoring § Interaction discipline](docs/authoring.md#interaction-discipline-all-skills).
 
 ## Repository layout
 
