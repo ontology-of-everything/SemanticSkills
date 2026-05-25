@@ -47,7 +47,6 @@ FORBIDDEN_SKILL_PATHS = (
     "qa",
     "tests",
     ".workspaces",
-    "huawei-cloud-billing-scout-workspace",
 )
 
 LEGACY_SEMANTIC = (
@@ -96,6 +95,12 @@ def check_layout() -> None:
     for name in FORBIDDEN_SKILL_PATHS:
         if (SKILL_DIR / name).exists():
             raise SystemExit(f"FAIL: forbidden runtime bundle path: {name}")
+    skills_parent = SKILL_DIR.parent
+    for path in skills_parent.iterdir():
+        if path.is_dir() and path.name.endswith("-workspace"):
+            raise SystemExit(
+                f"FAIL: Skill Creator workspace belongs at repo root, not skills/: {path.name}"
+            )
     for name in QA_FILES_FORBIDDEN_IN_SKILL:
         if (SKILL_DIR / name).exists():
             raise SystemExit(f"FAIL: QA gate file must not live in skills/: {name}")
@@ -215,8 +220,8 @@ def _check_evals(data: dict, semantic_entities: set[str], contracts: dict) -> in
     if data.get("skill_name") != "huawei-cloud-billing-scout":
         raise SystemExit("FAIL: eval skill_name mismatch")
     evals = data.get("evals")
-    if not isinstance(evals, list) or len(evals) < 21:
-        raise SystemExit("FAIL: expected at least 21 eval cases")
+    if not isinstance(evals, list) or len(evals) < 24:
+        raise SystemExit("FAIL: expected at least 24 eval cases")
     domains: set[str] = set()
     entities: set[str] = set()
     names: set[str] = set()
@@ -280,8 +285,9 @@ def check_docs_and_evals() -> tuple[int, int]:
     _require_needles(
         skill_text,
         [
-            "语义本体", "答复格式", "不要把调查负担转交给接收人", "完整业务 ID",
-            "profile/region", "未查不写", "请自行对账", "易懂的事实称呼", "业务说法",
+            "evidence_boundary", "答复", "不转交调查负担", "完整业务 ID",
+            "`profile`", "未查不写", "请自行对账", "业务称呼", "业务说法",
+            "只问会改变查证路径", "一次一问", "查证路径",
         ],
         "SKILL.md output contract guard",
     )
@@ -299,7 +305,8 @@ def check_docs_and_evals() -> tuple[int, int]:
         repo_docs,
         [
             "clawhub skill publish", "claude-skills", "--agent claude-code",
-            "--agent codex", "hermes skills install",
+            "--agent codex", "hermes skills install", "Interaction discipline",
+            "一次只问一事",
         ],
         "repo docs marketplace guidance",
     )

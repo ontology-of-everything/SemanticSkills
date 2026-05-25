@@ -605,6 +605,89 @@
         "回答不只填写 project_id，也不尝试创建、续订、支付或下单。",
         "回答缺少规格、区域或使用量时先澄清，不编造报价参数。"
       ]
+    },
+    {
+      "id": 22,
+      "name": "proceed-without-reasking-settled-scope",
+      "prompt": "我是当前登录账号，查 2025-04 账期企业项目 EP-FINANCE 按云服务的费用排行，只读就行。",
+      "expected_output": "账期、企业项目与只读范围已给定，直接定口径并路由成本分析，不重问已述事实；结论先行交付。",
+      "files": [],
+      "covers": {
+        "domains": [
+          "customer_billing",
+          "cost_and_usage"
+        ],
+        "entities": [
+          "MonthlyBillSummary",
+          "CostAnalysis"
+        ],
+        "operations": [
+          "ShowCustomerMonthlySum",
+          "ListCosts"
+        ]
+      },
+      "assertions": [
+        "回答不重问用户已给出的账期、企业项目 EP-FINANCE 或只读意图。",
+        "回答识别为指定账期与企业项目的云服务费用排行查询。",
+        "回答优先使用 ShowCustomerMonthlySum 或 ListCosts 做聚合，而不是直接全量详单。",
+        "回答先给一至三句小结，再分段给出依据（账期、企业项目、金额口径）；未查到的写待查。",
+        "回答在缺凭证时给出一条只读补证建议，而非并列多条无关澄清问题。"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "single-clarification-partner-customer-id",
+      "prompt": "我是经销商，想查某个代售客户余额，还没客户提供 ID。",
+      "expected_output": "客户 ID 阻塞查证路径，仅提出一条澄清（客户标识或如何从客户列表选定），不重问经销商身份；结论先行交付。",
+      "files": [],
+      "covers": {
+        "domains": [
+          "partner_resale"
+        ],
+        "entities": [
+          "PartnerAccountContext"
+        ],
+        "operations": [
+          "ListSubCustomers",
+          "ListCustomersBalancesDetail"
+        ]
+      },
+      "assertions": [
+        "回答识别为伙伴或经销商代售客户余额查询且客户 ID 未提供。",
+        "回答仅提出一条阻塞查证路径的澄清（客户标识或如何从客户列表选定），不并列多个无关问题。",
+        "回答说明可用 ListSubCustomers 发现客户范围后再查余额。",
+        "回答不对用户已声明的经销商身份重复确认。",
+        "回答使用 ListCustomersBalancesDetail 时包含 customer_infos.1.customer_id dot notation。"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "no-reask-readonly-after-refund-evidence-stated",
+      "prompt": "订单号尾号 8842 的退款金额怎么来的？只读查证据，不要帮我退款。",
+      "expected_output": "路由到 OrderEvidence 只读解释退款构成，拒绝代办退款，不重问只读意图；缺完整订单号时一次只问必要信息。",
+      "files": [],
+      "covers": {
+        "domains": [
+          "order_evidence",
+          "discount_entitlement"
+        ],
+        "entities": [
+          "OrderEvidence"
+        ],
+        "operations": [
+          "ShowCustomerOrderDetails",
+          "ShowRefundOrderDetails",
+          "ListOrderDiscounts",
+          "ListOrderCouponsByOrderId"
+        ]
+      },
+      "assertions": [
+        "回答识别为订单和退款证据解释。",
+        "回答明确拒绝退订、退款、转余额或修改资源/账户。",
+        "回答不重问用户已声明的只读意图或是否退款。",
+        "回答使用 ShowCustomerOrderDetails 和 ShowRefundOrderDetails 等只读查询。",
+        "回答在需要完整订单标识时一次只问必要信息，不发送澄清问卷。"
+      ]
     }
   ]
 }

@@ -102,8 +102,10 @@ def cmd_fast(args: argparse.Namespace) -> int:
     )
     _run_verify_ops()
     export_count = _run_export_count()
-    if export_count != 21:
-        raise SystemExit(f"FAIL: eval export expected 21 lines, got {export_count}")
+    if export_count != eval_count:
+        raise SystemExit(
+            f"FAIL: eval export expected {eval_count} lines, got {export_count}"
+        )
     print(f"export: export_llm_eval ok ({export_count} cases)")
     if not args.skip_style:
         run_style(require_all=False)

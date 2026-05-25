@@ -23,7 +23,7 @@ Only this tree is copied by `npx skills add` or Hermes local sync:
 
 ```text
 skills/huawei-cloud-billing-scout/
-├── SKILL.md                 # 工作准则 · 安全红线 · 查证路径 · 答复格式
+├── SKILL.md                 # 原则 · 分工 · 查证路径（四阶段表）· 红线 · 答复 · 边界
 └── references/
     ├── related-commands.md
     ├── cli-installation.md
@@ -59,23 +59,24 @@ related-commands.md ─── smallest read-only hcloud BSS query set
 
 | Section | Purpose |
 | --- | --- |
-| North star | One-page: 花、因、差；有据则证 |
-| 工作准则 | Scope/口径、对账分列、不甩锅调查、只读相伴 |
-| 安全红线 | 只读、不泄密、不越界推断、非官方 |
-| 查证路径 | 定口径 → 选入口 → 取证 → 交付 |
-| 答复格式 | Briefing delivery contract (see below) |
+| 原则 | 北极星 + 三件套（scope/账期/口径）+ 单一事实不混 + 证据边界自洽 |
+| 分工 | SKILL.md / catalog.yml / billing-ontology.yml / related-commands.md 四件套各司其职 |
+| 查证路径 | 四阶段表（定口径 → 选入口 → 取证 → 交付），含对账与企业/伙伴默认 |
+| 红线 | 只读 / 不泄密 / 不外推，三条各附一句「为何」从原则派生 |
+| 答复 | 答复格式 briefing delivery contract（见下） |
+| 边界 | 服务范围、官方身份、答复语言、环境就绪 |
 
 ## 答复格式 (briefing-style output contract)
 
 Answers follow **答复格式** in `SKILL.md` (conclusion-first summary, then fact bullets):
 
 1. **Briefing summary** (1–3 sentences) — scope, billing period, money basis; spend / cause / delta / gaps.
-2. **Fact bullets** — only **queried** facts; **易懂的事实称呼** (console-aligned; no API names in user text).
+2. **Fact bullets** — only **queried** facts; **业务称呼** (console-aligned; no API names in user text).
 3. **Delivery floor** — no JSON walls, command logs, full business IDs, credentials, or `profile/region`; at most **one** read-only next step in plain language; never「请自行对账」.
 
-**IM-safe:** single chat messages must **not** use GFM pipe tables (`|...|`). Use `·` or short paragraphs (Feishu, WeChat, and similar channels).
+**IM-safe:** facts are rendered as `·` lists or short paragraphs, not Markdown tables — the delivery channel is often IM (Feishu, WeChat, etc.) where pipe characters do not render.
 
-Grading: `qa/huawei-cloud-billing-scout/evals/llm-rubric.yml` (merged into all **21** eval cases).
+Grading: `qa/huawei-cloud-billing-scout/evals/llm-rubric.yml` (merged into all **24** eval cases; evals 22–24 exercise dialogue-progression discipline — "一次一问").
 
 ## Safety boundary
 

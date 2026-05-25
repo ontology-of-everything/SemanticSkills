@@ -121,7 +121,7 @@ def _rules() -> list[GradeRule]:
       ),
       (
           "balance-routing",
-          lambda a: "ShowCustomerAccountBalances" in a or "ListCustomerAccountBalances" in a,
+          lambda a: "ShowCustomerAccountBalances" in a,
           lambda _a, text, e: (
               _any_op(text, *_covers_ops(e)) or text_mentions_op(text, "ShowCustomerAccountBalances"),
               "routing op",
@@ -348,6 +348,20 @@ def _rules() -> list[GradeRule]:
           lambda a: "拒绝" in a or "不包含 Pay" in a or ("禁止" in a and "写操作" in a),
           lambda a, text, _e: _grade_refusal_mutable(a, text),
       ),
+      (
+          "no-reask-settled",
+          lambda a: "不重问" in a or "反复追问" in a,
+          lambda a, text, e: _grade_no_reask(a, text, e),
+      ),
+      (
+          "single-clarification",
+          lambda a: "一次只问" in a
+          or "仅提出一条" in a
+          or "澄清问卷" in a
+          or "不并列多个" in a
+          or ("一条只读补证" in a and "而非" in a),
+          lambda a, text, _e: _grade_single_clarification(a, text),
+      ),
     ]
     return [GradeRule(name, when=when, grade=grade) for name, when, grade in rules]
 
@@ -377,6 +391,43 @@ def _grade_clean_delivery(text: str) -> bool:
         or re.search(r"\bList[A-Z][A-Za-z]+\b", text)
         or re.search(r"\bShow[A-Z][A-Za-z]+\b", text)
     )
+
+
+def _grade_no_reask(assertion: str, text: str, eval_item: dict[str, Any]) -> tuple[bool, str]:
+    if "不重问" not in assertion and "反复追问" not in assertion:
+        return True, "no-reask n/a"
+    prompt = str(eval_item.get("prompt") or "")
+    failures: list[str] = []
+    if "2025-04" in prompt and re.search(r"请.{0,12}确认.{0,16}账期|哪.{0,6}账期", text):
+        failures.append("re-asked billing cycle")
+    if "EP-FINANCE" in prompt and re.search(
+        r"请.{0,12}确认.{0,16}企业项目|哪个企业项目", text
+    ):
+        failures.append("re-asked enterprise project")
+    if "只读" in prompt and re.search(
+        r"是否.{0,10}退款|要不要.{0,10}退款|仍要.{0,10}退款", text
+    ):
+        failures.append("re-asked refund vs readonly")
+    if "经销商" in prompt and re.search(r"请.{0,12}确认.{0,8}经销", text):
+        failures.append("re-asked partner role")
+    if failures:
+        return False, "; ".join(failures)
+    return True, "no reask ok"
+
+
+def _grade_single_clarification(assertion: str, text: str) -> tuple[bool, str]:
+    if not any(
+        token in assertion
+        for token in ("一次只问", "仅提出一条", "澄清问卷", "不并列多个", "一条只读补证")
+    ):
+        return True, "single-clarification n/a"
+    asks = re.findall(r"(?:请|能否|可否)[^\n]{0,80}[？?]", text)
+    numbered = re.findall(r"(?:^|\n)\s*\d+[\.\)、]", text, re.MULTILINE)
+    if len(asks) > 1 or len(numbered) >= 2:
+        return False, f"too many blocking questions ({len(asks)} asks, {len(numbered)} numbered)"
+    if "澄清问卷" in assertion and (text.count("？") + text.count("?")) > 2:
+        return False, "questionnaire"
+    return True, "single clarification ok"
 
 
 def _grade_refusal_mutable(assertion: str, text: str) -> tuple[bool, str]:
@@ -507,6 +558,21 @@ GOLDEN_BODIES: dict[str, str] = {
         "OBS 按需报价试算，不下单；报价不等于账单。",
         "嵌套参数用 product_infos.1；缺规格/区域/用量先澄清，不编造。",
         "只读做按需报价试算（小分页）。",
+    ),
+    "proceed-without-reasking-settled-scope": yagni_answer(
+        "将按 2025-04 账期、企业项目 EP-FINANCE 做云服务费用排行；具体金额待查。",
+        "范围=当前登录账号；账期=2025-04；过滤 EP-FINANCE；按云服务聚合成本分析。",
+        "只读做成本分析（小分页）；不先问账期或企业项目。",
+    ),
+    "single-clarification-partner-customer-id": yagni_answer(
+        "经销商视角查代售客户余额需客户标识；未查前不报余额。",
+        "可用客户列表发现范围；余额查询需 customer_infos.1.customer_id。",
+        "请提供代售客户 ID，或确认是否先从客户列表选定一位客户？",
+    ),
+    "no-reask-readonly-after-refund-evidence-stated": yagni_answer(
+        "**拒绝**代办退款；当前账号只读解释尾号 8842 订单退款构成，金额待查。",
+        "范围=当前账号；订单与退款详情只读；订单证据≠消费归因。",
+        "请提供完整订单号后，只读查退款详情（小分页）。",
     ),
 }
 
