@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.3.6 - 2026-05-25
+
+### Features
+
+- **huawei-cloud-billing-scout**: restructure `SKILL.md` (principles, roles, four-stage investigation
+  table, red lines, briefing delivery, boundaries); expand `related-commands.md` BSS templates
+- **huawei-cloud-billing-scout**: interaction discipline — evals 22–24, `protocol_grading.py`,
+  rubric `interaction_discipline`; **24** eval cases total
+
+### Changed
+
+- **qa/huawei-cloud-billing-scout**: gate export count tracks eval count; fail if `skills/*-workspace`
+  exists (Skill Creator output belongs at repo root)
+
+### Documentation
+
+- **authoring**: interaction discipline for all skills; SkillsMP monorepo topic indexing note
+- **project**: `CLAUDE.md` Skill Creator workspace placement; README and agent guides link
+  discipline section
+
+### Template
+
+- **template**: `validate.sh` rejects `*-workspace` under `skills/`
+
 ## 2.3.5 - 2026-05-24
 
 ### Changed

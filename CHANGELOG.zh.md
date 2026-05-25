@@ -1,5 +1,25 @@
 # 更新日志
 
+## 2.3.6 - 2026-05-25
+
+### 新功能
+
+- **huawei-cloud-billing-scout**：重组 `SKILL.md`（原则 / 分工 / 四阶段查证表 / 红线 / 答复 / 边界）；扩充 `related-commands.md` BSS 模板
+- **huawei-cloud-billing-scout**：对话推进纪律 — eval 22–24、`protocol_grading.py`、rubric `interaction_discipline`；共 **24** 条 eval
+
+### 变更
+
+- **qa/huawei-cloud-billing-scout**：gate 导出条数随 eval 数量；禁止 `skills/*-workspace`（Skill Creator 输出须在仓库根目录）
+
+### 文档
+
+- **authoring**：全技能对话推进纪律；SkillsMP 单仓 topic 索引说明
+- **project**：`CLAUDE.md` 明确 Skill Creator workspace 位置；README 与各 agent 指南链到纪律章节
+
+### 模板
+
+- **template**：`validate.sh` 拒绝 `skills/` 下的 `*-workspace`
+
 ## 2.3.5 - 2026-05-24
 
 ### 变更
