@@ -275,7 +275,7 @@ def check_docs_and_evals() -> tuple[int, int]:
         DOC_FILE.read_text(encoding="utf-8"),
         [
             "install payload", "billing-ontology.yml", "catalog.yml",
-            "58 unique read-only BSS query operations", "validate.sh", "bin/gate.py",
+            "53 unique read-only BSS query operations", "validate.sh", "bin/gate.py",
             "clawhub skill publish", "clawscan-note", "claude-code-skill", "MIT-0",
             "答复格式", "briefing-style", "IM-safe", "hermes.md",
         ],

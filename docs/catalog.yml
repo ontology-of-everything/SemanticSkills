@@ -8,9 +8,9 @@ skills:
     display_name_zh: "华为云 · 花多少为何扣 · 只读对账"
     domain: cloud
     subdomains: [billing, finops]
-    summary: Read-only Huawei Cloud BSS FinOps—balance, spend, charge attribution, reconciliation, coupons, enterprise billing; one-page briefing; 58 read-only ops
-    summary_zh: 华为云 · 花多少为何扣 · 只读对账；余额/扣费归因/对账/券包/企业账；一页简报；58 个只读 Operation
-    version: "2.3.6"
+    summary: Read-only Huawei Cloud BSS FinOps—balance, spend, charge attribution, reconciliation, coupons, enterprise billing; one-page briefing; 53 read-only ops; refuses pricing-quote and real-name review
+    summary_zh: 华为云 · 花多少为何扣 · 只读对账；余额/扣费归因/对账/券包/企业账；一页简报；53 个只读 Operation；拒绝报价/实名
+    version: "2.3.7"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, read-only BSS IAM, outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp, clawhub]

@@ -4,7 +4,7 @@
 
 Read-only **Huawei Cloud / 华为云** BSS FinOps via KooCLI (**hcloud ≥7.2**): balance, monthly spend, charge attribution, reconciliation, coupons, enterprise and partner billing. One-page briefing—how much, why charged, what differs, what evidence is still missing. Community edition, not official Huawei Cloud.
 
-**Version:** 2.3.5 · 中文仓库说明：[README-CN.md](../../README-CN.md)
+**Version:** 2.3.6+ (ClawHub audit alignment in progress) · 中文仓库说明：[README-CN.md](../../README-CN.md)
 
 ## What it does
 
@@ -15,7 +15,7 @@ Read-only **Huawei Cloud / 华为云** BSS FinOps via KooCLI (**hcloud ≥7.2**)
 | Reconciliation | Console vs export, summary vs detail, order vs usage |
 | Entitlements | Resource packages, coupons, partner quotas, deduction gaps |
 | Scope | Enterprise/sub-account, partner/reseller views |
-| Consulting | Pricing estimates, billing-cycle interpretation (read-only) |
+| Out of scope | Pricing quotes, real-name review, non-Huawei-Cloud billing — refused with a pointer to console/sales tools |
 
 ## Runtime bundle (install payload)
 
@@ -41,7 +41,10 @@ No `evals/`, `qa/`, `gate.py`, lint configs, or `*-workspace/` under `skills/`.
 User question
      │
      ▼
-catalog.yml ─── triggers → ontology_entities
+SKILL.md 华为云门禁 ─── confirm Huawei Cloud scope / profile when unclear
+     │
+     ▼
+catalog.yml ─── triggers (华为云-prefixed) → ontology_entities
      │
      ▼
 billing-ontology.yml ─── fact, scope, money_basis, evidence_boundary
@@ -53,7 +56,7 @@ related-commands.md ─── smallest read-only hcloud BSS query set
 答复格式 ─── 小结 → 事实要点 → 一条只读下一步（如有）
 ```
 
-58 unique read-only BSS query operations (KooCLI 7.2.2), aligned across ontology, commands, and `qa/.../fixtures/ops_contracts.yml`.
+53 unique read-only BSS query operations (KooCLI 7.2.2), aligned across ontology, commands, and `qa/.../fixtures/ops_contracts.yml`. Pricing-quote and real-name review operations were removed in 2.3.7 to retract the skill to a billing-only boundary; see `out_of_scope` in `catalog.yml`.
 
 ## SKILL.md structure
 
@@ -61,10 +64,10 @@ related-commands.md ─── smallest read-only hcloud BSS query set
 | --- | --- |
 | 原则 | 北极星 + 三件套（scope/账期/口径）+ 单一事实不混 + 证据边界自洽 |
 | 分工 | SKILL.md / catalog.yml / billing-ontology.yml / related-commands.md 四件套各司其职 |
-| 查证路径 | 四阶段表（定口径 → 选入口 → 取证 → 交付），含对账与企业/伙伴默认 |
+| 查证路径 | 华为云门禁 + 四阶段表（定口径 → 选入口 → 取证 → 交付），含对账与企业/伙伴默认 |
 | 红线 | 只读 / 不泄密 / 不外推，三条各附一句「为何」从原则派生 |
 | 答复 | 答复格式 briefing delivery contract（见下） |
-| 边界 | 服务范围、官方身份、答复语言、环境就绪 |
+| 边界 | 服务范围（仅 BSS 只读账务）、拒绝路由（报价/实名/非华为云）、官方身份、答复语言、环境就绪 |
 
 ## 答复格式 (briefing-style output contract)
 
@@ -142,12 +145,13 @@ npx skills add ./skills/huawei-cloud-billing-scout \
 ClawHub publish (only after explicit release approval):
 
 ```bash
-clawhub skill publish ./skills/huawei-cloud-billing-scout \
+# Use absolute path to the skill folder (relative ./skills/... may fail on some CLI versions)
+clawhub skill publish "$PWD/skills/huawei-cloud-billing-scout" \
   --slug huawei-cloud-billing-scout \
   --name "Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation" \
-  --version 2.3.5 \
-  --changelog "2.3.5: English marketplace title and searchable description" \
-  --clawscan-note "Read-only hcloud BSS List/Show; no writes" \
+  --version <semver> \
+  --changelog "<semver>: ClawHub audit alignment — drop pricing-quote and real-name review (retract to billing-only boundary), Huawei Cloud-prefixed catalog triggers, provider_gate" \
+  --clawscan-note "Huawei Cloud BSS List/Show read-only only. Billing scope only (balance/spend/attribution/reconciliation/coupons/cards/enterprise/partner); refuses pricing-quote, real-name review, and non-Huawei-Cloud billing; agent must not install hcloud; no writes" \
   --tags latest
 ```
 

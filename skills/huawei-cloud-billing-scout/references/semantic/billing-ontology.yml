@@ -61,10 +61,6 @@ section_index:
     - PartnerBilling
   reference_dimensions:
     - ReferenceDimensions
-  quote_and_identity:
-    - PricingAndIdentity
-    - PricingQuote
-    - IdentityReview
 entities:
   # Customer billing facts: balances, summaries, statements, resource-level charges.
   - name: AccountBalance
@@ -409,41 +405,3 @@ entities:
       - ServiceResourceRelation
       - Geography
     evidence_boundary: 字典只翻译和补充上下文，不作为扣费事实。
-
-  # Quote and identity: advisory-only entities that must not be confused with billed facts.
-  - name: PricingAndIdentity
-    kind: advisory_domain
-    domain: quote_and_identity
-    source_operations:
-      - BSS/ListOnDemandResourceRatings
-      - BSS/ListRateOnPeriodDetail
-      - BSS/ListRenewRateOnPeriod
-      - BSS/ListIncentiveDiscountPolicies
-      - BSS/ShowRealnameAuthenticationReviewResult
-    summary: 报价、折扣策略和实名认证结果；只读咨询，不替代账单事实。
-    subentities:
-      - PricingQuote
-      - IdentityReview
-    evidence_boundary: 靠近下单、续费、支付或实名变更时，只读说明，拒绝代操作。
-
-  - name: PricingQuote
-    kind: advisory_fact
-    domain: quote_and_identity
-    source_operations:
-      - BSS/ListOnDemandResourceRatings
-      - BSS/ListRateOnPeriodDetail
-      - BSS/ListRenewRateOnPeriod
-      - BSS/ListIncentiveDiscountPolicies
-    grain: 每个产品价格、续订报价或折扣策略结果一条记录
-    summary: 回答按需报价、包年包月报价、续订试算和折扣策略问题。
-    evidence_boundary: 报价不是已出账金额；实际费用以账单、订单和合同口径为准。
-
-  - name: IdentityReview
-    kind: advisory_fact
-    domain: quote_and_identity
-    source_operations:
-      - BSS/ShowRealnameAuthenticationReviewResult
-    grain: 每个客户实名认证审核结果一条记录
-    summary: 回答实名认证审核结果查询。
-    required_context: [customer_id]
-    evidence_boundary: 只查审核结果；不提交或变更实名认证。

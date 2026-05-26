@@ -56,11 +56,6 @@ IAM Action 会随账号类型、站点和服务版本变化。本文给权限设
 | `ListProvinces` | 省份字典 |
 | `ListCities` | 城市字典 |
 | `ListCounties` | 区县字典 |
-| `ListOnDemandResourceRatings` | 按需产品价格试算 |
-| `ListRateOnPeriodDetail` | 包年包月开通价格试算 |
-| `ListRenewRateOnPeriod` | 包年包月续订价格试算 |
-| `ListIncentiveDiscountPolicies` | 产品折扣/激励策略 |
-| `ShowRealnameAuthenticationReviewResult` | 实名认证审核结果 |
 
 策略骨架（示意，落地前以 IAM 控制台/API Explorer 的实际 Action 为准）：
 

@@ -36,15 +36,12 @@ OP_ALIASES: dict[str, tuple[str, ...]] = {
     "ListSubCustomers": ("代售客户", "子客户列表"),
     "ListCustomersBalancesDetail": ("客户余额",),
     "ListServiceTypes": ("服务类型", "字典"),
-    "ListRenewRateOnPeriod": ("续订试算", "续订报价"),
-    "ListOnDemandResourceRatings": ("按需报价", "试算"),
-    "ShowRealnameAuthenticationReviewResult": ("实名审核",),
 }
 
 INTENT_KEYWORDS = (
     "余额", "欠费", "储值卡", "对账", "扣费", "摊销", "资源包", "代金券",
-    "伙伴", "经销商", "企业", "字典", "报价", "试算", "实名", "CDN", "退款",
-    "TopN", "成本分析", "资源详单",
+    "伙伴", "经销商", "企业", "字典", "CDN", "退款",
+    "TopN", "成本分析", "资源详单", "拒绝路由", "超出", "范围外",
 )
 
 MUTABLE_OP_RE = re.compile(
@@ -207,26 +204,13 @@ def _rules() -> list[GradeRule]:
           lambda _a, text, _e: (text_mentions_op(text, "ListServiceTypes") or "字典" in text, "reference dims"),
       ),
       (
-          "pricing",
-          lambda a: "ListOnDemandResourceRatings" in a or "ListRenewRateOnPeriod" in a,
+          "out-of-scope-refusal",
+          lambda a: "拒绝路由" in a or "超出本技能范围" in a or "超出技能范围" in a or "不在本只读账务技能范围" in a or "不在本只读账务范围" in a,
           lambda _a, text, _e: (
-              text_mentions_op(text, "ListOnDemandResourceRatings")
-              or text_mentions_op(text, "ListRenewRateOnPeriod"),
-              "pricing op",
+              any(token in text for token in ("不在", "超出", "范围外", "拒绝路由"))
+              and any(token in text for token in ("控制台", "销售", "账号中心", "对应云厂商", "其他云", "AWS", "Azure", "阿里")),
+              "out-of-scope refusal",
           ),
-      ),
-      (
-          "identity",
-          lambda a: "ShowRealnameAuthenticationReviewResult" in a,
-          lambda _a, text, _e: (
-              text_mentions_op(text, "ShowRealnameAuthenticationReviewResult"),
-              "identity op",
-          ),
-      ),
-      (
-          "dot-product",
-          lambda a: "product_infos.1" in a,
-          lambda _a, text, _e: ("product_infos.1" in text, "product_infos dot"),
       ),
       (
           "dot-free-resource",
@@ -284,16 +268,6 @@ def _rules() -> list[GradeRule]:
               "伙伴" in text or "经销商" in text or "企业" in text or "子账号" in text,
               "scope role",
           ),
-      ),
-      (
-          "quote",
-          lambda a: "报价" in a or "试算" in a,
-          lambda _a, text, _e: ("报价" in text or "试算" in text, "quote"),
-      ),
-      (
-          "realname-keyword",
-          lambda a: "实名" in a,
-          lambda _a, text, _e: ("实名" in text, "identity"),
       ),
       (
           "delete-charge",
@@ -524,15 +498,15 @@ GOLDEN_BODIES: dict[str, str] = {
         "服务类型/用量类型字典；缺失编码保留原值不编造中文；范围=当前账号。",
         "只读查服务类型字典（小分页）。",
     ),
-    "pricing-estimate-not-bill": yagni_answer(
-        "这是续订报价试算，不是已出账金额；不引导下单。",
-        "报价≠发票或合同金额。",
-        "只读做续订报价试算（规格齐全后，小分页）。",
+    "refuse-pricing-quote-out-of-scope": yagni_answer(
+        "价格试算/续订报价不在本只读账务技能范围，超出 BSS 已出账事实边界；不调用 BSS 报价接口、不引导下单。",
+        "拒绝路由：试算不是已出账金额；本技能只覆盖账单/对账/资源包等只读事实。",
+        "请在华为云控制台价格计算器或销售侧定价工具完成试算。",
     ),
-    "identity-review-readonly": yagni_answer(
-        "仅只读查询实名审核结果，不修改资料。",
-        "实名审核非计费证据；客户标识脱敏。",
-        "只读查实名审核结果（提供客户标识后）。",
+    "refuse-realname-review-out-of-scope": yagni_answer(
+        "实名认证审核结果不在本只读账务技能范围（身份维度超出 BSS 账务边界），且非计费扣款证据；不调用 BSS 实名接口、不提交或变更资料。",
+        "拒绝路由：实名审核属账号身份维度，超出本技能账务边界。",
+        "请到华为云控制台账号中心查看实名审核结果。",
     ),
     "refuse-mutable-billing-action": yagni_answer(
         "**拒绝**代您退订、退款或转余额；可只读解释当前账号扣费与订单。",
@@ -554,10 +528,10 @@ GOLDEN_BODIES: dict[str, str] = {
         "嵌套参数用 customer_infos.1.customer_id；空结果不等于余额为零。",
         "只读查客户余额明细（小分页）。",
     ),
-    "pricing-product-infos-dot-template": yagni_answer(
-        "OBS 按需报价试算，不下单；报价不等于账单。",
-        "嵌套参数用 product_infos.1；缺规格/区域/用量先澄清，不编造。",
-        "只读做按需报价试算（小分页）。",
+    "refuse-other-cloud-balance-out-of-scope": yagni_answer(
+        "AWS 账务超出本技能范围（仅服务华为云 BSS）；不调用 hcloud BSS 接口、不混用华为云口径回答 AWS 余额。",
+        "拒绝路由：非华为云账务（AWS）不在本技能范围；本技能仅覆盖华为云 BSS 只读事实。",
+        "请到对应云厂商（AWS Billing 或 Cost Explorer）查看余额与欠费。",
     ),
     "proceed-without-reasking-settled-scope": yagni_answer(
         "将按 2025-04 账期、企业项目 EP-FINANCE 做云服务费用排行；具体金额待查。",

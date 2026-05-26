@@ -283,75 +283,18 @@ hcloud BSS ListCustomersBalancesDetail \
 | `ListUsageTypes` | 使用量类型字典 | - | 翻译 `usage_type` |
 | `ListMeasureUnits` | 计量单位字典 | - | 翻译金额和用量单位 |
 | `ListConversions` | 计量单位进制换算 | - | 用于单位换算 |
-| `ListServiceResources` | 服务到资源类型关系 | `service_type_code` | 价格试算前置字典 |
+| `ListServiceResources` | 服务到资源类型关系 | `service_type_code` | 服务/资源映射字典 |
 | `ListProvinces` | 省份字典 | - | 伙伴销售平台地域 |
 | `ListCities` | 城市字典 | `province_code` | 伙伴销售平台地域 |
 | `ListCounties` | 区县字典 | `city_code` | 伙伴销售平台地域 |
 
-## quote_and_identity
+## 范围外（拒绝路由）
 
-| 操作 | 用途 | 必填 | 说明 |
-| --- | --- | --- | --- |
-| `ListOnDemandResourceRatings` | 按需价格试算 | 见模板 | 只读报价，不等于账单 |
-| `ListRateOnPeriodDetail` | 包年包月开通试算 | 见模板 | 只读报价，不引导下单 |
-| `ListRenewRateOnPeriod` | 包年包月续订试算 | 见模板 | 只读报价，不引导续订 |
-| `ListIncentiveDiscountPolicies` | 产品折扣/激励策略 | `time` | 伙伴视角；不承诺客户最终价 |
-| `ShowRealnameAuthenticationReviewResult` | 实名审核 | `customer_id` | 只读；不提交变更 |
-
-### quote_and_identity 示例模板
-
-#### `ListOnDemandResourceRatings`
-
-```bash
-hcloud BSS ListOnDemandResourceRatings \
-  --project_id=<project_id> \
-  --product_infos.1.id=item-1 \
-  --product_infos.1.cloud_service_type=<service> \
-  --product_infos.1.resource_type=<resource> \
-  --product_infos.1.resource_spec=<spec> \
-  --product_infos.1.region=<region> \
-  --product_infos.1.subscription_num=1 \
-  --product_infos.1.usage_factor=Duration \
-  --product_infos.1.usage_measure_id=4 \
-  --product_infos.1.usage_value=1 \
-  --product_infos.1.available_zone=<az> \
-  --product_infos.1.resource_size=10 \
-  --product_infos.1.size_measure_id=17 \
-  --cli-region=<region> \
-  --cli-output=json
-```
-
-#### `ListRateOnPeriodDetail`
-
-```bash
-hcloud BSS ListRateOnPeriodDetail \
-  --project_id=<project_id> \
-  --product_infos.1.id=item-1 \
-  --product_infos.1.cloud_service_type=<service> \
-  --product_infos.1.resource_type=<resource> \
-  --product_infos.1.resource_spec=<spec> \
-  --product_infos.1.region=<region> \
-  --product_infos.1.period_num=1 \
-  --product_infos.1.period_type=2 \
-  --product_infos.1.subscription_num=1 \
-  --product_infos.1.available_zone=<az> \
-  --product_infos.1.fee_installment_mode=NA \
-  --product_infos.1.resource_size=10 \
-  --product_infos.1.size_measure_id=17 \
-  --cli-region=<region> \
-  --cli-output=json
-```
-
-#### `ListRenewRateOnPeriod`
-
-```bash
-hcloud BSS ListRenewRateOnPeriod \
-  --period_num=1 \
-  --period_type=2 \
-  --resource_ids.1=<resource_id> \
-  --cli-region=<region> \
-  --cli-output=json
-```
+| 类别 | 拒绝原因 | 替代去处 |
+| --- | --- | --- |
+| 价格试算 / 续订报价 / 折扣策略 | 不属于已出账事实；定价不可作为扣费证据 | 控制台价格计算器或销售侧定价工具 |
+| 实名认证审核结果 | 身份维度不在 BSS 账务边界内 | 控制台账号中心 |
+| 非华为云账务 | 仅服务华为云 BSS | 对应云厂商工具 |
 
 ## 产品侧只读交叉验证
 

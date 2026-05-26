@@ -216,7 +216,7 @@ def main() -> int:
         for failure in failures:
             print(f"FAIL: {failure}", file=sys.stderr)
         return 1
-    print("operation contracts ok: 58 BSS query operations")
+    print("operation contracts ok: 53 BSS query operations")
     return 0
 
 

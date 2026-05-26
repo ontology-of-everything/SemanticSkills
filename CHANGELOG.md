@@ -1,6 +1,27 @@
 # Changelog
 
-## 2.3.6 - 2026-05-25
+## 2.3.7 - 2026-05-26
+
+### Changed
+
+- **huawei-cloud-billing-scout**: retract skill to billing-only BSS read scope — drop
+  pricing-quote and real-name review (`quote_and_identity`), **53** aligned read-only BSS
+  query operations (was 58); sync `billing-ontology.yml`, `catalog.yml`,
+  `related-commands.md`, `iam-policies.md`, `fixtures/ops_contracts.yml`
+- **huawei-cloud-billing-scout**: `catalog.yml` adds **`provider_gate`** (Huawei Cloud / BSS /
+  profile signal before BSS calls), **`out_of_scope`** refusal table, and **华为云‑prefixed**
+  entry-point triggers
+
+### qa
+
+- **huawei-cloud-billing-scout**: evals **`refuse-*`** replace removed quote/identity cases;
+  `protocol_grading.py`; gate **`53`** needles and `verify_ops` message
+
+### Documentation
+
+- **huawei-cloud-billing-scout**: `docs/skills/huawei-cloud-billing-scout.md`,
+  `docs/catalog.yml` **`2.3.7`** summaries; ClawHub publish changelog / clawscan wording
+
 
 ### Features
 

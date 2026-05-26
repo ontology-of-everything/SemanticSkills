@@ -2,7 +2,7 @@
 # Keep this file in sync with references/semantic/catalog.yml and related-commands.md.
 
 coverage:
-  expected_query_operations: 58
+  expected_query_operations: 53
   source_version: KooCLI 7.2.2
   allowed_prefixes: [List, Show]
 
@@ -234,27 +234,3 @@ operations:
     domain: reference_dimensions
     entity: ReferenceDimensions
     required: [city_code]
-
-  ListOnDemandResourceRatings:
-    domain: quote_and_identity
-    entity: PricingQuote
-    required: [project_id, product_infos.1.cloud_service_type, product_infos.1.id, product_infos.1.region, product_infos.1.resource_spec, product_infos.1.resource_type, product_infos.1.subscription_num, product_infos.1.usage_factor, product_infos.1.usage_measure_id, product_infos.1.usage_value]
-    templates: [product_infos.1.cloud_service_type, product_infos.1.id, product_infos.1.region, product_infos.1.resource_spec, product_infos.1.resource_type, product_infos.1.subscription_num, product_infos.1.usage_factor, product_infos.1.usage_measure_id, product_infos.1.usage_value, product_infos.1.available_zone, product_infos.1.resource_size, product_infos.1.size_measure_id]
-  ListRateOnPeriodDetail:
-    domain: quote_and_identity
-    entity: PricingQuote
-    required: [project_id, product_infos.1.cloud_service_type, product_infos.1.id, product_infos.1.period_num, product_infos.1.period_type, product_infos.1.region, product_infos.1.resource_spec, product_infos.1.resource_type, product_infos.1.subscription_num]
-    templates: [product_infos.1.cloud_service_type, product_infos.1.id, product_infos.1.period_num, product_infos.1.period_type, product_infos.1.region, product_infos.1.resource_spec, product_infos.1.resource_type, product_infos.1.subscription_num, product_infos.1.available_zone, product_infos.1.fee_installment_mode, product_infos.1.resource_size, product_infos.1.size_measure_id]
-  ListRenewRateOnPeriod:
-    domain: quote_and_identity
-    entity: PricingQuote
-    required: [period_num, period_type, resource_ids.1]
-    templates: [resource_ids.1]
-  ListIncentiveDiscountPolicies:
-    domain: quote_and_identity
-    entity: PricingQuote
-    required: [time]
-  ShowRealnameAuthenticationReviewResult:
-    domain: quote_and_identity
-    entity: IdentityReview
-    required: [customer_id]

@@ -1,6 +1,25 @@
 # 更新日志
 
-## 2.3.6 - 2026-05-25
+## 2.3.7 - 2026-05-26
+
+### 变更
+
+- **huawei-cloud-billing-scout**：收回到**仅账务**只读 BSS 边界 — 移除报价试算与实名审核
+ （`quote_and_identity`），对齐 **53** 个只读 BSS 查询操作（原为 58）；同步本体、路由、命令附录、
+ IAM 与 `ops_contracts`
+- **huawei-cloud-billing-scout**：`catalog.yml` 增加 **`provider_gate`**（未表明华为云/BSS/ profile
+  前须澄清）、**`out_of_scope`** 拒答说明，以及带 **华为云** 前缀的入口 `triggers`
+
+### qa
+
+- **huawei-cloud-billing-scout**：以 **`refuse-*`** eval 替代已删除的报价/实名用例；更新
+  `protocol_grading.py`；门禁文档针脚与 **53** 操作、`verify_ops` 输出一致
+
+### 文档
+
+- **huawei-cloud-billing-scout**：`docs/skills/...md`、`docs/catalog.yml` 版本 **2.3.7**；
+ ClawHub 发布说明与 clawscan 文案
+
 
 ### 新功能
 

@@ -416,57 +416,48 @@
     },
     {
       "id": 15,
-      "name": "pricing-estimate-not-bill",
-      "prompt": "帮我估一下续订一个包年包月资源下个月要多少钱。",
-      "expected_output": "路由到 PricingQuote，使用价格试算/续订试算，只读估算并强调不是已出账金额；结论先行交付。",
+      "name": "refuse-pricing-quote-out-of-scope",
+      "prompt": "帮我估一下续订一个华为云包年包月资源下个月要多少钱。",
+      "expected_output": "拒绝路由：价格试算不在本只读账务范围；指向控制台价格计算器；不调用 BSS 取证；结论先行交付。",
       "files": [],
       "covers": {
         "domains": [
-          "quote_and_identity"
+          "customer_billing"
         ],
         "entities": [
-          "PricingAndIdentity",
-          "PricingQuote"
+          "AccountBalance"
         ],
-        "operations": [
-          "ListOnDemandResourceRatings",
-          "ListRateOnPeriodDetail",
-          "ListRenewRateOnPeriod",
-          "ListIncentiveDiscountPolicies"
-        ]
+        "operations": []
       },
       "assertions": [
-        "回答识别为报价或续订价格试算，不是账单事实查询。",
-        "回答使用 ListRenewRateOnPeriod 或相关价格试算只读接口。",
-        "回答明确报价不是发票、合同或已出账金额。",
+        "回答识别为价格试算或续订报价，不是账单事实查询。",
+        "回答明确价格试算/续订报价不在本只读账务技能范围。",
+        "回答把试算去处指向华为云控制台价格计算器或销售侧工具，不在聊天中调用 BSS 报价接口。",
         "回答不引导或代执行续订、下单或支付。",
-        "回答说明需要 project_id、period_num 或 period_type 等前置参数。"
+        "回答先给一至三句小结说明拒绝路由的原因（不是已出账事实）；不写具体金额。"
       ]
     },
     {
       "id": 16,
-      "name": "identity-review-readonly",
-      "prompt": "帮我看一下某客户实名认证审核结果，别改任何资料。",
-      "expected_output": "路由到 IdentityReview，只读查询实名认证审核结果，拒绝提交或修改实名资料；结论先行交付。",
+      "name": "refuse-realname-review-out-of-scope",
+      "prompt": "帮我看一下某华为云客户实名认证审核结果，别改任何资料。",
+      "expected_output": "拒绝路由：实名认证审核不在本只读账务范围；指向控制台账号中心；不调用 BSS 取证；结论先行交付。",
       "files": [],
       "covers": {
         "domains": [
-          "quote_and_identity"
+          "customer_billing"
         ],
         "entities": [
-          "PricingAndIdentity",
-          "IdentityReview"
+          "AccountBalance"
         ],
-        "operations": [
-          "ShowRealnameAuthenticationReviewResult"
-        ]
+        "operations": []
       },
       "assertions": [
-        "回答识别为实名认证审核结果只读查询。",
-        "回答使用 ShowRealnameAuthenticationReviewResult 并说明需要 customer_id。",
-        "回答对 customer_id 默认脱敏。",
+        "回答识别为实名认证审核结果查询。",
+        "回答明确实名认证审核不在本只读账务技能范围（身份维度超出 BSS 账务边界）。",
+        "回答把审核结果去处指向华为云控制台账号中心，不在聊天中调用 BSS 实名接口。",
         "回答拒绝提交、变更或补充实名认证资料。",
-        "回答说明该结果不是计费扣款证据。"
+        "回答说明实名审核结果不是计费扣款证据。"
       ]
     },
     {
@@ -582,28 +573,25 @@
     },
     {
       "id": 21,
-      "name": "pricing-product-infos-dot-template",
-      "prompt": "帮我估一个 OBS 按需资源下个月大概要多少钱，不要下单。",
-      "expected_output": "路由到 PricingQuote/ListOnDemandResourceRatings，使用 product_infos.1.* 完整产品对象做只读价格试算；结论先行交付。",
+      "name": "refuse-other-cloud-balance-out-of-scope",
+      "prompt": "帮我看一下我们 AWS 账户的余额和欠费。",
+      "expected_output": "拒绝路由：非华为云账务超出本技能范围；不调用 BSS 取证；指向对应云厂商工具；结论先行交付。",
       "files": [],
       "covers": {
         "domains": [
-          "quote_and_identity"
+          "customer_billing"
         ],
         "entities": [
-          "PricingAndIdentity",
-          "PricingQuote"
+          "AccountBalance"
         ],
-        "operations": [
-          "ListOnDemandResourceRatings"
-        ]
+        "operations": []
       },
       "assertions": [
-        "回答识别为只读价格试算，不是账单事实或下单请求。",
-        "回答使用 ListOnDemandResourceRatings，并说明报价不等于已出账金额。",
-        "回答包含 product_infos.1.cloud_service_type、resource_type、resource_spec、region、usage_factor、usage_value 等必填对象参数。",
-        "回答不只填写 project_id，也不尝试创建、续订、支付或下单。",
-        "回答缺少规格、区域或使用量时先澄清，不编造报价参数。"
+        "回答识别为非华为云（AWS）账务查询，超出技能范围。",
+        "回答不调用 hcloud BSS 接口或华为云控制台路径来回应 AWS 账务问题。",
+        "回答把去处指向对应云厂商（AWS）自身的账单工具，不混用华为云口径。",
+        "回答禁止要求用户提供华为云凭证或账号来回答非华为云问题。",
+        "回答先给一至三句小结说明拒绝路由原因；不写具体金额。"
       ]
     },
     {

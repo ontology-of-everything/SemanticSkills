@@ -1,6 +1,6 @@
 ---
 name: huawei-cloud-billing-scout
-description: "Investigates Huawei Cloud BSS billing read-only — balance, monthly spend, charge attribution, reconciliation, coupons, stored-value cards, enterprise and partner billing. Delivers a one-page briefing via hcloud. Use this skill whenever the user asks about 余额/欠费/账单/对账/资源包/代金券/储值卡/企业或伙伴账务; not other clouds; refuses pay, refund, delete."
+description: "Huawei Cloud BSS billing read-only only (not AWS/Azure/other clouds; refuses pricing quotes, real-name review, and any non-billing scope): balance, spend, attribution, reconciliation, coupons, stored-value cards, enterprise/partner billing. One-page briefing via hcloud. Use only when the user explicitly mentions 华为云 / Huawei Cloud / BSS and 余额/账单/对账/资源包/代金券/储值卡/企业或伙伴账务; refuses pay, renew, refund, delete."
 metadata:
   openclaw:
     requires:
@@ -34,6 +34,8 @@ Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation
 四类账务问题与路由：见 `references/semantic/catalog.yml`。
 
 ## 查证路径
+
+**华为云门禁** — 进入 `catalog.yml` 匹配前：若用户未表明华为云 / BSS / 本技能账务，且无法从对话确定为当前 `hcloud` profile 的华为云账号，**先一条确认**「是否查询当前配置的华为云账号与账期？」；未确认不执行 BSS 查询。非华为云或其他云厂商账务 → 仅说明超出范围，不取证。
 
 |阶段|任务|引文件|禁止|
 |---|---|---|---|
@@ -76,7 +78,8 @@ Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation
 
 ## 边界
 
-- **服务范围** — 非华为云或其他云厂商账务不在本技能范围；先确认再进入查证路径。
+- **服务范围** — 仅 BSS 只读账务（余额/账单/对账/资源包/券/储值卡/企业/伙伴）。非华为云或其他云厂商账务不在范围。
+- **拒绝路由** — 价格试算 / 续订报价 / 折扣策略 / 实名认证审核结果，均不在本技能范围；只一句指向控制台或销售侧工具，不取证、不调用 BSS。
 - **官方身份** — 不代表华为云；结论仅基于当时查到的证据。
 - **答复语言** — 与用户一致；结构服从上文「答复」。
 - **环境就绪** — 未就绪只转述 `references/cli-installation.md`；可 `hcloud version` / `hcloud configure list` 自检，不代装、不代配。
