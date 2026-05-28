@@ -116,7 +116,7 @@ def cmd_full(args: argparse.Namespace) -> int:
     fast_args = argparse.Namespace(skip_style=True)
     cmd_fast(fast_args)
     if not args.skip_style:
-        run_style(require_all=False)
+        run_style(require_all=True)
     run_protocol_suite()
     print("OK: huawei-cloud-billing-scout validation passed")
     return 0
