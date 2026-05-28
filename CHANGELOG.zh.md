@@ -1,5 +1,28 @@
 # 更新日志
 
+## 3.0.0 - 2026-05-28
+
+### 新功能
+
+- **huawei-cloud-cost-estimation**：新增华为云下单前 BSS 询价技能 — 包年/包月
+  （`ListRateOnPeriodDetail`）与按需（`ListOnDemandResourceRatings`）；Parse / Clarify /
+  Spec Review / Estimation 工作流；`rfq-*-model.yml` 语义路由
+- **huawei-cloud-cost-estimation**：QA 包 — `validate.sh`、7 条离线 eval、skillcheck/markdownlint 门禁
+
+### 变更
+
+- **project**：CI validate 工作流安装必需的 Python/Node QA 工具；skill-scanner 必装
+- **project**：跟踪 `.githooks/pre-commit` 跑 `validate-all.sh`；
+  `tools/install-git-hooks.sh` 设置 `core.hooksPath`
+- **huawei-cloud-billing-scout**：`gate.py full` 强制 skillcheck、markdownlint、skill-scanner
+  （`require_all=True`）
+
+### 文档
+
+- **huawei-cloud-cost-estimation**：`docs/skills/huawei-cloud-cost-estimation.md` 与
+  `docs/catalog.yml` 索引
+- **project**：README 技能表增加 cost-estimation
+
 ## 2.3.7 - 2026-05-26
 
 ### 变更

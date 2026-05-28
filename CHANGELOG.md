@@ -1,5 +1,30 @@
 # Changelog
 
+## 3.0.0 - 2026-05-28
+
+### Features
+
+- **huawei-cloud-cost-estimation**: new skill for Huawei Cloud pre-order BSS pricing — period
+  (`ListRateOnPeriodDetail`) and on-demand (`ListOnDemandResourceRatings`); Parse / Clarify /
+  Spec Review / Estimation workflow; semantic routing via `rfq-*-model.yml`
+- **huawei-cloud-cost-estimation**: QA bundle with `validate.sh`, seven offline evals, and
+  skillcheck/markdownlint gates
+
+### Changed
+
+- **project**: CI validate workflow installs required Python and Node QA tools; skill-scanner
+  install is mandatory
+- **project**: tracked `.githooks/pre-commit` runs `validate-all.sh`;
+  `tools/install-git-hooks.sh` sets `core.hooksPath`
+- **huawei-cloud-billing-scout**: `gate.py full` requires skillcheck, markdownlint, and
+  skill-scanner (`require_all=True`)
+
+### Documentation
+
+- **huawei-cloud-cost-estimation**: `docs/skills/huawei-cloud-cost-estimation.md` and
+  `docs/catalog.yml` index entry
+- **project**: README skill tables list cost-estimation
+
 ## 2.3.7 - 2026-05-26
 
 ### Changed
