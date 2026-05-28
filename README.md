@@ -55,7 +55,8 @@ SemanticSkills/
 
 | Skill | Version | Summary | Docs |
 | --- | --- | --- | --- |
-| `huawei-cloud-billing-scout` | 2.3.5 | **Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation** — one-page BSS briefing via KooCLI | [details](docs/skills/huawei-cloud-billing-scout.md) |
+| `huawei-cloud-billing-scout` | 3.0.0 | **Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation** — one-page BSS briefing via KooCLI | [details](docs/skills/huawei-cloud-billing-scout.md) |
+| `huawei-cloud-cost-estimation` | 0.3.1 | **Huawei Cloud Pre-Order Cost Estimation** — period and on-demand quotes via hcloud BSS | [details](docs/skills/huawei-cloud-cost-estimation.md) |
 
 Index: [docs/catalog.yml](docs/catalog.yml).
 

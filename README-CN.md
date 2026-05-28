@@ -55,7 +55,8 @@ SemanticSkills/
 
 | 技能 | 版本 | 摘要 | 文档 |
 | --- | --- | --- | --- |
-| `huawei-cloud-billing-scout` | 2.3.5 | **华为云 · 花多少为何扣 · 只读对账** — KooCLI BSS 一页简报 | [详情](docs/skills/huawei-cloud-billing-scout.md) |
+| `huawei-cloud-billing-scout` | 3.0.0 | **华为云 · 花多少为何扣 · 只读对账** — KooCLI BSS 一页简报 | [详情](docs/skills/huawei-cloud-billing-scout.md) |
+| `huawei-cloud-cost-estimation` | 0.3.1 | **华为云成本估算** — hcloud BSS 包年/包月与按需询价 | [详情](docs/skills/huawei-cloud-cost-estimation.md) |
 
 机器可读索引：[docs/catalog.yml](docs/catalog.yml)。
 
