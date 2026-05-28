@@ -2,7 +2,7 @@
 # 通用 skill QA 模板：布局 + skills-ref + markdownlint + skillcheck。
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 QA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_DIR="$(cd "$QA_DIR/../../skills/__SKILL_NAME__" && pwd)"
 

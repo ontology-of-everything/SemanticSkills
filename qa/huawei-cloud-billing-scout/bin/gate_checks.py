@@ -181,9 +181,15 @@ def _require_needles(text: str, needles: list[str], label: str) -> None:
             raise SystemExit(f"FAIL: {label} missing: {needle}")
 
 
-def _check_frontmatter(frontmatter: dict) -> None:
+def _check_frontmatter(frontmatter: dict, *, version: str | None = None) -> None:
     if frontmatter.get("name") != "huawei-cloud-billing-scout":
         raise SystemExit("FAIL: SKILL.md name mismatch")
+    if version is not None:
+        meta = frontmatter.get("metadata") or {}
+        if meta.get("version") != version:
+            raise SystemExit(
+                f"FAIL: SKILL.md metadata.version should match qa/VERSION ({version})"
+            )
     desc = str(frontmatter.get("description", ""))
     if "储值卡" not in desc and "stored-value" not in desc.lower():
         raise SystemExit("FAIL: SKILL.md description missing stored-value card trigger")
@@ -207,7 +213,7 @@ def _check_catalog_entry(entry: dict | None, version: str) -> None:
     if entry.get("path") != "skills/huawei-cloud-billing-scout" or entry.get("qa") != "qa/huawei-cloud-billing-scout":
         raise SystemExit("FAIL: docs/catalog.yml path/qa mismatch")
     if entry.get("version") != version:
-        raise SystemExit(f"FAIL: docs/catalog.yml version should match VERSION ({version})")
+        raise SystemExit(f"FAIL: docs/catalog.yml version should match qa/VERSION ({version})")
     if entry.get("distribution") != "direct-skill":
         raise SystemExit("FAIL: docs/catalog.yml distribution should be direct-skill")
     if "openclaw" not in entry.get("agents", []):
@@ -266,8 +272,8 @@ def check_docs_and_evals() -> tuple[int, int]:
     skill = SKILL_DIR
     for path in sorted((skill / "references/semantic").glob("*.yml")) + [ROOT / "docs/catalog.yml"]:
         load_yaml(path)
-    _check_frontmatter(parse_skill_frontmatter())
     version = expected_version()
+    _check_frontmatter(parse_skill_frontmatter(), version=version)
     catalog = load_yaml(ROOT / "docs/catalog.yml")
     entry = next((item for item in catalog.get("skills", []) if item.get("id") == "huawei-cloud-billing-scout"), None)
     _check_catalog_entry(entry, version)

@@ -2,29 +2,112 @@
 
 `huawei-cloud-cost-estimation` · **Huawei Cloud Pre-Order Cost Estimation — Period & On-Demand via hcloud (Read-Only)**
 
-通过 hcloud BSS 进行确定性的华为云下单前询价（包年/包月 与 按需）。**切勿臆造价格——始终以本次 hcloud 响应为准；模糊不开价——四元未齐先问，再取数。**
+Deterministic **pre-order** quotes via hcloud BSS: period (`ListRateOnPeriodDetail`) and on-demand (`ListOnDemandResourceRatings`). Prices come only from the live hcloud response—never guessed. Clarify before quoting when the four-tuple (service / resource / region / spec) or duration/usage is incomplete.
 
-*社区技能，非华为云官方；需 hcloud ≥7.2 与 BSS 询价只读 IAM。*
+> **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud/BSS 响应为准。
 
-**North Star** — 询价员之笔：四元未齐不开价，价有所本、口径写明；模糊先问，越界不替。
+**Version:** 1.0.0 · Changelog: [qa/huawei-cloud-cost-estimation/CHANGELOG.md](../../qa/huawei-cloud-cost-estimation/CHANGELOG.md) · 中文仓库说明：[README-CN.md](../../README-CN.md)
 
-## 能力域
+## What it does
 
-- **Period 包年/包月询价** — `BSS/ListRateOnPeriodDetail`；主 fact `RFQ_Header` / `RFQ_Line`。
-- **On-Demand 按需询价** — `BSS/ListOnDemandResourceRatings`；主 fact `RFQ_OnDemand_Header` / `RFQ_OnDemand_Line`。
-- **维度查询** — `cloud_service_type` / `resource_type` / `measure_unit` / `usage_type` 字典与换算。
-- **规格查询** — ECS/RDS/DCS/EVS flavor 与 AZ；带宽与 EIP 走编码常量表。
+| Capability | Typical questions |
+| --- | --- |
+| Period RFQ | 包年/包月 ECS、RDS、EVS、带宽等多少钱 |
+| On-demand RFQ | 按小时/按量跑 N 小时/GB 多少钱 |
+| Multi-product | 一套环境（多台 ECS + 盘 + 带宽）分项加总 |
+| Dimension lookup | 查 `cloud_service_type` / flavor / measure unit |
+| Out of scope | 历史账单、余额、对账 → 费用中心或 BSS 账单只读 API；跨云；下单/支付；对话中 AK/SK |
 
-## 工作机制
+Independent from [huawei-cloud-billing-scout](huawei-cloud-billing-scout.md) (past spend)—install either or both; skills do not cross-route.
 
-**Phase 1 Analysis → Phase 2 Estimation → Iteration 微调**。
+## Runtime bundle (install payload)
 
-- **Phase 1**：Parse 四元组 + Clarify（一轮问完）+ Spec Review（已确认 / 待补 / 默认）。
-- **Phase 2**：最小 hcloud 命令取价；分项展示、分步验算、口径标注。
-- **Iteration**：换 region / 改规格只跑受影响项。
+```text
+skills/huawei-cloud-cost-estimation/
+├── SKILL.md
+└── references/
+    ├── related-commands.md
+    ├── cli-installation.md
+    ├── iam-policies.md
+    └── semantic/
+        ├── catalog.yml
+        ├── rfq-period-model.yml
+        ├── rfq-ondemand-model.yml
+        └── rfq-shared-dimensions.yml
+```
 
-## 安全红线
+No `evals/`, `qa/`, or `*-workspace/` under `skills/`.
 
-只读 · 不收凭证 · 不泄密 · 不越界（估价不是最终账单；**本技能仅覆盖未发生报价**；历史账单/余额/对账 → 费用中心或 BSS 账单只读 API）· **IM 交付不出 GFM 表格**（`·` 分项 / 短段换行）。
+## In-skill flow
 
-**Version:** 0.3.1
+```text
+User question
+     │
+     ▼
+Phase 1 · Parse ─── catalog.yml → rfq-period | rfq-ondemand model
+     │
+     ▼
+Phase 1 · Clarify ─ one round with 2–4 candidates when ambiguous
+     │
+     ▼
+Phase 1 · Spec Review ─ confirmed / missing / defaults table
+     │
+     ▼
+Phase 2 · Query ─── related-commands.md minimal hcloud command
+     │
+     ▼
+Phase 2 · Calculate / Verify / Present ─ line items + basis labels + total
+```
+
+Primary operations: `BSS/ListRateOnPeriodDetail`, `BSS/ListOnDemandResourceRatings`, plus dimension/flavor lookups documented in `related-commands.md`.
+
+## SKILL.md structure
+
+| Section | Purpose |
+| --- | --- |
+| Workflow | Phase 1 Analysis (Parse, Clarify, Spec Review) → Phase 2 Estimation |
+| Critical Rules | Never guess; never-assume vs safe-default; label basis; no credentials in chat; route out-of-scope |
+| Reference Index | When to load each semantic / command file |
+
+## Safety boundary
+
+```text
+Allowed: BSS RFQ read APIs; IAM project scope; dimension/flavor List* helpers in related-commands.md
+Refused: order placement, payment, credential intake in chat, cross-cloud quotes
+Note: estimate ≠ final bill; discounts are account-view only
+```
+
+IM-safe delivery: use `·` bullets or numbered lines—no GFM pipe tables in user-facing chat.
+
+## QA (not installed with skill)
+
+```text
+qa/huawei-cloud-cost-estimation/
+├── validate.sh
+├── evals/evals.json          # 7 offline eval cases
+├── assertions/README.md
+└── .markdownlint.json
+```
+
+```bash
+./qa/huawei-cloud-cost-estimation/validate.sh
+```
+
+## Install
+
+[![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
+
+```bash
+npx skills add ontology-of-everything/SemanticSkills \
+  --skill huawei-cloud-cost-estimation \
+  --agent cursor \
+  --copy -y
+```
+
+**Hermes:** [hermes.md](../agents/hermes.md) · local sync:
+
+```bash
+rsync -a --delete ./skills/huawei-cloud-cost-estimation/ ~/.hermes/skills/huawei-cloud-cost-estimation/
+```
+
+Requires hcloud ≥7.2 and BSS IAM with `bss:order:view`. Agent does not auto-install `hcloud`.

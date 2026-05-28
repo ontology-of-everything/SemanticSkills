@@ -5,7 +5,7 @@ license: Apache-2.0
 compatibility: hcloud KooCLI 7.2+, BSS IAM with bss:order:view permission, outbound network; no agent auto-install
 metadata:
   author: ontology-of-everything
-  version: "0.3.1"
+  version: "1.0.0"
   openclaw:
     requires:
       bins: [hcloud]
@@ -19,7 +19,9 @@ metadata:
 
 # 华为云成本估算
 
-确定性下单前询价：价格只能来自当次 hcloud 响应，**不臆造、不类比、不记忆**。社区技能，非华为云官方。
+> **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud/BSS 响应为准。
+
+确定性下单前询价：价格只能来自当次 hcloud 响应，**不臆造、不类比、不记忆**。
 
 ## Workflow
 

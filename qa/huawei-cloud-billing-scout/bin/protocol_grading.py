@@ -54,7 +54,7 @@ def text_mentions_op(text: str, op: str) -> bool:
 
 
 def yagni_answer(summary: str, basis: str, gap: str) -> str:
-    community = "（社区技能，非华为官方）"
+    community = "（华为社区版，非华为官方）"
     return (
         f"**小结**{community}：{summary}\n\n"
         f"**事实要点**：{basis}\n\n"

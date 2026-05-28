@@ -2,7 +2,7 @@
 # 通用 skill QA 模板：布局 + skills-ref + markdownlint + skillcheck。
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 QA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_DIR="$(cd "$QA_DIR/../../skills/huawei-cloud-cost-estimation" && pwd)"
 
@@ -34,8 +34,33 @@ check_skill_layout() {
   [[ ! -f "$QA_DIR/evals.json" ]] || fail "duplicate eval source: $QA_DIR/evals.json"
 }
 
+check_version_sync() {
+  need_cmd python3
+  QA_DIR="$QA_DIR" ROOT="$ROOT" SKILL_DIR="$SKILL_DIR" python3 - <<'PY'
+import os, sys
+from pathlib import Path
+try:
+    import yaml
+except ImportError:
+    sys.exit("FAIL: PyYAML required for version sync check")
+qa = Path(os.environ["QA_DIR"])
+root = Path(os.environ["ROOT"])
+skill = Path(os.environ["SKILL_DIR"])
+expected = (qa / "VERSION").read_text(encoding="utf-8").strip()
+catalog = yaml.safe_load((root / "docs/catalog.yml").read_text(encoding="utf-8"))
+entry = next(x for x in catalog.get("skills", []) if x.get("id") == "huawei-cloud-cost-estimation")
+if entry.get("version") != expected:
+    sys.exit(f"FAIL: docs/catalog.yml version {entry.get('version')!r} != qa/VERSION ({expected})")
+body = skill.joinpath("SKILL.md").read_text(encoding="utf-8").split("---", 2)[1]
+meta = yaml.safe_load(body).get("metadata") or {}
+if meta.get("version") != expected:
+    sys.exit(f"FAIL: SKILL.md metadata.version != qa/VERSION ({expected})")
+PY
+}
+
 need_cmd rg
 check_skill_layout
+check_version_sync
 run_local_or_npx skills-ref validate "$SKILL_DIR"
 run_local_or_npx markdownlint-cli2 --config "$QA_DIR/.markdownlint.json" "$SKILL_DIR/**/*.md"
 need_cmd skillcheck

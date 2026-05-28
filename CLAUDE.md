@@ -8,7 +8,7 @@ Community skills monorepo — not official Huawei Cloud.
 - **Skill Creator eval output:** `<name>-workspace/` at **repo root only** (gitignored). Never under `skills/` — `npx skills add` would ship it. Run evals from repo root so paths resolve to `./<name>-workspace/`.
 - **Do not edit or commit:** `.agents/`, `*-workspace/`, `.workspaces/`, `.credentials/`, gate reports.
 - **Done means** `./qa/<name>/validate.sh` (or `./tools/validate-all.sh`) passes — say so only after running it.
-- **Skill change** syncs four places: `skills/`, `qa/`, `docs/catalog.yml`, `docs/skills/<name>.md`. New skill: `./tools/skill-scaffold.sh <name>`.
+- **Skill change** syncs five places: `skills/`, `qa/` (`VERSION`, `CHANGELOG.md`), `docs/catalog.yml`, `docs/skills/<name>.md`. New skill: `./tools/skill-scaffold.sh <name>`.
 - **Routing** is by fact / dimension / measure / time / scope — not FAQ lists. BSS operation change → update `references/semantic/*.yml`, `related-commands.md`, and `qa/.../fixtures/ops_contracts.yml` together.
 - **No commit** unless asked. Never commit `.env*`, AK/SK, or credential files. Minimal diffs; no extra markdown unless asked.
 

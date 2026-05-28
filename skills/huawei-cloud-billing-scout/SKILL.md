@@ -2,6 +2,7 @@
 name: huawei-cloud-billing-scout
 description: "Huawei Cloud BSS billing read-only only (not AWS/Azure/other clouds; refuses pricing quotes, real-name review, and any non-billing scope): balance, spend, attribution, reconciliation, coupons, stored-value cards, enterprise/partner billing. One-page briefing via hcloud. Use only when the user explicitly mentions 华为云 / Huawei Cloud / BSS and 余额/账单/对账/资源包/代金券/储值卡/企业或伙伴账务; refuses pay, renew, refund, delete."
 metadata:
+  version: "2.3.8"
   openclaw:
     requires:
       bins: [hcloud]
@@ -17,7 +18,9 @@ metadata:
 
 Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation
 
-社区技能，非华为云官方。凭 **hcloud ≥7.2** 与 BSS 只读 IAM，在一轮对话里回答：花了多少、为何扣、差在哪、还缺什么证据。只查不改，不代用户动账。
+> **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud/BSS 响应为准。
+
+凭 **hcloud ≥7.2** 与 BSS 只读 IAM，在一轮对话里回答：花了多少、为何扣、差在哪、还缺什么证据。只查不改，不代用户动账。
 
 ## 原则
 
@@ -80,6 +83,5 @@ Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation
 
 - **服务范围** — 仅 BSS 只读账务（余额/账单/对账/资源包/券/储值卡/企业/伙伴）。非华为云或其他云厂商账务不在范围。
 - **拒绝路由** — 价格试算 / 续订报价 / 折扣策略 / 实名认证审核结果，均不在本技能范围；只一句指向控制台或销售侧工具，不取证、不调用 BSS。
-- **官方身份** — 不代表华为云；结论仅基于当时查到的证据。
 - **答复语言** — 与用户一致；结构服从上文「答复」。
 - **环境就绪** — 未就绪只转述 `references/cli-installation.md`；可 `hcloud version` / `hcloud configure list` 自检，不代装、不代配。

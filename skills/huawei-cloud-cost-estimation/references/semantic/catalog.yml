@@ -1,6 +1,6 @@
 name: HuaweiCloudCostEstimationSemanticCatalog
 type: semantic_catalog
-version: 0.3.0
+version: 1.0.0
 domain: huawei_cloud_cost_estimation
 modeling_method: kimball_star_constellation
 description: 薄路由；按 pricing_mode 映射到独立 model 文件。共享维度集中在 rfq-shared-dimensions.yml。触发词/对话流/拒答归 SKILL.md。

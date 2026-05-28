@@ -22,7 +22,7 @@ DOC_FILE = ROOT / "docs/skills/huawei-cloud-billing-scout.md"
 CONTRACTS_FILE = QA_DIR / "fixtures/ops_contracts.yml"
 EVALS_FILE = QA_DIR / "evals/evals.json"
 RUBRIC_FILE = QA_DIR / "evals/llm-rubric.yml"
-VERSION_FILE = ROOT / "VERSION"
+VERSION_FILE = QA_DIR / "VERSION"
 
 SCANNER_SEVERITIES = frozenset({"CRITICAL", "HIGH", "MEDIUM", "LOW", "WARNING"})
 SKILLCHECK_ALLOWED_WARNINGS = frozenset({"disclosure.metadata-budget"})

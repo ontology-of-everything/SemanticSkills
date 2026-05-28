@@ -2,9 +2,11 @@
 
 `huawei-cloud-billing-scout` · **Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation**
 
-Read-only **Huawei Cloud / 华为云** BSS FinOps via KooCLI (**hcloud ≥7.2**): balance, monthly spend, charge attribution, reconciliation, coupons, enterprise and partner billing. One-page briefing—how much, why charged, what differs, what evidence is still missing. Community edition, not official Huawei Cloud.
+Read-only **Huawei Cloud / 华为云** BSS FinOps via KooCLI (**hcloud ≥7.2**): balance, monthly spend, charge attribution, reconciliation, coupons, enterprise and partner billing. One-page briefing—how much, why charged, what differs, what evidence is still missing.
 
-**Version:** 2.3.6+ (ClawHub audit alignment in progress) · 中文仓库说明：[README-CN.md](../../README-CN.md)
+> **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud/BSS 响应为准。
+
+**Version:** 2.3.8 · Changelog: [qa/huawei-cloud-billing-scout/CHANGELOG.md](../../qa/huawei-cloud-billing-scout/CHANGELOG.md) · Pre-order pricing: [huawei-cloud-cost-estimation.md](huawei-cloud-cost-estimation.md)
 
 ## What it does
 
@@ -15,7 +17,7 @@ Read-only **Huawei Cloud / 华为云** BSS FinOps via KooCLI (**hcloud ≥7.2**)
 | Reconciliation | Console vs export, summary vs detail, order vs usage |
 | Entitlements | Resource packages, coupons, partner quotas, deduction gaps |
 | Scope | Enterprise/sub-account, partner/reseller views |
-| Out of scope | Pricing quotes, real-name review, non-Huawei-Cloud billing — refused with a pointer to console/sales tools |
+| Out of scope | Pricing quotes → use [huawei-cloud-cost-estimation](huawei-cloud-cost-estimation.md); real-name review; non-Huawei-Cloud billing |
 
 ## Runtime bundle (install payload)
 
@@ -67,7 +69,7 @@ related-commands.md ─── smallest read-only hcloud BSS query set
 | 查证路径 | 华为云门禁 + 四阶段表（定口径 → 选入口 → 取证 → 交付），含对账与企业/伙伴默认 |
 | 红线 | 只读 / 不泄密 / 不外推，三条各附一句「为何」从原则派生 |
 | 答复 | 答复格式 briefing delivery contract（见下） |
-| 边界 | 服务范围（仅 BSS 只读账务）、拒绝路由（报价/实名/非华为云）、官方身份、答复语言、环境就绪 |
+| 边界 | 服务范围（仅 BSS 只读账务）、拒绝路由（报价/实名/非华为云）、华为社区版声明、答复语言、环境就绪 |
 
 ## 答复格式 (briefing-style output contract)
 

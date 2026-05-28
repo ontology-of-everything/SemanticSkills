@@ -8,9 +8,9 @@ Thanks for contributing to [SemanticSkills](https://github.com/ontology-of-every
 2. Add or edit a skill under `skills/<name>/` (runtime only).
 3. Add matching QA under `qa/<name>/` with `validate.sh` and optional `evals/`.
 4. Register the skill in `docs/catalog.yml`.
-5. Run `./tools/validate-all.sh` before opening a PR.
+5. Run `./tools/install-git-hooks.sh` once, then `./tools/validate-all.sh` before opening a PR.
 
-See [authoring.md](authoring.md) for conventions and [agents/](agents/) for install paths per agent.
+See [authoring.md](authoring.md) for conventions. Per-skill version lives in `qa/<name>/VERSION`; changelog in `qa/<name>/CHANGELOG.md`.
 
 ## Pull requests
 

@@ -8,9 +8,9 @@ skills:
     display_name_zh: "华为云 · 花多少为何扣 · 只读对账"
     domain: cloud
     subdomains: [billing, finops]
-    summary: Read-only Huawei Cloud BSS FinOps—balance, spend, charge attribution, reconciliation, coupons, enterprise billing; one-page briefing; 53 read-only ops; refuses pricing-quote and real-name review
-    summary_zh: 华为云 · 花多少为何扣 · 只读对账；余额/扣费归因/对账/券包/企业账；一页简报；53 个只读 Operation；拒绝报价/实名
-    version: "3.0.0"
+    summary: Read-only Huawei Cloud BSS FinOps—balance, spend, charge attribution, reconciliation, coupons, enterprise billing; one-page briefing; 53 read-only ops; independent skill; refuses pricing-quote (see cost-estimation) and real-name review
+    summary_zh: 华为云 · 花多少为何扣 · 只读对账；余额/扣费归因/对账/券包/企业账；一页简报；53 个只读 Operation；独立技能；拒绝询价（见 cost-estimation）/实名
+    version: "2.3.8"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, read-only BSS IAM, outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp, clawhub]
@@ -23,9 +23,9 @@ skills:
     display_name_zh: "华为云成本估算"
     domain: cloud
     subdomains: [pricing, finops, procurement]
-    summary: Huawei Cloud BSS pre-order pricing—period (ListRateOnPeriodDetail) and on-demand (ListOnDemandResourceRatings) quotes; payable-price semantics; ontology-echo gate before quoting; one-round clarification; refuses order placement, credential intake, and out-of-platform quotes
-    summary_zh: 华为云 · 询价员之笔；包年包月 + 按需双入口；ListRateOnPeriodDetail 与 ListOnDemandResourceRatings；本体回声闸门；一轮带答案对齐；拒绝下单、拒收凭证、拒绝非平台报价
-    version: "0.3.1"
+    summary: Huawei Cloud BSS pre-order pricing—period (ListRateOnPeriodDetail) and on-demand (ListOnDemandResourceRatings) quotes; Spec Review before query; one-round clarification; independent skill; refuses order placement, credential intake, historical billing, and cross-cloud quotes
+    summary_zh: 华为云 · 询价员之笔；包年包月 + 按需；Spec Review 后取数；一轮 Clarify；独立技能；拒绝下单/凭证/历史账务/跨云
+    version: "1.0.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, BSS IAM (bss:order:view permission), outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp, clawhub]
