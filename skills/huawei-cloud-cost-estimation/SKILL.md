@@ -1,7 +1,6 @@
 ---
 name: huawei-cloud-cost-estimation
 description: Estimates Huawei Cloud pre-order pricing via hcloud BSS — 包年/包月 与 按需，返回官方+应付金额。Use this skill whenever the user asks about Huawei Cloud / 华为云 / hcloud cost (报价/询价/多少钱/价格/quote/pricing/budget) for ECS/RDS/EVS/DCS/带宽/EIP, even if only spec+duration is given. Refuses cross-cloud (AWS/Azure/Aliyun), order placement, AK/SK intake.
-license: Apache-2.0
 compatibility: hcloud KooCLI 7.2+, BSS IAM with bss:order:view permission, outbound network; no agent auto-install
 metadata:
   author: ontology-of-everything
