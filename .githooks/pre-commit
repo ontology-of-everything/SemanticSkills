@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Mandatory local gate — same entry as CI (tools/validate-all.sh).
+set -euo pipefail
+
+ROOT="$(git rev-parse --show-toplevel)"
+exec "$ROOT/tools/validate-all.sh"
