@@ -54,12 +54,7 @@ dimensions:
     business_key: measure_id
     source_operations: [BSS/ListMeasureUnits]
     attributes: [measure_id, measure_name, abbreviation, measure_type]
-    rfq_used_values:
-      - { measure_id: 15, name: Mbps, used_for: bandwidth_resource_size }
-      - { measure_id: 17, name: GB,   used_for: disk_resource_size }
-      - { measure_id: 14, name: 个,   used_for: count_resource_size }
-      - { measure_id: 4,  name: 小时, used_for: on_demand_usage_value }
-      - { measure_id: 10, name: GB,   used_for: on_demand_upflow_usage_value }
+    notes: RFQ 用到的 measure_id 取值与用途见 related-commands.md 字段对照（size_measure_id / usage_measure_id）
 
 # ============================================================
 # RESOURCE_SPEC SNOWFLAKE
@@ -86,11 +81,7 @@ dimensions:
     business_key: flavor_id
     source_operations: [ECS/ListFlavors, ECS/NovaListFlavors, ECS/NovaListFlavorsDetails]
     rfq_transform:
-      rule: "resource_spec = flavor_id + os_suffix"
-      os_suffix_enum:
-        - { value: .linux, when: "os_type == linux" }
-        - { value: .win,   when: "os_type == windows" }
-      example: { flavor_id: c6.2xlarge.2, os: linux, resource_spec: c6.2xlarge.2.linux }
+      rule: "resource_spec = flavor_id + os_suffix（.linux / .win）"   # OS 默认策略见 SKILL.md
     attributes: [flavor_id, name, vcpus, ram]
 
   - name: Dim_ResourceSpec_RDS
@@ -110,34 +101,19 @@ dimensions:
     kind: encoded_or_catalog_dimension
     business_key: volume_type_code
     source_operations: [EVS/CinderListVolumeTypes]
-    documented_examples:
-      - { code: SATA,           name: 普通 IO 云硬盘 }
-      - { code: SAS,            name: 高 IO 云硬盘 }
-      - { code: GPSSD,          name: 通用型 SSD }
-      - { code: SSD,            name: 超高 IO 云硬盘 }
-      - { code: ESSD,           name: 极速型 SSD }
-      - { code: GPSSD2.storage, name: 通用型 SSD V2 容量 }
     rfq_pairing: { requires_resource_size: true, size_measure_id: 17 }
+    notes: 云硬盘类型码清单见 related-commands.md resource_spec_lookup（命令层为唯一真源）
 
   - name: Dim_ResourceSpec_EncodedConstant
     kind: encoded_constant_dimension
     business_key: constant_code
     source_documents: [https://support.huaweicloud.com/api-bpconsole/bcloud_01002.html]
-    documented_examples:
-      bandwidth:
-        - { code: 12_bgp,    name: 动态 BGP 按流量计费带宽 }
-        - { code: 12_sbgp,   name: 静态 BGP 按流量计费带宽 }
-        - { code: 19_bgp,    name: 动态 BGP 按带宽计费带宽 }
-        - { code: 19_sbgp,   name: 静态 BGP 按带宽计费带宽 }
-        - { code: 19_share,  name: 按带宽计费共享带宽 }
-      eip:
-        - { code: 5_bgp,  name: 动态 BGP 公网 IP }
-        - { code: 5_sbgp, name: 静态 BGP 公网 IP }
     rfq_pairing:
       bandwidth: { requires_resource_size: true, size_measure_id: 15 }
       eip:       { requires_resource_size: false }
-    notes: 无 List API；以官方文档常量为准
+    notes: 无 List API；带宽/EIP 常量表（code + size_measure_id）见 related-commands.md resource_spec_lookup 编码常量段（命令层为唯一真源）
 
 evidence_boundary:
-  - ECS .win/.linux 后缀必须由用户提供 OS 类型，不擅自默认。
+  - ECS resource_spec 必须带 .linux/.win 后缀；OS 未指定时的默认策略归 SKILL.md（safe-default .linux，Spec Review 披露）。
+  - 具体 code / spec / measure 取值清单归 related-commands.md；本表只描述维度形态与配对规则，不复制取值。
   - 维度样本为 partner 视角；客户/伙伴账号可见范围可能不同。

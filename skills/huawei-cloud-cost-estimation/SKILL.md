@@ -1,10 +1,10 @@
 ---
 name: huawei-cloud-cost-estimation
-description: Estimates Huawei Cloud pre-order pricing via hcloud BSS — 包年/包月 与 按需，返回官方+应付金额。Use this skill whenever the user asks about Huawei Cloud / 华为云 / hcloud cost (报价/询价/多少钱/价格/quote/pricing/budget) for ECS/RDS/EVS/DCS/带宽/EIP, even if only spec+duration is given. Refuses cross-cloud (AWS/Azure/Aliyun), order placement, AK/SK intake.
+description: Estimates Huawei Cloud pre-order pricing via hcloud BSS — 包年/包月 与 按需，返回官网价（含折扣则附折后）。Use this skill whenever the user asks about Huawei Cloud / 华为云 / hcloud cost (报价/询价/多少钱/价格/quote/pricing/budget) for ECS/RDS/EVS/DCS/带宽/EIP, even if only spec+duration is given. Refuses cross-cloud (AWS/Azure/Aliyun), order placement, AK/SK intake.
 compatibility: hcloud KooCLI 7.2+, BSS IAM with bss:order:view permission, outbound network; no agent auto-install
 metadata:
   author: ontology-of-everything
-  version: "1.0.0"
+  version: "1.0.1"
   openclaw:
     requires:
       bins: [hcloud]
@@ -41,13 +41,14 @@ metadata:
 
 - 任一 **never-assume**（region/周期/数量/线性 size）缺失 → 回到 Clarify，不进 Phase 2。
 - 仅 **safe-default** 缺失（OS=linux、AZ=空、`fee_installment_mode=NA`）→ 披露后继续。
+- **确认话术**：回显用口语四元组 + 周期/用量（如「ECS c6.2xlarge ×1，华北-北京，包年 1 年」），不暴露内部名（`RFQ_Line` / `pricing_mode=` / 内部 code）。
 
 ### Phase 2 · Estimation
 
 1. **Query** — 按 `references/related-commands.md` 执行最小命令：period → `BSS/ListRateOnPeriodDetail`；on-demand → `BSS/ListOnDemandResourceRatings`。多产品一次性放进 `product_infos.N.*`。
 2. **Calculate** — 多 `product_infos` 逐项展示再加和；跨万元乘法分步算。
 3. **Verify** — 分项加和 = 总价；币种、`period_type`、`subscription_num` 与用户口径一致。
-4. **Present** — 一句结论 + 分项 `[服务] [规格] [region] [数量×周期] = ¥<金额> [pricing_mode/币种]` + 加总 + 「非最终账单」声明。**Iteration**：换 region / 改规格 / 增删项 → 只重跑受影响项。
+4. **Present** — 一句结论 + 分项 `[服务] [规格] [region] [数量×周期] = ¥<金额> [pricing_mode/币种]` + 加总 + 「非最终账单」声明。读数见 `related-commands.md` response_contract（默认官网价，有折扣附折后）。**Iteration**：换 region / 改规格 / 增删项 → 只重跑受影响项。
 
 ## Critical Rules
 
@@ -65,6 +66,6 @@ metadata:
 | --- | --- |
 | 每次 Phase 1 入口 | `references/semantic/catalog.yml` |
 | period / on-demand 询价场景 | `references/semantic/rfq-{period,ondemand}-model.yml` + `rfq-shared-dimensions.yml` |
-| 命令模板 / 字段对照 / 维度查 code / flavor 查询 / 通用陷阱 | `references/related-commands.md` |
+| 命令模板 / 字段对照 / 响应字段路径 / 维度查 code / flavor 查询 / 通用陷阱 | `references/related-commands.md` |
 | 403 或权限问题 | `references/iam-policies.md` |
 | hcloud 未就绪 | `references/cli-installation.md`（**仅转述给用户**，不代为执行） |

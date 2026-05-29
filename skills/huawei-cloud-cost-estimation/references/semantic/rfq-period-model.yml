@@ -32,18 +32,18 @@ facts:
       - Dim_MeasureUnit
       - Dim_ResourceSpec
     attributes:
-      - { name: id,                   type: string,  max_length: 64,  notes: "同次询价唯一；映射响应 product_rating_results[].id" }
+      - { name: id,                   type: string,  max_length: 64,  notes: "同次询价唯一，回映射响应 id（响应路径见 related-commands.md response_contract）" }
       - { name: cloud_service_type,   type: string,  max_length: 400, dimension: Dim_CloudServiceType }
       - { name: resource_type,        type: string,  max_length: 400, dimension: Dim_ResourceType }
       - { name: resource_spec,        type: string,  max_length: 400, dimension: Dim_ResourceSpec }
       - { name: region,               type: string,  max_length: 64,  dimension: Dim_Region }
-      - { name: period_type,          type: integer, max: 4, enum_documented: { "0": day, "2": month, "3": year, "4": hour } }
+      - { name: period_type,          type: integer, notes: "枚举见 related-commands.md 字段对照（0天/2月/3年/4小时）" }
       - { name: period_num,           type: integer, min: 1, max: 214783647 }
       - { name: subscription_num,     type: integer, min: 1, max: 10000 }
       - { name: available_zone,       type: string,  max_length: 64, dimension: Dim_AvailabilityZone, required: false, notes: "空/null = 不筛选；大小写不敏感" }
       - { name: resource_size,        type: integer, max: 214783647, required: conditional, condition: linear_product }
       - { name: size_measure_id,      type: integer, dimension: Dim_MeasureUnit, required: conditional, condition: linear_product }
-      - { name: fee_installment_mode, type: string,  max_length: 64, required: false, default: NA, enum_documented: [HALF_PAY, ZERO_PAY, NA], notes: "仅 CloudPond" }
+      - { name: fee_installment_mode, type: string,  max_length: 64, required: false, notes: "默认 NA（仅 CloudPond）；枚举见 related-commands.md 字段对照" }
 
 linear_product_indicators:
   resource_type_in:

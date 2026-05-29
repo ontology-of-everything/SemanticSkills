@@ -4,14 +4,14 @@
 
 ## Universal Traps（每次询价必看）
 
-1. **数组参数仅 dot notation** — `--product_infos.1.region_id=xxx`；JSON 串或 `[...]` 形式 KooCLI 不识别。
+1. **数组参数仅 dot notation** — `--product_infos.1.region=xxx`；JSON 串或 `[...]` 形式 KooCLI 不识别。
 2. **询价 API 无分页** — `ListRateOnPeriodDetail` / `ListOnDemandResourceRatings` 不接受 `--limit/--offset`；多项一次性放进 `product_infos.N.*`。
-3. **code 大小写敏感** — `cloud_service_type` (`hws.service.type.ec2`)、`resource_type`、`region_id`、flavor 必须按维度查询返回的原文，不能小写化或拼接。
+3. **code 大小写敏感** — `cloud_service_type` (`hws.service.type.ec2`)、`resource_type`、`region`、flavor 必须按维度查询返回的原文，不能小写化或拼接。
 
 ## CLI 格式要点
 
 - 数组参数用 dot notation 递增：`--product_infos.1.id=1`、`--product_infos.2.id=2`。
-- 默认分页 `--limit=10 --offset=0`；每命令 ≤3 页。`ListMeasureUnits` / `ListConversions` / `ListUsageTypes` 无分页参数。
+- 默认分页 `--limit=10 --offset=0`；每命令 ≤3 页。`ListMeasureUnits` / `ListConversions` 无分页参数；`ListUsageTypes` 有 `--limit/--offset`。
 - 输出 `--cli-output=json`；`table` 仅人眼用。
 
 ---
@@ -24,7 +24,7 @@
 > **required**: `project_id` + 每行 `id` / `cloud_service_type` / `resource_type` / `resource_spec` / `region` / `period_type` / `period_num` / `subscription_num`
 > **conditional**: `linear_product` → `resource_size` + `size_measure_id`
 
-ECS 包年示例（c6.2xlarge.2.linux，月付 1 个月，1 台）：
+ECS 包年示例（c6.2xlarge.2.linux，OS 未指定默认 `.linux`，1 年，1 台 → `period_type=3`）：
 
 ```bash
 hcloud BSS ListRateOnPeriodDetail \
@@ -35,7 +35,7 @@ hcloud BSS ListRateOnPeriodDetail \
   --product_infos.1.resource_spec=c6.2xlarge.2.linux \
   --product_infos.1.region=cn-north-1 \
   --product_infos.1.available_zone=cn-north-1a \
-  --product_infos.1.period_type=2 \
+  --product_infos.1.period_type=3 \
   --product_infos.1.period_num=1 \
   --product_infos.1.subscription_num=1 \
   --cli-region=cn-north-1 --cli-output=json
@@ -138,10 +138,23 @@ hcloud BSS ListOnDemandResourceRatings \
 
 | 字段 | 类型 | 取值 | 备注 |
 | --- | --- | --- | --- |
-| `usage_factor` | string | `Duration` / `upflow` / 等 | 与话单一致；首次未知调 `BSS/ListUsageTypes` |
+| `usage_factor` | string | `Duration` / `upflow` / 等 | ECS/EVS/EIP/市场镜像→`Duration`；带宽→`Duration` 或 `upflow`；与话单一致，未知调 `BSS/ListUsageTypes` |
 | `usage_value` | number | - | 使用量数值，如 2 小时 → 2 |
 | `usage_measure_id` | int | 4=小时 / 10=GB / 等 | 与 `usage_factor` 单位匹配 |
 | `inquiry_precision` | int | 0 默认 / 1 全 10 位 | 仅当结果到小数点 7 位以上才有差别 |
+
+---
+
+## response_contract（报价怎么读）
+
+只读当次响应，**不臆造折扣**。`measure_id=1`=元；`currency=CNY`（空=人民币）；`id` 回映射请求 `product_infos[].id`。**默认报官网价；响应里有折扣才附折后（有则报）。**
+
+| API | 官网价（默认报） | 折后应付（有则报） |
+| --- | --- | --- |
+| `ListRateOnPeriodDetail` | 总额 `official_website_rating_result.official_website_amount`；分项同对象 `.product_rating_results[].official_website_amount` | `optional_discount_rating_results[]` 非空时取 `best_offer==1`，读组级 `amount` / `discount_amount` / `discount_name` |
+| `ListOnDemandResourceRatings` | 总额根级 `official_website_amount`；分项 `product_rating_results[].official_website_amount` | `discount_amount>0`（即 `amount≠official_website_amount`）时读 `amount` / `discount_amount`，明细见 `product_rating_results[].discount_rating_results[]` |
+
+> 校验：分项 `official_website_amount` 之和 = 总额。on-demand `usage_value` 是询价标量（如 24h），结果即累计，**不再二次乘时长**。
 
 ---
 
@@ -154,7 +167,7 @@ hcloud BSS ListOnDemandResourceRatings \
 | `BSS/ListServiceResources` | 服务→资源类型桥 | `service_type_code` | limit/offset |
 | `BSS/ListMeasureUnits` | 翻译 `size_measure_id`/`measure_id` | - | none |
 | `BSS/ListConversions` | 度量进制换算 | - | none |
-| `BSS/ListUsageTypes` | 翻译 on-demand `usage_factor` | - | none |
+| `BSS/ListUsageTypes` | 翻译 on-demand `usage_factor` | - | limit/offset |
 
 ```bash
 hcloud BSS ListServiceTypes --service_type_name=弹性云服务器 \
@@ -207,7 +220,7 @@ hcloud EVS CinderListVolumeTypes --cli-region=cn-north-1 --cli-output=json
 | 动态 BGP EIP | `5_bgp` | - |
 | 静态 BGP EIP | `5_sbgp` | - |
 
-云硬盘常量：`SATA` / `SAS` / `GPSSD` / `SSD` / `ESSD` / `GPSSD2.storage`（均配 `size_measure_id=17`）。
+云硬盘常量：`SATA` / `SAS` / `GPSSD` / `SSD` / `ESSD` / `GPSSD2.storage`（通用型 SSD V2 容量）/ `GPSSD2.iops` / `GPSSD2.throughput`（均配 `resource_size` + `size_measure_id=17`）。
 
 ---
 

@@ -1,6 +1,6 @@
-# IAM 最小权限（RFQ 包年包月询价）
+# IAM 最小权限（RFQ 询价 · 包年包月 + 按需）
 
-目标：以 BSS 询价为中心的最小只读权限集合。覆盖 `rfq-operations.yml` 中全部 op；不引入任何写动作。
+目标：以 BSS 询价为中心的最小只读权限集合。覆盖 `references/related-commands.md` 与 `catalog.yml` `primary_operations` 中全部 op；不引入任何写动作。
 
 IAM Action 会随账号类型、站点、服务版本变化。本文给权限设计口径；落地前以
 [IAM 权限最佳实践](https://support.huaweicloud.com/bestpractice-iam/iam_0426.html)、
@@ -11,7 +11,7 @@ IAM Action 会随账号类型、站点、服务版本变化。本文给权限设
 
 | 层级 | 用途 | 何时需要 |
 | --- | --- | --- |
-| BSS 询价只读 | 调用 `ListRateOnPeriodDetail` 拿包年包月报价 | 默认必需 |
+| BSS 询价只读 | 调用 `ListRateOnPeriodDetail`（包年包月）/ `ListOnDemandResourceRatings`（按需）拿报价 | 默认必需 |
 | BSS 字典只读 | 翻译 `cloud_service_type` / `resource_type` / `measure_id` | 默认必需 |
 | 产品规格只读 | 解析 `resource_spec`（ECS / RDS / DCS / EVS） | 询价目标产品涉及对应云服务时 |
 | 身份范围只读 | 解析 `project_id` 与可访问项目 | 当 hcloud profile 未直接配置 `project_id` 时 |
@@ -23,6 +23,7 @@ IAM Action 会随账号类型、站点、服务版本变化。本文给权限设
 | KooCLI 操作 | 读取内容 |
 | --- | --- |
 | `BSS/ListRateOnPeriodDetail` | 包年/包月报价（官网价 / 可选折扣 / 折扣最优） |
+| `BSS/ListOnDemandResourceRatings` | 按需报价（官网价 / 折后成交价 / 折扣明细） |
 
 策略骨架（示意，落地以 IAM 控制台/API Explorer 实际 Action 为准）：
 
@@ -129,7 +130,7 @@ IAM Action 会随账号类型、站点、服务版本变化。本文给权限设
 1. 伙伴账号本身只需上面四层只读权限。
 2. 通过伙伴中心创建客户委托 / 客户授权，置换出客户 Token。
 3. 用置换后的客户 Token 调用 `KeystoneListAuthProjects` 获取目标 region 的客户 `project_id`。
-4. 在 `ListRateOnPeriodDetail` 请求中带客户 `project_id`。
+4. 在 `ListRateOnPeriodDetail` / `ListOnDemandResourceRatings` 请求中带客户 `project_id`。
 
 授权失败时**不要**绕过、不扩大查询；记录操作名 + 失败原因即可。
 
@@ -138,7 +139,7 @@ IAM Action 会随账号类型、站点、服务版本变化。本文给权限设
 | 现象 | 处理 |
 | --- | --- |
 | `403 Forbidden` | 记录操作名、账号范围；建议补对应只读 Action |
-| `CBC.99006006 产品未发现` | 不是权限问题，回到 quote_gate 重新核对四元组（cloud_service_type / resource_type / region / resource_spec） |
+| `CBC.99006006 产品未发现` | 不是权限问题，回到 Spec Review / Clarify 重新核对四元组（cloud_service_type / resource_type / region / resource_spec） |
 | `CBC.99006055 询价结果超过金额最大限制` | 拆小 product_infos 或缩短 period_num |
 | 维度查不到 | 保留原始 code 写到小结，提示用户用 `ListServiceTypes` / `ListResourceTypes` 校对 |
 
