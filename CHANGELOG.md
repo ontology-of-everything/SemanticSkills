@@ -7,6 +7,12 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-billing-scout | [qa/huawei-cloud-billing-scout/CHANGELOG.md](qa/huawei-cloud-billing-scout/CHANGELOG.md) |
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.md](qa/huawei-cloud-cost-estimation/CHANGELOG.md) |
 
+## 3.0.2 - 2026-05-29
+
+### Changed
+
+- **huawei-cloud-cost-estimation** **1.0.1**: BSS command/semantic alignment, `response_contract`, DRY layer split in `CLAUDE.md`, 10 eval cases with A/B grading harness (see skill changelog)
+
 ## 3.0.1 - 2026-05-28
 
 ### Changed
