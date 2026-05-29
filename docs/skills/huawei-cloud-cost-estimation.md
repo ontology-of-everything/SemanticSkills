@@ -6,7 +6,7 @@ Deterministic **pre-order** quotes via hcloud BSS: period (`ListRateOnPeriodDeta
 
 > **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud/BSS 响应为准。
 
-**Version:** 1.0.0 · Changelog: [qa/huawei-cloud-cost-estimation/CHANGELOG.md](../../qa/huawei-cloud-cost-estimation/CHANGELOG.md) · 中文仓库说明：[README-CN.md](../../README-CN.md)
+**Version:** 1.0.1 · Changelog: [qa/huawei-cloud-cost-estimation/CHANGELOG.md](../../qa/huawei-cloud-cost-estimation/CHANGELOG.md) · 中文仓库说明：[README-CN.md](../../README-CN.md)
 
 ## What it does
 
