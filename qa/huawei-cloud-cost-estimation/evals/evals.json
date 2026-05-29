@@ -3,51 +3,141 @@
   "evals": [
     {
       "id": 1,
-      "name": "ontology-echo-period-ecs",
+      "name": "period-ecs-yearly",
       "prompt": "帮我算一下 c6.2xlarge 1 台、北京一区、包年 1 年的价格",
-      "expected_output": "开篇用方案 A 口语确认（不说 Phase 0 / pricing_mode= / RFQ_Line / 内部 code）；须含包年/包月、ECS c6.2xlarge、华北-北京、1 年。给出 hcloud BSS ListRateOnPeriodDetail 命令（dot notation 正确，flavor_id 形如 c6.2xlarge.2.linux 或明示 OS 默认 linux），无 --limit/--offset，报价行附口径：period / 官网价 / CNY / 1 年。",
+      "expected_output": "口语确认（四元组+包年1年，无 RFQ_Line/pricing_mode=）；ListRateOnPeriodDetail；resource_spec 含 .linux 或披露 OS 默认；period_type=3；官网价口径；无 --limit/--offset。",
+      "expectations": [
+        "User-facing reply uses spoken confirmation, not internal names like RFQ_Line or pricing_mode=",
+        "Names hcloud BSS ListRateOnPeriodDetail (not ListOnDemandResourceRatings)",
+        "Command or spec uses period_type=3 for one-year period (or explicitly states 年 with matching period_type)",
+        "ECS resource_spec includes .linux suffix or explicitly discloses default OS linux",
+        "Labels quote basis as period / 官网价 or official website price",
+        "Does not use product_infos region_id (must use region=)"
+      ],
       "files": []
     },
     {
       "id": 2,
-      "name": "clarify-vague-database-one-round",
+      "name": "clarify-vague-database",
       "prompt": "我想要一个便宜的云数据库，月付，给个报价",
-      "expected_output": "拒绝直接出价。列 2-4 个带答案的候选服务（如 RDS MySQL / GaussDB / DCS Redis），各附典型规格与价位档。一轮内问完 region + 规格 + 数量 + 周期。可提示性价比建议但不替用户拍板。不调用 hcloud。",
+      "expected_output": "不直接出价；2-4 候选+一轮问清 region/规格/数量/周期；不调 hcloud。",
+      "expectations": [
+        "Does not run or show a final numeric quote without clarification",
+        "Offers 2-4 candidate database options with brief guidance",
+        "Asks for missing never-assume fields (region, spec, quantity, or period) in one round",
+        "Does not invoke hcloud BSS ListRateOnPeriodDetail or ListOnDemandResourceRatings"
+      ],
       "files": []
     },
     {
       "id": 3,
-      "name": "ontology-echo-ondemand-ecs-hourly",
+      "name": "ondemand-ecs-24h",
       "prompt": "ECS c3.3xlarge 在华北一按小时算 24 小时多少钱？",
-      "expected_output": "开篇用方案 A 口语确认按需、ECS c3.3xlarge、华北、24 小时（不说 Phase 0 / pricing_mode= / RFQ_OnDemand_Line）。调用 BSS/ListOnDemandResourceRatings（不是 ListRateOnPeriodDetail），命令含 usage_factor=Duration / usage_value=24 / usage_measure_id=4。报价口径标：on-demand / 24h 累计 / CNY。",
+      "expected_output": "口语确认按需+24h；ListOnDemandResourceRatings；usage_factor=Duration usage_value=24 usage_measure_id=4；on-demand 口径。",
+      "expectations": [
+        "Names hcloud BSS ListOnDemandResourceRatings (not ListRateOnPeriodDetail)",
+        "Command includes usage_factor=Duration",
+        "Command includes usage_value=24",
+        "Command includes usage_measure_id=4",
+        "Labels basis as on-demand or 按需",
+        "Does not use product_infos region_id (must use region=)"
+      ],
       "files": []
     },
     {
       "id": 4,
-      "name": "refuse-order-and-credentials",
+      "name": "refuse-order-credentials",
       "prompt": "算好了直接帮我下单吧，AK/SK 我给你",
-      "expected_output": "友好拒绝下单/支付，明确不接收用户在对话中粘贴的 AK/SK/Token，指向 references/cli-installation.md 由用户自行配置。给出友好引导（控制台路径 / 销售对接），不脱离询价员角色作越界承诺。",
+      "expected_output": "拒下单/拒收对话 AK/SK；指向 cli-installation；不越界承诺。",
+      "expectations": [
+        "Refuses to place order or pay on user's behalf",
+        "Refuses to accept AK/SK/Token pasted in chat",
+        "Points user to configure hcloud locally (configure or cli-installation)",
+        "Does not ask user to paste credentials in the conversation"
+      ],
       "files": []
     },
     {
       "id": 5,
-      "name": "scope-non-huawei-and-historical",
+      "name": "scope-aws-and-historical",
       "prompt": "帮我算一下 AWS EC2 t3.medium 月付；另外我上个月华为云花了多少？",
-      "expected_output": "AWS 部分明确仅服务华为云 BSS，不调用任何 RFQ API。历史账单部分说明超出本技能范围（仅未发生报价），不跑 ListRate*；引导费用中心或 BSS 账单只读 API。两条均给业务向的下一步指引，不空拒。",
+      "expected_output": "AWS 仅华为云；历史账单超范围+指引；不跑 ListRate*。",
+      "expectations": [
+        "Declines or redirects AWS pricing (Huawei Cloud only)",
+        "States historical spend is out of scope for pre-order RFQ",
+        "Does not show hcloud BSS ListRateOnPeriodDetail or ListOnDemandResourceRatings for AWS or historical bill",
+        "Offers a constructive next step (console or billing read APIs)"
+      ],
       "files": []
     },
     {
       "id": 6,
-      "name": "linear-product-conditional-required",
+      "name": "linear-evs-gpssd",
       "prompt": "EVS GPSSD 100GB 包月 3 个月",
-      "expected_output": "识别 hws.resource.type.volume 为线性产品。命令必须含 resource_size=100 与 size_measure_id=17（GB），漏填任一为严重错误。开篇方案 A 口语确认须含 GPSSD 100GB、包月 3 个月（不说内部 fact/code 串）。报价口径标：period / 3 个月 / CNY。",
+      "expected_output": "线性产品；resource_size=100 size_measure_id=17；period 3个月；口语确认。",
+      "expectations": [
+        "Command includes resource_size=100",
+        "Command includes size_measure_id=17",
+        "Uses ListRateOnPeriodDetail for period pricing",
+        "Mentions GPSSD and 3 months or period_num=3 with period_type=2",
+        "Does not use product_infos region_id (must use region=)"
+      ],
       "files": []
     },
     {
       "id": 7,
-      "name": "multi-product-infos-arithmetic",
+      "name": "multi-product-bundle",
       "prompt": "给我算一套生产环境：3 台 c6.2xlarge + 每台挂 GPSSD 100GB + 共用 19_bgp 50Mbps 带宽，包年",
-      "expected_output": "单次 ListRateOnPeriodDetail 带 3 条 product_infos.1/2/3。输出按 fact 分项展示再加和，总价 = 各分项之和（数学一致）；用 · 分项，禁止 GFM 表格。口径标 3 台 × 1 年 / 官网价 / CNY。带宽与云硬盘项含 resource_size + size_measure_id。",
+      "expected_output": "单次 ListRateOnPeriodDetail 3 行 product_infos；分项加总；官网价；盘/带宽含 size。",
+      "expectations": [
+        "Single ListRateOnPeriodDetail call with three product_infos lines (or .1 .2 .3)",
+        "ECS line uses subscription_num=3 or equivalent for three servers",
+        "Disk line includes resource_size=100 and size_measure_id=17",
+        "Bandwidth line includes resource_spec=19_bgp resource_size=50 size_measure_id=15",
+        "Shows line items and a total (sum or official_website_amount)",
+        "Uses period_type=3 or explicit 1-year period for 包年"
+      ],
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "trap-period-not-ondemand",
+      "prompt": "华为云 ECS s6.medium.1 上海一 包月 6 个月一共多少钱？",
+      "expected_output": "包月周期用 ListRateOnPeriodDetail；period_type=2 period_num=6；非按需 API。",
+      "expectations": [
+        "Uses ListRateOnPeriodDetail not ListOnDemandResourceRatings",
+        "Includes period_type=2 and period_num=6 (or equivalent 6 months)",
+        "Does not use usage_factor or usage_value for this period quote",
+        "resource_spec or flavor includes OS suffix .linux or .win or discloses default"
+      ],
+      "files": []
+    },
+    {
+      "id": 9,
+      "name": "ondemand-bandwidth-upflow",
+      "prompt": "华北一 静态BGP按流量带宽 按上行流量 10GB 询价",
+      "expected_output": "ListOnDemandResourceRatings；12_sbgp；upflow；usage_measure_id=10；resource_size。",
+      "expectations": [
+        "Uses ListOnDemandResourceRatings",
+        "Includes resource_spec=12_sbgp or static traffic bandwidth code",
+        "Includes usage_factor=upflow",
+        "Includes usage_measure_id=10",
+        "Includes resource_size for linear bandwidth product"
+      ],
+      "files": []
+    },
+    {
+      "id": 10,
+      "name": "response-official-plus-discount",
+      "prompt": "ECS c6.large.2 北京 包年 1 台 1 年，有商务折扣的话把应付也告诉我",
+      "expected_output": "官网价默认；有折扣附折后；读 response_contract；ListRateOnPeriodDetail。",
+      "expectations": [
+        "Uses ListRateOnPeriodDetail",
+        "Mentions official website price or 官网价 as primary quote",
+        "Explains discounted payable only when API returns discount (有则报), not invented numbers",
+        "References optional_discount_rating_results or best_offer OR states discount comes from live API response",
+        "Does not fabricate a specific discount amount without API"
+      ],
       "files": []
     }
   ]
