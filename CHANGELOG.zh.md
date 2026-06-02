@@ -7,6 +7,13 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-billing-scout | [qa/huawei-cloud-billing-scout/CHANGELOG.zh.md](qa/huawei-cloud-billing-scout/CHANGELOG.zh.md) |
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md](qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md) |
 
+## 3.0.3 - 2026-06-02
+
+### 变更
+
+- **huawei-cloud-billing-scout** **2.3.9**：BSS `--cli-region=cn-north-1`、eval #25、语义层 DRY、A/B 评分工具链（详见技能 changelog）
+- **huawei-cloud-cost-estimation** **1.0.2**：BSS cli-region 规则与 eval #11（详见技能 changelog）
+
 ## 3.0.2 - 2026-05-29
 
 ### 变更

@@ -7,6 +7,13 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-billing-scout | [qa/huawei-cloud-billing-scout/CHANGELOG.md](qa/huawei-cloud-billing-scout/CHANGELOG.md) |
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.md](qa/huawei-cloud-cost-estimation/CHANGELOG.md) |
 
+## 3.0.3 - 2026-06-02
+
+### Changed
+
+- **huawei-cloud-billing-scout** **2.3.9**: BSS `--cli-region=cn-north-1` rule, eval #25, semantic DRY, A/B grading harness (see skill changelog)
+- **huawei-cloud-cost-estimation** **1.0.2**: BSS cli-region rule and eval #11 (see skill changelog)
+
 ## 3.0.2 - 2026-05-29
 
 ### Changed

@@ -10,7 +10,7 @@ skills:
     subdomains: [billing, finops]
     summary: Read-only Huawei Cloud BSS FinOps—balance, spend, charge attribution, reconciliation, coupons, enterprise billing; one-page briefing; 53 read-only ops; independent skill; refuses pricing-quote (see cost-estimation) and real-name review
     summary_zh: 华为云 · 花多少为何扣 · 只读对账；余额/扣费归因/对账/券包/企业账；一页简报；53 个只读 Operation；独立技能；拒绝询价（见 cost-estimation）/实名
-    version: "2.3.8"
+    version: "2.3.9"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, read-only BSS IAM, outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp, clawhub]
@@ -25,7 +25,7 @@ skills:
     subdomains: [pricing, finops, procurement]
     summary: Huawei Cloud BSS pre-order pricing—period (ListRateOnPeriodDetail) and on-demand (ListOnDemandResourceRatings) quotes; Spec Review before query; one-round clarification; independent skill; refuses order placement, credential intake, historical billing, and cross-cloud quotes
     summary_zh: 华为云 · 询价员之笔；包年包月 + 按需；Spec Review 后取数；一轮 Clarify；独立技能；拒绝下单/凭证/历史账务/跨云
-    version: "1.0.1"
+    version: "1.0.2"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, BSS IAM (bss:order:view permission), outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp]
