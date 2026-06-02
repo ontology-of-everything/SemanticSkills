@@ -139,6 +139,21 @@
         "Does not fabricate a specific discount amount without API"
       ],
       "files": []
+    },
+    {
+      "id": 11,
+      "name": "bss-cli-region-shanghai-period",
+      "prompt": "ECS s6.medium.1 上海一 包月 6 个月一共多少钱？我 hcloud profile 默认区域是 cn-east-2。",
+      "expected_output": "ListRateOnPeriodDetail；product_infos.region=cn-east-2；--cli-region=cn-north-1；period_type=2 period_num=6。",
+      "expectations": [
+        "Uses ListRateOnPeriodDetail not ListOnDemandResourceRatings",
+        "Includes period_type=2 and period_num=6 (or equivalent 6 months)",
+        "product_infos uses region=cn-east-2 (resource deploy region), not region_id",
+        "BSS command uses --cli-region=cn-north-1, not --cli-region=cn-east-2",
+        "ECS resource_spec includes .linux suffix or explicitly discloses default OS linux",
+        "Does not use product_infos region_id (must use region=)"
+      ],
+      "files": []
     }
   ]
 }

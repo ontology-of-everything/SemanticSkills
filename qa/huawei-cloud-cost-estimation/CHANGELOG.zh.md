@@ -2,6 +2,13 @@
 
 仅本技能变更。仓库级变更见 [../../CHANGELOG.zh.md](../../CHANGELOG.zh.md)。
 
+## 1.0.2 - 2026-06-02
+
+### 新增
+
+- **SKILL.md**：BSS 端点规则 — 所有 `hcloud BSS` 固定 `--cli-region=cn-north-1`；`product_infos.N.region` 仍为资源部署区
+- **eval #11** `bss-cli-region-shanghai-period` + cli-region 程序化断言；真实 hcloud A/B
+
 ## 1.0.1 - 2026-05-29
 
 对照官方 BSS 文档与 hcloud 7.2.2 `--help`/`--dryrun` 的语义/命令一致性修订。

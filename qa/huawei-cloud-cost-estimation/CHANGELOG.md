@@ -2,6 +2,13 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 1.0.2 - 2026-06-02
+
+### Added
+
+- **SKILL.md**: BSS 端点规则 — 所有 `hcloud BSS` 固定 `--cli-region=cn-north-1`；`product_infos.N.region` 仍为资源部署区
+- **eval #11** `bss-cli-region-shanghai-period` + `grade_response.py` cli-region 断言；真实 hcloud A/B 验证
+
 ## 1.0.1 - 2026-05-29
 
 Semantic/command consistency pass against official BSS docs and hcloud 7.2.2 `--help`/`--dryrun`.

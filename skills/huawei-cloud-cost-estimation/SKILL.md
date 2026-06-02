@@ -4,7 +4,7 @@ description: Estimates Huawei Cloud pre-order pricing via hcloud BSS — 包年/
 compatibility: hcloud KooCLI 7.2+, BSS IAM with bss:order:view permission, outbound network; no agent auto-install
 metadata:
   author: ontology-of-everything
-  version: "1.0.1"
+  version: "1.0.2"
   openclaw:
     requires:
       bins: [hcloud]
@@ -57,6 +57,7 @@ metadata:
 3. **Always label the basis** — 每行报价带 `pricing_mode / 币种 / 时长或使用量`。
 4. **Never accept credentials in chat** — 用户粘 AK/SK/Token 立即拒收，指向 `references/cli-installation.md` 让用户自行 `hcloud configure`。
 5. **Route, don't refuse blankly** — 历史账单 / 余额 / 对账 → 明确超出本技能（仅下单前询价），指向费用中心或 BSS 账单只读 API；非华为云 → 仅服务华为云 BSS；写操作 → 给控制台指引。
+6. **BSS 端点** — 所有 `hcloud BSS` 调用固定 `--cli-region=cn-north-1`；`product_infos.N.region` 仍是资源部署区，勿与 CLI region 混用。
 
 > 输出禁忌：对用户消息不用 GFM 表格（IM 渲染差），用 `·` 分项或编号。`product_infos` 等命令级陷阱（dot notation、无分页、code 大小写）见 `references/related-commands.md` 顶部。
 

@@ -78,6 +78,16 @@ def grade(expectations: list[str], text: str) -> dict:
                 re.search(r"period_num\s*=\s*6\b", t)
             )
             add(e, ok, "matched period 6 months" if ok else "missing period_type=2 period_num=6")
+        elif "BSS command uses --cli-region=cn-north-1" in e:
+            bad = bool(re.search(r"--cli-region\s*=\s*cn-east-2\b", t, re.I))
+            good = bool(re.search(r"--cli-region\s*=\s*cn-north-1\b", t, re.I))
+            ok = good and not bad
+            add(e, ok, "cli-region cn-north-1" if ok else "wrong or missing cli-region")
+        elif "product_infos uses region=cn-east-2" in e:
+            ok = bool(re.search(r"product_infos\.\d+\.region\s*=\s*cn-east-2\b", t, re.I)) or (
+                "cn-east-2" in t and "上海" in t and "cn-north-1" not in t.split("product_infos", 1)[-1][:80]
+            )
+            add(e, ok, "deploy region cn-east-2" if ok else "missing product_infos cn-east-2")
         elif "region_id" in e and "must use region=" in e:
             bad = bool(re.search(r"product_infos\.\d+\.region_id\s*=", t))
             good = bool(re.search(r"product_infos\.\d+\.region\s*=", t)) or "region=cn-" in t
