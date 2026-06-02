@@ -2,6 +2,19 @@
 
 仅本技能变更。仓库级变更见 [../../CHANGELOG.zh.md](../../CHANGELOG.zh.md)。
 
+## 2.3.9 - 2026-06-02
+
+### 新增
+
+- **SKILL.md**：BSS 端点规则 — 所有 `hcloud BSS` 固定 `--cli-region=cn-north-1`
+- **eval #25** `bss-cli-region-not-profile-default` + cli-region 断言；真实 hcloud A/B
+- **qa**：A/B 工具链 — `run_ab_eval.py`、`grade_response.py`、`aggregate_ab.py`；`assertions/README.md` 说明 Skill Creator 流程
+
+### 变更
+
+- **semantic**：瘦身 `billing-ontology.yml` / `catalog.yml`（事实、粒度、`source_operations`；查证流在 SKILL.md）
+- **gate**：`HUAWEICLOUD_BILLING_SCOUT_REAL=1` 时 `gate full` 执行 `smoke_real_bss.py`
+
 ## 2.3.8 - 2026-05-28
 
 ### 变更

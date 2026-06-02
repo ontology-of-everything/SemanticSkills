@@ -6,7 +6,7 @@ Read-only **Huawei Cloud / 华为云** BSS FinOps via KooCLI (**hcloud ≥7.2**)
 
 > **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud/BSS 响应为准。
 
-**Version:** 2.3.8 · Changelog: [qa/huawei-cloud-billing-scout/CHANGELOG.md](../../qa/huawei-cloud-billing-scout/CHANGELOG.md) · Pre-order pricing: [huawei-cloud-cost-estimation.md](huawei-cloud-cost-estimation.md)
+**Version:** 2.3.9 · Changelog: [qa/huawei-cloud-billing-scout/CHANGELOG.md](../../qa/huawei-cloud-billing-scout/CHANGELOG.md) · Pre-order pricing: [huawei-cloud-cost-estimation.md](huawei-cloud-cost-estimation.md)
 
 ## What it does
 

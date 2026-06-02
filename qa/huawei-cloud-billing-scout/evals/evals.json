@@ -676,6 +676,31 @@
         "回答使用 ShowCustomerOrderDetails 和 ShowRefundOrderDetails 等只读查询。",
         "回答在需要完整订单标识时一次只问必要信息，不发送澄清问卷。"
       ]
+    },
+    {
+      "id": 25,
+      "name": "bss-cli-region-not-profile-default",
+      "prompt": "我的 hcloud 默认区域是华东-上海（cn-east-2），帮我查华为云账户余额和有没有欠费，只读。",
+      "expected_output": "路由账户余额；BSS 调用 --cli-region=cn-north-1，不用 cn-east-2 作 CLI region；结论先行交付。",
+      "files": [],
+      "covers": {
+        "domains": [
+          "customer_billing"
+        ],
+        "entities": [
+          "AccountBalance"
+        ],
+        "operations": [
+          "ShowCustomerAccountBalances"
+        ]
+      },
+      "assertions": [
+        "回答识别为余额和欠费快照查询。",
+        "回答选择 ShowCustomerAccountBalances 或等价账户余额事实作为首查。",
+        "取证命令或执行记录中 BSS 使用 --cli-region=cn-north-1，不用 cn-east-2 作为 --cli-region。",
+        "回答先给一至三句小结，再分段给出依据（账户类型、金额、币种、欠费状态）；未查到的写待查。",
+        "回答说明当前 profile 或账号范围，不自动扩大到企业/伙伴客户。"
+      ]
     }
   ]
 }

@@ -2,7 +2,7 @@
 name: huawei-cloud-billing-scout
 description: "Huawei Cloud BSS billing read-only only (not AWS/Azure/other clouds; refuses pricing quotes, real-name review, and any non-billing scope): balance, spend, attribution, reconciliation, coupons, stored-value cards, enterprise/partner billing. One-page briefing via hcloud. Use only when the user explicitly mentions 华为云 / Huawei Cloud / BSS and 余额/账单/对账/资源包/代金券/储值卡/企业或伙伴账务; refuses pay, renew, refund, delete."
 metadata:
-  version: "2.3.8"
+  version: "2.3.9"
   openclaw:
     requires:
       bins: [hcloud]
@@ -51,6 +51,7 @@ Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation
 
 - **对账** — 用户已表只读意图时，默认当前 profile 与当前（或已给）账期，按 `related-commands.md` `reconciliation` 顺序取证；仅缺阻塞 ID 时一次一问。
 - **企业 / 伙伴** — 本体要求 `customer_id` 等前置 ID 时，先给只读获取路径或一条澄清，再下责任判断。
+- **BSS 端点** — 所有 `hcloud BSS` 调用固定 `--cli-region=cn-north-1`；勿用 profile 或其它 region 替代。
 
 ## 红线
 

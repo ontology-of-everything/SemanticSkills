@@ -1,6 +1,6 @@
 # 命令合同附录
 
-本文件只保留 operation 合同：用途、必填、模板和限制。路由看 `semantic/catalog.yml`（`required_context` + `triggers`），语义边界看 `semantic/billing-ontology.yml`。
+本文件只保留 operation 合同：用途、必填、模板和限制。路由看 `semantic/catalog.yml`（`required_context`；`triggers` 为辅助，完整触发/拒答见 `SKILL.md`），语义边界看 `semantic/billing-ontology.yml` 各实体 `evidence_boundary`。
 
 ## 命令格式标准
 

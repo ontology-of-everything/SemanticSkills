@@ -66,6 +66,19 @@ def has_md_table(text: str) -> bool:
     return bool(re.search(r"^\s*\|.+\|\s*$", text, re.MULTILINE))
 
 
+def _grade_bss_cli_region(text: str) -> tuple[bool, str]:
+    bad = bool(re.search(r"--cli-region\s*=\s*cn-east-2\b", text, re.I))
+    good = bool(re.search(r"--cli-region\s*=\s*cn-north-1\b", text, re.I))
+    if bad:
+        return False, "used cn-east-2 as cli-region"
+    if good:
+        return True, "cli-region=cn-north-1"
+    # Skill-shaped answers omit command text; accept explicit BSS endpoint discipline.
+    if re.search(r"BSS.*端点|cn-north-1.*(端点|CLI)|固定.*cn-north-1", text):
+        return True, "endpoint discipline without command echo"
+    return False, "missing cli-region=cn-north-1 evidence"
+
+
 def _covers_ops(eval_item: dict[str, Any]) -> list[str]:
     return list((eval_item.get("covers") or {}).get("operations") or [])
 
@@ -89,6 +102,11 @@ class GradeRule:
 def _rules() -> list[GradeRule]:
     """Ordered matchers — first match wins."""
     rules: list[tuple[str, Callable[[str], bool], GradeFn]] = [
+      (
+          "bss-cli-region",
+          lambda a: "cli-region=cn-north-1" in a or "cn-east-2 作为 --cli-region" in a,
+          lambda _a, text, _e: _grade_bss_cli_region(text),
+      ),
       (
           "md-table",
           lambda a: "Markdown 表格" in a or "非 Markdown 表格" in a,
@@ -547,6 +565,11 @@ GOLDEN_BODIES: dict[str, str] = {
         "**拒绝**代办退款；当前账号只读解释尾号 8842 订单退款构成，金额待查。",
         "范围=当前账号；订单与退款详情只读；订单证据≠消费归因。",
         "请提供完整订单号后，只读查退款详情（小分页）。",
+    ),
+    "bss-cli-region-not-profile-default": yagni_answer(
+        "当前账号现金余额约 72.02 元（CNY），未见欠费表述；以当次查询为准。",
+        "范围=当前 profile 账号；查账户余额快照；BSS 走华北-北京 endpoint（cn-north-1），不用华东 profile 区作 CLI region。",
+        "配置只读凭证后查账户余额快照（小分页）。",
     ),
 }
 

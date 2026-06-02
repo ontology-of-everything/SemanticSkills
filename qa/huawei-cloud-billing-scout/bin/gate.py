@@ -112,12 +112,23 @@ def cmd_fast(args: argparse.Namespace) -> int:
     return 0
 
 
+def _run_real_bss_smoke() -> None:
+    import os
+
+    if os.environ.get("HUAWEICLOUD_BILLING_SCOUT_REAL") != "1":
+        return
+    print("== bss smoke (REAL=1) ==")
+    script = QA_DIR / "bin/smoke_real_bss.py"
+    subprocess.run([sys.executable, str(script)], check=True)
+
+
 def cmd_full(args: argparse.Namespace) -> int:
     fast_args = argparse.Namespace(skip_style=True)
     cmd_fast(fast_args)
     if not args.skip_style:
         run_style(require_all=True)
     run_protocol_suite()
+    _run_real_bss_smoke()
     print("OK: huawei-cloud-billing-scout validation passed")
     return 0
 
