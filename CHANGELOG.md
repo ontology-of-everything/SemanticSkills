@@ -6,6 +6,14 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | --- | --- |
 | huawei-cloud-billing-scout | [qa/huawei-cloud-billing-scout/CHANGELOG.md](qa/huawei-cloud-billing-scout/CHANGELOG.md) |
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.md](qa/huawei-cloud-cost-estimation/CHANGELOG.md) |
+| semantic-layer-builder | [qa/semantic-layer-builder/CHANGELOG.md](qa/semantic-layer-builder/CHANGELOG.md) |
+
+## 3.1.0 - 2026-06-29
+
+### Features
+
+- **semantic-layer-builder** **0.1.0**: meta-skill — guided interface-to-Kimball semantic layer modeling with OKF export (see skill changelog)
+- **huawei-cloud-account-onboarding** **0.1.0**: scaffold empty skill for Huawei Cloud real-name account onboarding (placeholder payload)
 
 ## 3.0.3 - 2026-06-02
 
