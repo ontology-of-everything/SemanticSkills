@@ -2,11 +2,11 @@
 
 `semantic-creator` · **Semantic Creator — Interface to Governed Semantic Layer (Meta-Skill)**
 
-把一份**接口契约**（REST/OpenAPI、CLI 帮助、或数据表/DDL）通过**逐项确认**的引导式访谈，建成受治理的 Kimball 语义层：先锁事实与粒度，再挂维度与度量，最后按 Schema 生成语义对象。输出本仓 YAML 或 markdown，并可导出 **Google OKF v0.1**（推荐）。唯一真源是用户给的接口——**不臆造**字段、粒度、枚举或取值。
+把一份**接口契约**（REST/OpenAPI、CLI 帮助、或数据表/DDL）通过**逐项确认**的引导式访谈，建成受治理的 Kimball 语义层：先锁事实与粒度，再挂维度与度量，最后按 Schema 生成语义对象。默认输出本仓 Kimball 星型 YAML 或 markdown，可选导出 **Google OKF v0.1**。唯一真源是用户给的接口——**不臆造**字段、粒度、枚举或取值。
 
 > **元技能** · 它生产的是「别的领域的语义层」，本身不连任何云或数据库。
 
-**Version:** 0.1.1 · Changelog: [qa/semantic-creator/CHANGELOG.md](../../qa/semantic-creator/CHANGELOG.md)
+**Version:** 0.2.0 · Changelog: [qa/semantic-creator/CHANGELOG.md](../../qa/semantic-creator/CHANGELOG.md)
 
 ## What it does
 
@@ -14,10 +14,10 @@
 | --- | --- |
 | Ingest interface | 把 REST/OpenAPI、CLI help、表/DDL 归一成操作清单 |
 | Confirm facts & grain | 「一行 = 什么」？锁定可证伪的 grain |
-| Model dimensions | conformed / snowflake / scope / degenerate / abstract / encoded_constant |
+| Model dimensions | conformed / snowflake / degenerate |
 | Model measures | 可加性（additive / semi / non-additive）+ 口径 |
 | Routing & boundary | entry_points 与 evidence_boundary（不能回答什么） |
-| Emit | 本仓 Kimball YAML / markdown / **Google OKF v0.1（推荐）** |
+| Emit | 本仓 Kimball 星型 YAML / markdown（**默认**）；Google OKF v0.1（可选导出） |
 | Out of scope | 不臆造接口未给的字段/枚举/取值；写操作只 frame 不擅自建模 |
 
 ## In-skill flow
@@ -32,10 +32,10 @@ Phase 1 · Ingest ── 操作清单（name/method/safety/inputs/outputs/doc）
 Phase 1 · Frame ── fact | dimension-lookup | scope（按 fact·dimension·measure·time·scope 路由）
      │
      ▼
-Phase 2 · Confirm ── 一次一问，逐步回显小表：Facts&Grain → Dimensions → Measures → Selection/Pairing → Routing/Boundary
+Phase 2 · Confirm ── 一次一问，逐步回显小表：Facts&Grain → Dimensions → Measures → Routing/Boundary
      │
      ▼
-Phase 3 · Emit ── 按 schema-spec 生成；okf-emitter 导出 OKF；跑 Conformance
+Phase 3 · Emit ── 默认生成 Kimball 星型（schema-spec）；OKF 为可选导出（okf-emitter）；跑 Conformance
 ```
 
 ## SKILL.md structure

@@ -5,7 +5,7 @@ license: Apache-2.0
 compatibility: No external tools or network; pure modeling + file generation. Optional YAML/markdown linter.
 metadata:
   author: ontology-of-everything
-  version: "0.1.1"
+  version: "0.2.0"
 ---
 
 # Semantic Creator（接口 → 语义层 元技能）
@@ -25,19 +25,18 @@ metadata:
 
 顺序见 `elicitation-playbook.md` §3：
 
-1. **Facts & Grain** — 「一行=什么」；标 role、parent_fact。
-2. **Dimensions** — `kind` / `business_key` / `source_operations` / `attributes`；共享维度复用，命名稳定。
+1. **Facts & Grain** — 「一行=什么」；事实类型（事务 / 周期快照 / 累积快照）、role、parent_fact。
+2. **Dimensions** — `kind`（conformed / snowflake / degenerate）/ `business_key` / `source_operations` / `attributes`；共享维度复用，命名稳定。
 3. **Measures** — 可加性（additive / semi / non）+ 口径。
-4. **Selection & pairing** — 抽象维 `selection_rule`；条件必填（线性产品配 `resource_size + measure_id`）。
-5. **Routing & boundary** — `entry_points` + `evidence_boundary`（不能回答什么）。
+4. **Routing & boundary** — `entry_points` + `evidence_boundary`（不能回答什么）。
 
-> 缺 never-assume（grain / business_key / 读写 / 条件必填触发器）→ 必须问。缺 safe-default（可选属性、命名）→ 披露后继续。
+> 缺 never-assume（grain / business_key / 读写）→ 必须问。缺 safe-default（可选属性、命名）→ 披露后继续。
 
 ### Phase 3 · Emit
 
-1. **Target** — `okf`（Google OKF v0.1，**默认/推荐**）/ `repo-yaml` / `markdown`。
-2. **Generate** — 按 `schema-spec.md` 生成；OKF 映射按 `okf-emitter.md`。
-3. **Verify** — 跑 `schema-spec.md` §6 Conformance；OKF 再跑 `okf-emitter.md` §6 三条硬约束。逐条回报 pass/fail。
+1. **Target** — `repo-yaml`（Kimball 星型/星座，**默认**）/ `markdown`；`okf`（Google OKF v0.1）为可选导出。
+2. **Generate** — 按 `schema-spec.md` 生成；如需 OKF，映射按 `okf-emitter.md`。
+3. **Verify** — 跑 `schema-spec.md` §5 Conformance；若导出 OKF，再跑 `okf-emitter.md` §6 三条硬约束。逐条回报 pass/fail。
 
 ## Critical Rules
 
@@ -53,5 +52,5 @@ metadata:
 | --- | --- |
 | Phase 1–2 抽取 + 确认顺序 + 检查表 | `references/elicitation-playbook.md` |
 | Phase 3 Schema 约束 + Conformance | `references/schema-spec.md` |
-| 导出 OKF：映射 / 保留文件 / 硬约束 | `references/okf-emitter.md` |
+| 可选导出 OKF：映射 / 保留文件 / 硬约束 | `references/okf-emitter.md` |
 | 端到端样例 | `references/examples.md` |

@@ -21,7 +21,6 @@
 | --- | --- |
 | **fact** | 度量某业务过程/事件（`list*` 明细或可聚合快照） |
 | **dimension-lookup** | 翻译/枚举 code 的字典 |
-| **scope** | 圈定可见范围/授权（project/account/partner） |
 
 ## §3 Confirm — 顺序（一次一问）
 
@@ -52,11 +51,7 @@
 
 additivity：`additive`（跨所有维可加）/ `semi_additive`（如余额，不跨时间）/ `non_additive`（比率）。单位枚举值归契约层。
 
-### 3.4 Selection & Pairing
-
-抽象维写 `selection_rule`（when→use + default）；条件必填写 `condition`（线性产品 → `resource_size + size_measure_id`）。
-
-### 3.5 Routing & Boundary
+### 3.4 Routing & Boundary
 
 - `entry_points`：每场景 → primary_facts + ontology_files。
 - `evidence_boundary`：逐条写「不能回答什么」（粒度/口径/范围外）。

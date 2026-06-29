@@ -15,7 +15,7 @@ modeling_method: kimball_star_constellation
 description: <一句话；薄路由，触发词/对话流不放这里>
 entry_points:
   <entry_key>:                 # 按场景
-    <axis>: <value>            # 路由轴：可含 pricing_mode / time / scope 等
+    <axis>: <value>            # 可选路由轴（如 time）
     primary_facts: [<Fact>, ...]
     ontology_files: [<file>, ...]
 primary_operations: [<Service/Operation>, ...]
@@ -40,8 +40,6 @@ dimensions:
     source_operations: [<Service/Operation>, ...]
     source_documents: [<url>, ...]    # 无 List API 时
     attributes: [<field>, ...]
-    selection_rule: [...]             # 仅 abstract，见 §5
-    resolved_by: [<Dim_*>, ...]       # 仅 abstract
     notes: <可选>
 evidence_boundary: [<句>, ...]
 ```
@@ -85,32 +83,17 @@ evidence_boundary: [<句>, ...]
 | --- | --- | --- |
 | `conformed_dimension` | 跨事实复用的一致性维度 | business_key, source_operations |
 | `snowflake_dimension` | 规范化子维（挂在父维下） | business_key, parent_dimension |
-| `scope_dimension` | 范围/授权（project/account/partner） | business_key |
-| `abstract_dimension` | 逻辑维，按上下文解析到物理维 | resolved_by, selection_rule |
-| `encoded_constant_dimension` | 无 List API、文档常量编码 | source_documents（取值表归契约层） |
-| `dimension_catalog` | 一组翻译字典维度的集合 | source_operations |
 | `degenerate`（不单列） | 事实里的裸键 | 记于 fact.degenerate_dimensions |
 
-## 5. `selection_rule`（abstract dimension）
-
-```yaml
-selection_rule:
-  - { when: "<service> == <code>", use: Dim_<Physical> }
-  - { default: ask_user_or_consult_official_doc }
-```
-
-条件配对（pairing）写在被解析维度的 `rfq_pairing` / `condition` 上；触发器（如 linear_product）在 model 顶层用 `*_indicators` 列出判定集合。
-
-## 6. Conformance（生成后必跑，逐条回报）
+## 5. Conformance（生成后必跑，逐条回报）
 
 1. 恰好 1 个 `semantic_catalog`；其 `entry_points.*.ontology_files` 指向存在的 model/shared 文件。
 2. 每个 `semantic_ontology` 有 `name` + `type`。
 3. 每个 fact 有 `name/role/grain`；child 有 `parent_fact` 且其父存在。
 4. fact `dimensions[]` 每个名字能在 shared-dimensions 或本文件解析。
-5. abstract dimension 有 `resolved_by` + `selection_rule`（含 default）。
-6. 无内联枚举/code/字段路径取值（grep 反例：长枚举表、`documented_examples` 代码目录）→ 应在契约层。
-7. 每个文件有 `evidence_boundary`（catalog 除外）。
-8. 无悬空引用：`dimension:`/`parent_dimension:`/`parent_fact:` 目标均存在。
-9. 所有 `TODO(verify)` 已列入交付说明的待确认清单（允许保留，但必须可见）。
+5. 无内联枚举/code/字段路径取值（grep 反例：长枚举表、`documented_examples` 代码目录）→ 应在契约层。
+6. 每个文件有 `evidence_boundary`（catalog 除外）。
+7. 无悬空引用：`dimension:`/`parent_dimension:`/`parent_fact:` 目标均存在。
+8. 所有 `TODO(verify)` 已列入交付说明的待确认清单（允许保留，但必须可见）。
 
 任一 fail → 修复或回到确认步骤；不得「静默通过」。

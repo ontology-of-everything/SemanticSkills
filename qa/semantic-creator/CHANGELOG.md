@@ -2,6 +2,19 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 0.2.0 - 2026-06-29
+
+### Changed
+
+- Focus on Kimball methodology: dimension `kind` reduced to `conformed` / `snowflake` / `degenerate`
+- Default emit target is repo-YAML Kimball star/constellation; Google OKF v0.1 demoted to optional export
+- Phase 2 Confirm simplified from 5 to 4 steps (removed Selection & Pairing)
+
+### Removed
+
+- Non-Kimball dimension extensions: `abstract_dimension` + `selection_rule` / `resolved_by`, `encoded_constant_dimension`, `scope_dimension`, `dimension_catalog`; `scope` frame role
+- `schema-spec.md` §5 `selection_rule` section and its Conformance check (Conformance renumbered §6 → §5)
+
 ## 0.1.1 - 2026-06-29
 
 ### Changed

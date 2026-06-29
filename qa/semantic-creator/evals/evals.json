@@ -29,14 +29,14 @@
     },
     {
       "id": 3,
-      "name": "okf-default-target",
-      "prompt": "我有一个 orders 表（order_id PK, store_id FK, placed_at, total_amount）。直接生成语义对象，用推荐格式。",
-      "expected_output": "默认/推荐 Google OKF v0.1：每概念一文件、frontmatter 含非空 type、根 index.md 仅 okf_version；事实/维度/度量分别为 concept。",
+      "name": "kimball-default-target",
+      "prompt": "我有一个 orders 表（order_id PK, store_id FK, placed_at, total_amount）。直接生成语义对象，用默认格式。",
+      "expected_output": "默认 repo-yaml Kimball 星型：semantic_catalog（薄路由）+ model（事实带 grain/dimensions/measures）；不默认导出 OKF（仅在用户明确要求时）。",
       "expectations": [
-        "Chooses Google OKF v0.1 as the recommended/default output target",
-        "Each concept is one markdown file with YAML frontmatter containing a non-empty type",
-        "Fact, dimension(s), and measure(s) are emitted as separate concepts",
-        "Root index.md carries only okf_version frontmatter (or none in sub-index)"
+        "Defaults to repo-YAML Kimball star schema (semantic_catalog + model), not OKF",
+        "Declares the fact grain (one row per order) before listing dimensions/measures",
+        "Models store_id as a dimension reference and order_id as a degenerate dimension",
+        "Does not emit a Google OKF bundle unless the user explicitly asks for it"
       ],
       "files": []
     },

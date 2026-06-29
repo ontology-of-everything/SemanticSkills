@@ -28,11 +28,11 @@ Concept ID = 去掉 `.md` 的 bundle 相对路径（`facts/rfq_line`）。**ID =
 | --- | --- | --- | --- |
 | semantic_catalog | `Semantic Catalog` | 根 `index.md`（带 `okf_version`） | 见 §4 |
 | fact | `Semantic Fact` | `facts/<fact>.md` | `# Grain` / `# Dimensions` / `# Schema` / `# Citations` |
-| dimension | `Dimension` | `dimensions/<dim>.md` | `# Schema`（attributes 表）/ `# Selection`（abstract）/ `# Citations` |
+| dimension | `Dimension` | `dimensions/<dim>.md` | `# Schema`（attributes 表）/ `# Citations` |
 | measure | `Metric` | `metrics/<measure>.md` | `# Definition`（additivity, basis, unit）/ `# Citations` |
 | source operation | `API Endpoint` | `references/<op>.md` | `# Schema`（inputs/outputs）/ `# Citations` |
 
-`time` / `scope` 路由轴 → frontmatter `tags` 或 prose。OKF 链接为无类型有向边，关系语义靠 prose（「joins-with」「parent of」）。
+`time` 路由轴 → frontmatter `tags` 或 prose。OKF 链接为无类型有向边，关系语义靠 prose（「joins-with」「parent of」）。
 
 ## 3. Concept frontmatter（必填 + 推荐）
 
@@ -93,4 +93,4 @@ okf_version: "0.1"
 2. 每个 frontmatter 有非空 `type`。
 3. `index.md`/`log.md` 符合 §4（根 index 仅 `okf_version`）。
 
-逐条回报 pass/fail；并跑 `schema-spec.md` §6（OKF 是承载，不替代语义校验）。
+逐条回报 pass/fail；并跑 `schema-spec.md` §5（OKF 是承载，不替代语义校验）。

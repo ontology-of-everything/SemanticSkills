@@ -124,5 +124,5 @@ orders[] 每个元素一条记录（一笔订单）。
 
 ## 6. Verify
 
-- schema-spec §6：catalog 1 个 ✓；SalesOrder 有 grain ✓；Dim_Currency `source_operations`=`TODO(verify)` ⚠ → 交付说明点名。
+- schema-spec §5：catalog 1 个 ✓；SalesOrder 有 grain ✓；Dim_Currency `source_operations`=`TODO(verify)` ⚠ → 交付说明点名。
 - okf-emitter §6：所有 concept 有 `type` ✓；根 index 仅 `okf_version` ✓。

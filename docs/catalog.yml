@@ -37,9 +37,9 @@ skills:
     display_name_zh: "语义创建器 · 接口转语义元技能"
     domain: meta
     subdomains: [semantic-layer, dimensional-modeling, ontology, okf]
-    summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball semantic layer via a guided one-fact-at-a-time interview (facts/grain/dimensions/measures/routing); emits semantic objects as repo YAML or markdown and a Google OKF v0.1 bundle; evidence-only, refuses to invent fields or values
-    summary_zh: 元技能 · 把 REST/CLI/数据表接口逐项确认建成 Kimball 语义层（事实/粒度/维度/度量/路由）；输出仓库 YAML 或 markdown，并可导出 Google OKF v0.1；只依据接口证据，不臆造
-    version: "0.1.1"
+    summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball star-schema semantic layer via a guided one-fact-at-a-time interview (facts/grain/dimensions/measures/routing); emits repo YAML or markdown by default, optional Google OKF v0.1 export; evidence-only, refuses to invent fields or values
+    summary_zh: 元技能 · 把 REST/CLI/数据表接口逐项确认建成 Kimball 星型语义层（事实/粒度/维度/度量/路由）；默认输出仓库 YAML 或 markdown，OKF v0.1 为可选导出；只依据接口证据，不臆造
+    version: "0.2.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; pure modeling + file generation; optional YAML/markdown linter for validation
     marketplaces: [skills-sh, skillsmp]
