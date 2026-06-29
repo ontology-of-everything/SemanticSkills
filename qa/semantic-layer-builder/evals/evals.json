@@ -1,0 +1,70 @@
+{
+  "skill_name": "semantic-layer-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "grain-first-before-dimensions",
+      "prompt": "这是一个 REST 接口：GET /v1/orders 返回 { orders: [ { order_id, store_id, placed_at, total_amount } ] }。帮我建语义层。",
+      "expected_output": "先确认事实与 grain（一行=一笔订单）再挂维度；回显小表请确认；不直接跳到生成。",
+      "expectations": [
+        "Identifies a fact for the orders array before listing dimensions",
+        "States a falsifiable grain such as one row per order (orders[] element)",
+        "Echoes a confirmation table (fact/grain or dimensions) and asks to confirm before emitting",
+        "Does not produce final YAML/OKF before grain is confirmed"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "no-invented-fields",
+      "prompt": "把这个 CLI 转成语义层：`mytool list-invoices --customer` 输出每行 invoice_id, amount, currency。币种字典接口我没给你。",
+      "expected_output": "只用给出的字段；缺失的字典来源标 TODO(verify)，不编造 source_operations 或枚举值。",
+      "expectations": [
+        "Only models fields evidenced by the interface (invoice_id, amount, currency)",
+        "Marks the missing currency dictionary source as TODO(verify) instead of inventing an operation",
+        "Does not fabricate enum values, codes, or field paths not present in the input",
+        "Lists open TODO(verify) items in the deliverable"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "okf-default-target",
+      "prompt": "我有一个 orders 表（order_id PK, store_id FK, placed_at, total_amount）。直接生成语义对象，用推荐格式。",
+      "expected_output": "默认/推荐 Google OKF v0.1：每概念一文件、frontmatter 含非空 type、根 index.md 仅 okf_version；事实/维度/度量分别为 concept。",
+      "expectations": [
+        "Chooses Google OKF v0.1 as the recommended/default output target",
+        "Each concept is one markdown file with YAML frontmatter containing a non-empty type",
+        "Fact, dimension(s), and measure(s) are emitted as separate concepts",
+        "Root index.md carries only okf_version frontmatter (or none in sub-index)"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "one-blocking-ask-on-grain-ambiguity",
+      "prompt": "把 GET /v1/usage 转语义层，响应是 { data: [...] }，结构我暂时说不清。",
+      "expected_output": "在改变建模结果的歧义（grain/响应结构未知）处一次一问，给候选；不做问卷连环问，不臆造结构。",
+      "expectations": [
+        "Asks one blocking question about the unknown response structure / grain",
+        "Offers candidate grains or asks for the array element shape",
+        "Does not invent a schema or proceed to emit without the structure",
+        "Does not fire a long multi-question questionnaire"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "layer-split-values-to-contract",
+      "prompt": "ListProducts 返回 category 字段，枚举有 ELECTRONICS/FOOD/TOYS 等几十个。帮我建语义层维度。",
+      "expected_output": "语义层维度只描述形态（kind/business_key/source_operations），枚举取值不内联进语义对象，指向命令/契约层。",
+      "expectations": [
+        "Models category as a dimension with kind and business_key",
+        "Does NOT inline the full enum value list into the semantic object",
+        "Points enum/code values to the command/contract layer (notes references contract)",
+        "Keeps the semantic layer thin (shape, not concrete typed-in values)"
+      ],
+      "files": []
+    }
+  ]
+}
