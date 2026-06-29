@@ -8,6 +8,13 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.md](qa/huawei-cloud-cost-estimation/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.1.1 - 2026-06-29
+
+### Changed
+
+- **semantic-creator** **0.2.0**: Kimball star-schema focus — default emit is repo YAML; OKF optional; dimension kinds reduced to conformed / snowflake / degenerate; Confirm phase simplified (see skill changelog)
+- **semantic-creator** **0.1.1**: rename from `semantic-layer-builder` (skills/, qa/, docs/)
+
 ## 3.1.0 - 2026-06-29
 
 ### Features

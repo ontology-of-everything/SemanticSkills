@@ -8,6 +8,13 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md](qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.1.1 - 2026-06-29
+
+### 变更
+
+- **semantic-creator** **0.2.0**：聚焦 Kimball 星型语义层 — 默认输出 repo YAML；OKF 改为可选导出；维度 kind 精简为 conformed / snowflake / degenerate；Confirm 阶段简化（详见技能 changelog）
+- **semantic-creator** **0.1.1**：由 `semantic-layer-builder` 更名（skills/、qa/、docs/）
+
 ## 3.1.0 - 2026-06-29
 
 ### 新功能
