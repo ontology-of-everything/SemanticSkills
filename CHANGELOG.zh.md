@@ -6,13 +6,13 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | --- | --- |
 | huawei-cloud-billing-scout | [qa/huawei-cloud-billing-scout/CHANGELOG.zh.md](qa/huawei-cloud-billing-scout/CHANGELOG.zh.md) |
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md](qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md) |
-| semantic-layer-builder | [qa/semantic-layer-builder/CHANGELOG.md](qa/semantic-layer-builder/CHANGELOG.md) |
+| semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
 ## 3.1.0 - 2026-06-29
 
 ### 新功能
 
-- **semantic-layer-builder** **0.1.0**：元技能 — 引导式接口转 Kimball 语义层建模，支持 OKF 导出（详见技能 changelog）
+- **semantic-creator** **0.1.0**：元技能 — 引导式接口转 Kimball 语义层建模，支持 OKF 导出（详见技能 changelog；0.1.1 起由 `semantic-layer-builder` 更名）
 - **huawei-cloud-account-onboarding** **0.1.0**：华为云实名认证准入技能空脚手架（占位载荷）
 
 ## 3.0.3 - 2026-06-02

@@ -30,16 +30,16 @@ skills:
     compatibility: hcloud KooCLI 7.2+, BSS IAM (bss:order:view permission), outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp]
     distribution: direct-skill
-  - id: semantic-layer-builder
-    path: skills/semantic-layer-builder
-    qa: qa/semantic-layer-builder
-    display_name: "Semantic Layer Builder — Interface to Governed Semantic Layer (Meta-Skill)"
-    display_name_zh: "语义层构建器 · 接口转语义元技能"
+  - id: semantic-creator
+    path: skills/semantic-creator
+    qa: qa/semantic-creator
+    display_name: "Semantic Creator — Interface to Governed Semantic Layer (Meta-Skill)"
+    display_name_zh: "语义创建器 · 接口转语义元技能"
     domain: meta
     subdomains: [semantic-layer, dimensional-modeling, ontology, okf]
     summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball semantic layer via a guided one-fact-at-a-time interview (facts/grain/dimensions/measures/routing); emits semantic objects as repo YAML or markdown and a Google OKF v0.1 bundle; evidence-only, refuses to invent fields or values
     summary_zh: 元技能 · 把 REST/CLI/数据表接口逐项确认建成 Kimball 语义层（事实/粒度/维度/度量/路由）；输出仓库 YAML 或 markdown，并可导出 Google OKF v0.1；只依据接口证据，不臆造
-    version: "0.1.0"
+    version: "0.1.1"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; pure modeling + file generation; optional YAML/markdown linter for validation
     marketplaces: [skills-sh, skillsmp]

@@ -1,14 +1,14 @@
 ---
-name: semantic-layer-builder
+name: semantic-creator
 description: Turns an interface (REST/OpenAPI, CLI, or table/DDL) into a governed Kimball semantic layer via a guided, one-fact-at-a-time interview—confirm facts, grain, dimensions, measures—then emits semantic objects as YAML/markdown or a Google OKF (Open Knowledge Format) bundle. Use when modeling an API/CLI/table into a semantic layer, ontology, or dimensional (star/snowflake) model, or exporting OKF. 触发词：语义层 / 元技能 / 接口(REST/CLI/数据表)转语义 / 事实·粒度·维度·度量 / 维度建模 / 本体 / OKF。Refuses to invent fields, grain, or values the interface does not evidence.
 license: Apache-2.0
 compatibility: No external tools or network; pure modeling + file generation. Optional YAML/markdown linter.
 metadata:
   author: ontology-of-everything
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
-# Semantic Layer Builder（接口 → 语义层 元技能）
+# Semantic Creator（接口 → 语义层 元技能）
 
 把**接口契约**（REST/OpenAPI、CLI、表/DDL）建成**受治理语义层**：确认事实与粒度 → 挂维度与度量 → 按 Schema 生成，可导出 **Google OKF**（推荐）。
 

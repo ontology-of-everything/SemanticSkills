@@ -67,7 +67,7 @@ SemanticSkills/
 | --- | --- | --- | --- |
 | `huawei-cloud-billing-scout` | 2.3.8 | **Huawei Cloud Read-Only Billing — Spend, Charges & Reconciliation** — one-page BSS briefing via KooCLI | [details](docs/skills/huawei-cloud-billing-scout.md) · [changelog](qa/huawei-cloud-billing-scout/CHANGELOG.md) |
 | `huawei-cloud-cost-estimation` | 1.0.0 | **Huawei Cloud Pre-Order Cost Estimation** — period and on-demand quotes via hcloud BSS | [details](docs/skills/huawei-cloud-cost-estimation.md) · [changelog](qa/huawei-cloud-cost-estimation/CHANGELOG.md) |
-| `semantic-layer-builder` | 0.1.0 | **Semantic Layer Builder** — meta-skill: interface → governed Kimball semantic layer + OKF export | [details](docs/skills/semantic-layer-builder.md) · [changelog](qa/semantic-layer-builder/CHANGELOG.md) |
+| `semantic-creator` | 0.1.1 | **Semantic Creator** — meta-skill: interface → governed Kimball semantic layer + OKF export | [details](docs/skills/semantic-creator.md) · [changelog](qa/semantic-creator/CHANGELOG.md) |
 
 Index: [docs/catalog.yml](docs/catalog.yml).
 

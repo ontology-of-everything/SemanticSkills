@@ -1,6 +1,12 @@
-# semantic-layer-builder Changelog
+# semantic-creator Changelog
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
+
+## 0.1.1 - 2026-06-29
+
+### Changed
+
+- Rename skill id `semantic-layer-builder` → `semantic-creator` (skills/, qa/, docs/catalog.yml, docs/skills/, evals, validate)
 
 ## 0.1.0 - 2026-06-29
 
@@ -21,4 +27,4 @@ First release — meta-skill that turns an interface into a governed semantic la
 
 ### Documentation
 
-- `docs/skills/semantic-layer-builder.md`; `docs/catalog.yml` index entry
+- `docs/skills/semantic-creator.md`; `docs/catalog.yml` index entry

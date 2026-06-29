@@ -1,12 +1,12 @@
-# 语义层构建器（元技能）
+# 语义创建器（元技能）
 
-`semantic-layer-builder` · **Semantic Layer Builder — Interface to Governed Semantic Layer (Meta-Skill)**
+`semantic-creator` · **Semantic Creator — Interface to Governed Semantic Layer (Meta-Skill)**
 
 把一份**接口契约**（REST/OpenAPI、CLI 帮助、或数据表/DDL）通过**逐项确认**的引导式访谈，建成受治理的 Kimball 语义层：先锁事实与粒度，再挂维度与度量，最后按 Schema 生成语义对象。输出本仓 YAML 或 markdown，并可导出 **Google OKF v0.1**（推荐）。唯一真源是用户给的接口——**不臆造**字段、粒度、枚举或取值。
 
 > **元技能** · 它生产的是「别的领域的语义层」，本身不连任何云或数据库。
 
-**Version:** 0.1.0 · Changelog: [qa/semantic-layer-builder/CHANGELOG.md](../../qa/semantic-layer-builder/CHANGELOG.md)
+**Version:** 0.1.1 · Changelog: [qa/semantic-creator/CHANGELOG.md](../../qa/semantic-creator/CHANGELOG.md)
 
 ## What it does
 
@@ -49,7 +49,7 @@ Phase 3 · Emit ── 按 schema-spec 生成；okf-emitter 导出 OKF；跑 Con
 ## Runtime bundle (install payload)
 
 ```text
-skills/semantic-layer-builder/
+skills/semantic-creator/
 ├── SKILL.md
 └── references/
     ├── elicitation-playbook.md   # 抽取规则 + 确认顺序 + 检查表
@@ -63,7 +63,7 @@ No `evals/`, `qa/`, or `*-workspace/` under `skills/`.
 ## QA (not installed with skill)
 
 ```text
-qa/semantic-layer-builder/
+qa/semantic-creator/
 ├── validate.sh
 ├── VERSION
 ├── .markdownlint.json
@@ -72,14 +72,14 @@ qa/semantic-layer-builder/
 ```
 
 ```bash
-./qa/semantic-layer-builder/validate.sh
+./qa/semantic-creator/validate.sh
 ```
 
 ## Install
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills \
-  --skill semantic-layer-builder \
+  --skill semantic-creator \
   --agent cursor \
   --copy -y
 ```

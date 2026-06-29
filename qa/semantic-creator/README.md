@@ -1,4 +1,4 @@
-# semantic-layer-builder QA
+# semantic-creator QA
 
 Per-skill quality gate. Run `validate.sh` locally and in CI via
 `tools/validate-all.sh`.
@@ -6,7 +6,7 @@ Per-skill quality gate. Run `validate.sh` locally and in CI via
 ## Layout
 
 ```text
-qa/semantic-layer-builder/
+qa/semantic-creator/
 ├── validate.sh              # entry point (required)
 ├── README.md
 ├── evals/evals.json         # Skill Creator eval cases
@@ -21,5 +21,5 @@ Add `fixtures/` and `bin/` when a skill needs cross-layer checks beyond
 ## Commands
 
 ```bash
-./qa/semantic-layer-builder/validate.sh
+./qa/semantic-creator/validate.sh
 ```

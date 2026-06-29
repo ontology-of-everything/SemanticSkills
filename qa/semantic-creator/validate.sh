@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 QA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILL_DIR="$(cd "$QA_DIR/../../skills/semantic-layer-builder" && pwd)"
+SKILL_DIR="$(cd "$QA_DIR/../../skills/semantic-creator" && pwd)"
 
 fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 need_cmd() { command -v "$1" >/dev/null 2>&1 || fail "missing command: $1"; }
@@ -48,7 +48,7 @@ root = Path(os.environ["ROOT"])
 skill = Path(os.environ["SKILL_DIR"])
 expected = (qa / "VERSION").read_text(encoding="utf-8").strip()
 catalog = yaml.safe_load((root / "docs/catalog.yml").read_text(encoding="utf-8"))
-entry = next(x for x in catalog.get("skills", []) if x.get("id") == "semantic-layer-builder")
+entry = next(x for x in catalog.get("skills", []) if x.get("id") == "semantic-creator")
 if entry.get("version") != expected:
     sys.exit(f"FAIL: docs/catalog.yml version {entry.get('version')!r} != qa/VERSION ({expected})")
 body = skill.joinpath("SKILL.md").read_text(encoding="utf-8").split("---", 2)[1]
@@ -66,4 +66,4 @@ run_local_or_npx markdownlint-cli2 --config "$QA_DIR/.markdownlint.json" "$SKILL
 need_cmd skillcheck
 skillcheck "$SKILL_DIR" --target-agent cursor --strict-cursor --min-desc-score 70
 
-printf 'OK: semantic-layer-builder validation passed\n'
+printf 'OK: semantic-creator validation passed\n'
