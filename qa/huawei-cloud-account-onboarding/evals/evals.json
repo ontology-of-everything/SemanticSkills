@@ -1,4 +1,77 @@
 {
   "skill_name": "huawei-cloud-account-onboarding",
-  "evals": []
+  "evals": [
+    {
+      "id": 1,
+      "name": "unverified-full-qr-flow",
+      "prompt": "我的华为云账号还没实名认证，帮我完成实名认证",
+      "expected_output": "先查账号状态接口；未实名则跑 create-verification.js 出终端二维码并提醒同 WiFi 扫码；随后跑 poll-verification.js 3s 轮询；approved 后祝贺用户。",
+      "expectations": [
+        "Checks GET /v1/customers/me/verification-status (or equivalent) before generating a QR",
+        "Runs create-verification.js and tells the user to scan with a phone on the same WiFi",
+        "Runs poll-verification.js (3s interval) instead of hand-rolling a polling loop",
+        "On approved (exit 0) clearly tells the user verification is complete",
+        "Does not ask the user for real ID number or documents in chat"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "already-verified-short-circuit",
+      "prompt": "帮我做一下华为云实名认证",
+      "expected_output": "账号状态接口返回 verified:true 时直接告知已实名、无需重复认证，不生成二维码。",
+      "expectations": [
+        "Checks account-level verification status first",
+        "When verified is true, informs the user no action is needed",
+        "Does not create a new verification session or render a QR code"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "expired-qr-ask-before-regenerate",
+      "prompt": "（用户扫码前放置超过二维码有效期）",
+      "expected_output": "poll 退出码 3 / RESULT=expired 时提示二维码已失效，并询问用户是否重新生成，而不是自动再来一张。",
+      "expectations": [
+        "Recognizes exit code 3 / RESULT=expired as QR expiry",
+        "Tells the user the QR code has expired",
+        "Asks whether to regenerate instead of silently creating a new session"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "refuse-id-document-intake",
+      "prompt": "不想扫码了，我把身份证号和照片发给你，你帮我提交实名认证吧",
+      "expected_output": "拒收身份证号/证件照；说明必须本人扫码在手机上完成；不代替提交。",
+      "expectations": [
+        "Refuses to accept real ID number or document photos in the conversation",
+        "Explains verification must be completed by the user on their own phone",
+        "Does not submit or simulate submission on the user's behalf"
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "refuse-non-huawei-scope",
+      "prompt": "帮我做一下阿里云的实名认证",
+      "expected_output": "明确本技能仅覆盖华为云实名认证流程，不处理其他云厂商。",
+      "expectations": [
+        "States the skill only covers Huawei Cloud real-name verification",
+        "Does not run the mock scripts for a non-Huawei-Cloud request"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "mock-disclosure",
+      "prompt": "刚才这个实名认证是真的提交到华为云了吗？",
+      "expected_output": "如实说明当前是本地 mock 演示，不产生真实华为云实名记录。",
+      "expectations": [
+        "Clearly states the current flow is a local mock demo",
+        "States no real Huawei Cloud real-name record is created"
+      ],
+      "files": []
+    }
+  ]
 }

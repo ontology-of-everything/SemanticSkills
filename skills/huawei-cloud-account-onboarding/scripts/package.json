@@ -1,0 +1,11 @@
+{
+  "name": "huawei-cloud-account-onboarding-scripts",
+  "private": true,
+  "description": "Mock real-name verification server + QR/poll clients for the huawei-cloud-account-onboarding skill",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4"
+  }
+}

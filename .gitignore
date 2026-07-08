@@ -27,6 +27,10 @@ skill-gate-report-*.txt
 dev/
 study/.tmp-clones/
 
+# Node (skill scripts install deps locally at runtime)
+node_modules/
+package-lock.json
+
 # Python (qa/bin, tools)
 __pycache__/
 *.py[cod]
