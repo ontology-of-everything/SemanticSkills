@@ -6,7 +6,15 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | --- | --- |
 | huawei-cloud-billing-scout | [qa/huawei-cloud-billing-scout/CHANGELOG.md](qa/huawei-cloud-billing-scout/CHANGELOG.md) |
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.md](qa/huawei-cloud-cost-estimation/CHANGELOG.md) |
+| huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
+
+## 3.2.0 - 2026-07-08
+
+### Features
+
+- **huawei-cloud-account-onboarding** **0.1.0**: real-name verification QR mock workflow — mock server, create/poll scripts, terminal QR flow, QA gate (see skill changelog)
+- **semantic-creator** **0.3.0**: phase-aligned four-stage workflow (Ingest → Review → Emit → Verify); interactive HTML design-review report with clipboard-JSON annotations and `amendments.md` iteration; OKF v0.1 default emit; semantic lint and slim catalog routing aligned with OKF Entry Points (see skill changelog)
 
 ## 3.1.1 - 2026-06-29
 

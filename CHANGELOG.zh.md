@@ -6,7 +6,15 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | --- | --- |
 | huawei-cloud-billing-scout | [qa/huawei-cloud-billing-scout/CHANGELOG.zh.md](qa/huawei-cloud-billing-scout/CHANGELOG.zh.md) |
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md](qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md) |
+| huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
+
+## 3.2.0 - 2026-07-08
+
+### 新功能
+
+- **huawei-cloud-account-onboarding** **0.1.0**：扫码实名认证 mock 全流程 — mock 服务、创建/轮询脚本、终端二维码引导、QA 门禁（详见技能 changelog）
+- **semantic-creator** **0.3.0**：四阶段对齐工作流（Ingest → Review → Emit → Verify）；交互式 HTML 评审报告（剪贴板 JSON 批注 + `amendments.md` 迭代）；默认导出 OKF v0.1；语义 lint 与 catalog 路由精简并对齐 OKF Entry Points（详见技能 changelog）
 
 ## 3.1.1 - 2026-06-29
 
