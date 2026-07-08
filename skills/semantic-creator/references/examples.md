@@ -1,95 +1,40 @@
-# Worked Example（接口 → 确认 → 语义对象 + OKF）
+# Worked Example（Ingest → Review → Emit → Verify）
 
-最小端到端：1 个 REST 操作 → 语义对象（YAML）+ OKF concept。示范节奏，非模板填空。
+最小端到端：2 个 REST 操作走完四个阶段，默认产物 OKF bundle，另附 YAML 节选。示范节奏，非模板填空。
 
-## 0. 输入物料（REST）
+## §0 输入物料（REST）
 
-```
+```text
 GET /v1/orders?store_id&from&to  →  200: { orders: [ { order_id, store_id, placed_at, total_amount, currency, line_count } ] }
 GET /v1/stores                   →  200: { stores: [ { store_id, store_name, region } ] }
 ```
 
-## 1. Ingest → 操作清单
+## §1 Phase 1 · Ingest → 操作清单 + 角色
 
-| name | method | safety | inputs | outputs(数组) | doc |
+| name | method | safety | inputs | outputs(数组) | 角色 |
 | --- | --- | --- | --- | --- | --- |
-| ListOrders | GET | read | store_id, from, to | orders[] | <doc> |
-| ListStores | GET | read | — | stores[] | <doc> |
+| ListOrders | GET | read | store_id, from, to | orders[] | fact（业务过程：下单） |
+| ListStores | GET | read | — | stores[] | dimension-lookup（门店字典） |
 
-## 2. Frame
+## §2 Phase 2 · Review — 评审报告卡片（示意）
 
-- `ListOrders` → **fact**（业务过程：下单）。
-- `ListStores` → **dimension-lookup**（门店字典）。
+访谈收集完毕后出 HTML 报告（规范见 `review.md` §2），卡片内容如：
 
-## 3. Confirm（逐项，回显小表）
+> **SalesOrder** · Fact
+> 结论：grain = orders[] 每元素一条（一笔订单）；role=primary；退化维 order_id
+> 证据：ListOrders 响应 `orders[]` 数组结构 · 置信度 **confirmed**
+> 批注：( ) 通过 ( ) 修改 ( ) 拒绝
+>
+> ---
+>
+> **Dim_Currency** · Dimension
+> 结论：conformed；business_key=currency
+> 证据：仅见 orders[].currency 字段，字典接口未给 → `TODO(verify)` · 置信度 **assumed**
+> 批注：…
 
-**Grain**（确认）：
+用户导出批注 JSON 回粘，如 `{"verdicts":[{"id":"dim/currency","action":"edit","field":"source_operations","note":"用 GET /v1/currencies"}],"approved_rest":true}` → 写 `amendments.md`、应用、重出报告，通过后进 Phase 3。
 
-| fact | grain | role |
-| --- | --- | --- |
-| SalesOrder | orders[] 每个元素一条（一笔订单） | primary |
-
-**Dimensions**（确认）：
-
-| dimension | kind | business_key | source_operations | attributes |
-| --- | --- | --- | --- | --- |
-| Dim_Store | conformed | store_id | [ListStores] | [store_id, store_name, region] |
-| Dim_Currency | conformed | currency | [TODO(verify): 字典接口?] | [currency] |
-| Dim_Date | conformed | date | [—] | [date] |
-
-`order_id` → 退化维度（degenerate）。`region` 在 Dim_Store 内，不另列（除非需独立分析）。
-
-**Measures**（确认）：
-
-| measure | additivity | unit | source | notes |
-| --- | --- | --- | --- | --- |
-| total_amount | additive | currency | total_amount | 跨门店/时间可加 |
-| line_count | additive | count | line_count | |
-
-## 4. Emit — repo-yaml（节选）
-
-`catalog.yml`：
-
-```yaml
-name: SalesSemanticCatalog
-type: semantic_catalog
-version: 0.1.0
-domain: sales
-modeling_method: kimball_star_constellation
-description: 薄路由；下单事实 + 门店字典。
-entry_points:
-  sales_orders:
-    primary_facts: [SalesOrder]
-    ontology_files: [shared-dimensions.yml, sales-model.yml]
-primary_operations: [ListOrders, ListStores]
-command_contracts_file: ../related-commands.md
-```
-
-`sales-model.yml`：
-
-```yaml
-name: SalesModel
-type: semantic_ontology
-description: 下单事实；对齐 ListOrders.orders[]。
-shared_dimensions_file: shared-dimensions.yml
-facts:
-  - name: SalesOrder
-    role: primary
-    grain: orders[] 每个元素一条（一笔订单）
-    degenerate_dimensions: [order_id]
-    dimensions: [Dim_Store, Dim_Currency, Dim_Date]
-    attributes:
-      - { name: store_id,   type: string,   required: true, dimension: Dim_Store }
-      - { name: placed_at,  type: datetime, required: true, dimension: Dim_Date }
-      - { name: currency,   type: string,   required: true, dimension: Dim_Currency }
-    measures:
-      - { name: total_amount, additivity: additive, unit: currency }
-      - { name: line_count,   additivity: additive, unit: count }
-evidence_boundary:
-  - 仅下单事实；退款/履约/库存超出本对象。
-```
-
-## 5. Emit — OKF（节选）
+## §3 Phase 3 · Emit — OKF（默认）
 
 `facts/sales_order.md`：
 
@@ -114,15 +59,36 @@ orders[] 每个元素一条记录（一笔订单）。
 | field | type | required | dimension |
 | --- | --- | --- | --- |
 | store_id | string | true | Store |
-| placed_at | datetime | true | Date |
 
 # Citations
 [1] [ListOrders 文档](<doc>)
 ```
 
-`dimensions/store.md`、`metrics/total_amount.md` 同法；根 `index.md` 结构见 `okf-emitter.md` §4。
+`dimensions/store.md`、`metrics/total_amount.md` 同法（Metric body 含 additivity=additive、unit=currency）；根 `index.md`（含 `# Entry Points`：`sales_orders → [Sales Order]`）与子目录 index 结构见 `emit-okf.md` §4。
 
-## 6. Verify
+## §4 Phase 3 · Emit — repo-YAML（可选，节选）
 
-- schema-spec §5：catalog 1 个 ✓；SalesOrder 有 grain ✓；Dim_Currency `source_operations`=`TODO(verify)` ⚠ → 交付说明点名。
-- okf-emitter §6：所有 concept 有 `type` ✓；根 index 仅 `okf_version` ✓。
+```yaml
+# sales-model.yml
+name: SalesModel
+type: semantic_ontology
+shared_dimensions_file: shared-dimensions.yml
+facts:
+  - name: SalesOrder
+    role: primary
+    grain: orders[] 每个元素一条（一笔订单）
+    degenerate_dimensions: [order_id]
+    dimensions: [Dim_Store, Dim_Currency, Dim_Date]
+    measures:
+      - { name: total_amount, additivity: additive, unit: currency }
+      - { name: line_count,   additivity: additive, unit: count }
+evidence_boundary:
+  - 仅下单事实；退款/履约/库存超出本对象。
+```
+
+catalog（薄路由）与 shared-dimensions 结构见 `emit-yaml.md` §1–§2。
+
+## §5 Phase 4 · Verify
+
+- verify §1 结构：catalog 1 个 ✓；SalesOrder 有 grain ✓；Dim_Currency `source_operations`=`TODO(verify)` ⚠ → 交付说明点名。
+- verify §3 OKF：所有 concept 有 `type` ✓；根 index 仅 `okf_version` ✓。

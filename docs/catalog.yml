@@ -30,6 +30,20 @@ skills:
     compatibility: hcloud KooCLI 7.2+, BSS IAM (bss:order:view permission), outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp]
     distribution: direct-skill
+  - id: huawei-cloud-account-onboarding
+    path: skills/huawei-cloud-account-onboarding
+    qa: qa/huawei-cloud-account-onboarding
+    display_name: "Huawei Cloud Account Onboarding — Real-Name Verification via QR (Mock)"
+    display_name_zh: "华为云账号开通 · 扫码实名认证（Mock）"
+    domain: cloud
+    subdomains: [onboarding, identity]
+    summary: Guides Huawei Cloud real-name verification via terminal QR—check account status, generate scan-to-verify QR (LAN H5 page), poll every 3s to approved/rejected/expired; local mock modeled on industry create-session/poll shape; refuses real ID document or credential intake and non-Huawei-Cloud identity flows
+    summary_zh: 华为云 · 扫码实名认证引导；查状态 → 终端二维码 → 3s 轮询收敛；本地 mock（业界三段式接口形态）；拒收真实证件/凭证；仅华为云场景
+    version: "0.1.0"
+    agents: [cursor, claude-code, codex, openclaw]
+    compatibility: Node.js 18+, phone on same WiFi to scan; local mock, no Huawei Cloud credentials needed
+    marketplaces: []
+    distribution: direct-skill
   - id: semantic-creator
     path: skills/semantic-creator
     qa: qa/semantic-creator
@@ -37,10 +51,10 @@ skills:
     display_name_zh: "语义创建器 · 接口转语义元技能"
     domain: meta
     subdomains: [semantic-layer, dimensional-modeling, ontology, okf]
-    summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball star-schema semantic layer via a guided one-fact-at-a-time interview (facts/grain/dimensions/measures/routing); emits repo YAML or markdown by default, optional Google OKF v0.1 export; evidence-only, refuses to invent fields or values
-    summary_zh: 元技能 · 把 REST/CLI/数据表接口逐项确认建成 Kimball 星型语义层（事实/粒度/维度/度量/路由）；默认输出仓库 YAML 或 markdown，OKF v0.1 为可选导出；只依据接口证据，不臆造
-    version: "0.2.0"
+    summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball star-schema semantic layer via a guided interview plus an interactive HTML design-review report (evidence, confidence badges, clipboard-JSON annotations, amendments.md iteration); emits a Google OKF v0.1 bundle by default, optional repo YAML; evidence-only, refuses to invent fields or values
+    summary_zh: 元技能 · 把 REST/CLI/数据表接口经访谈 + 交互式 HTML 评审（证据/置信度/批注回传/amendments 迭代）建成 Kimball 星型语义层；默认输出 Google OKF v0.1 bundle，仓库 YAML 为可选；只依据接口证据，不臆造
+    version: "0.3.0"
     agents: [cursor, claude-code, codex, openclaw]
-    compatibility: No external tools or network; pure modeling + file generation; optional YAML/markdown linter for validation
+    compatibility: No external tools or network; pure modeling + file generation; review report is self-contained HTML (inline CSS/JS, no CDN)
     marketplaces: [skills-sh, skillsmp]
     distribution: direct-skill

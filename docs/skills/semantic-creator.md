@@ -2,22 +2,22 @@
 
 `semantic-creator` · **Semantic Creator — Interface to Governed Semantic Layer (Meta-Skill)**
 
-把一份**接口契约**（REST/OpenAPI、CLI 帮助、或数据表/DDL）通过**逐项确认**的引导式访谈，建成受治理的 Kimball 语义层：先锁事实与粒度，再挂维度与度量，最后按 Schema 生成语义对象。默认输出本仓 Kimball 星型 YAML 或 markdown，可选导出 **Google OKF v0.1**。唯一真源是用户给的接口——**不臆造**字段、粒度、枚举或取值。
+把一份**接口契约**（REST/OpenAPI、CLI 帮助、或数据表/DDL）建成受治理的 Kimball 语义层：访谈锁事实与粒度 → **交互式 HTML 评审报告**（证据出处 + 置信度徽章 + 批注回传）确认 → 按 Schema 生成。默认输出 **Google OKF v0.1** bundle，可选仓库 Kimball 星型 YAML / markdown。唯一真源是用户给的接口——**不臆造**字段、粒度、枚举或取值。
 
 > **元技能** · 它生产的是「别的领域的语义层」，本身不连任何云或数据库。
 
-**Version:** 0.2.0 · Changelog: [qa/semantic-creator/CHANGELOG.md](../../qa/semantic-creator/CHANGELOG.md)
+**Version:** 0.3.0 · Changelog: [qa/semantic-creator/CHANGELOG.md](../../qa/semantic-creator/CHANGELOG.md)
 
 ## What it does
 
 | Capability | Typical questions |
 | --- | --- |
 | Ingest interface | 把 REST/OpenAPI、CLI help、表/DDL 归一成操作清单 |
-| Confirm facts & grain | 「一行 = 什么」？锁定可证伪的 grain |
-| Model dimensions | conformed / snowflake / degenerate |
-| Model measures | 可加性（additive / semi / non-additive）+ 口径 |
+| Interview facts & grain | 「一行 = 什么」？锁定可证伪的 grain |
+| Model dimensions / measures | conformed / snowflake / degenerate；additivity + 口径 |
+| Design review | HTML 评审报告：证据 + 置信度（confirmed/inferred/assumed）+ 批注 JSON 回传 → `amendments.md` 迭代 |
 | Routing & boundary | entry_points 与 evidence_boundary（不能回答什么） |
-| Emit | 本仓 Kimball 星型 YAML / markdown（**默认**）；Google OKF v0.1（可选导出） |
+| Emit | Google OKF v0.1 bundle（**默认**）；仓库 Kimball 星型 YAML / markdown（可选）；≥2 bundle 生成薄根索引 |
 | Out of scope | 不臆造接口未给的字段/枚举/取值；写操作只 frame 不擅自建模 |
 
 ## In-skill flow
@@ -26,25 +26,25 @@
 Interface (REST / CLI / table)
      │
      ▼
-Phase 1 · Ingest ── 操作清单（name/method/safety/inputs/outputs/doc）
+Phase 1 · Ingest ── 操作清单 → fact | dimension-lookup（退出条件达成才前进）
      │
      ▼
-Phase 1 · Frame ── fact | dimension-lookup | scope（按 fact·dimension·measure·time·scope 路由）
+Phase 2 · Review ── 访谈收集（证据+置信度）→ HTML 评审报告 → 批注回粘 → amendments.md → 通过
      │
      ▼
-Phase 2 · Confirm ── 一次一问，逐步回显小表：Facts&Grain → Dimensions → Measures → Routing/Boundary
+Phase 3 · Emit ── OKF bundle（默认，emit-okf）| repo-YAML（可选，emit-yaml）
      │
      ▼
-Phase 3 · Emit ── 默认生成 Kimball 星型（schema-spec）；OKF 为可选导出（okf-emitter）；跑 Conformance
+Phase 4 · Verify ── 结构检查 + 语义 lint + OKF 硬约束；不可机械修复 → 回 Phase 2 提问
 ```
 
 ## SKILL.md structure
 
 | Section | Purpose |
 | --- | --- |
-| Workflow | Phase 1 Ingest & Frame → Phase 2 Confirm（逐项）→ Phase 3 Emit |
+| Workflow | 四阶段串行，每阶段一个参考文件 + 退出条件 |
 | Critical Rules | Evidence-only；grain first；one blocking ask；layer split；stable names |
-| Reference Index | 何时加载 playbook / schema-spec / okf-emitter / examples |
+| Reference Index | 按阶段加载 ingest / review / emit-okf / emit-yaml / verify / examples |
 
 ## Runtime bundle (install payload)
 
@@ -52,10 +52,12 @@ Phase 3 · Emit ── 默认生成 Kimball 星型（schema-spec）；OKF 为可
 skills/semantic-creator/
 ├── SKILL.md
 └── references/
-    ├── elicitation-playbook.md   # 抽取规则 + 确认顺序 + 检查表
-    ├── schema-spec.md            # 语义对象 Schema 约束 + Conformance
-    ├── okf-emitter.md            # Google OKF v0.1 映射 + 硬约束
-    └── examples.md               # 接口 → 确认 → YAML + OKF 端到端样例
+    ├── ingest.md      # Phase 1：物料归一 + 角色判定
+    ├── review.md      # Phase 2：访谈 + HTML 评审 + amendments 迭代
+    ├── emit-okf.md    # Phase 3 默认目标：OKF v0.1 布局/映射
+    ├── emit-yaml.md   # Phase 3 可选目标：YAML Schema + 共享字段语义
+    ├── verify.md      # Phase 4：结构检查 + 语义 lint + OKF 硬约束 + 升级回路
+    └── examples.md    # 四阶段端到端样例
 ```
 
 No `evals/`, `qa/`, or `*-workspace/` under `skills/`.
@@ -67,7 +69,7 @@ qa/semantic-creator/
 ├── validate.sh
 ├── VERSION
 ├── .markdownlint.json
-├── evals/evals.json             # 5 offline eval cases
+├── evals/evals.json             # 6 offline eval cases
 └── assertions/README.md
 ```
 
@@ -84,4 +86,4 @@ npx skills add ontology-of-everything/SemanticSkills \
   --copy -y
 ```
 
-No external tools or network required — pure modeling and file generation.
+No external tools or network required — pure modeling and file generation; the review report is a self-contained HTML file (inline CSS/JS, no CDN).

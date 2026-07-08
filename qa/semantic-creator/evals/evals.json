@@ -29,14 +29,14 @@
     },
     {
       "id": 3,
-      "name": "kimball-default-target",
+      "name": "okf-default-target",
       "prompt": "我有一个 orders 表（order_id PK, store_id FK, placed_at, total_amount）。直接生成语义对象，用默认格式。",
-      "expected_output": "默认 repo-yaml Kimball 星型：semantic_catalog（薄路由）+ model（事实带 grain/dimensions/measures）；不默认导出 OKF（仅在用户明确要求时）。",
+      "expected_output": "默认 Google OKF v0.1 bundle（每概念一个 markdown concept，frontmatter 含 type）；repo-YAML 仅在用户明确要求时；建模仍是 Kimball（grain 先行）。",
       "expectations": [
-        "Defaults to repo-YAML Kimball star schema (semantic_catalog + model), not OKF",
+        "Defaults to a Google OKF v0.1 bundle (concept-per-file markdown with frontmatter type), not repo-YAML",
         "Declares the fact grain (one row per order) before listing dimensions/measures",
         "Models store_id as a dimension reference and order_id as a degenerate dimension",
-        "Does not emit a Google OKF bundle unless the user explicitly asks for it"
+        "Does not emit repo-YAML unless the user explicitly asks for it"
       ],
       "files": []
     },
@@ -63,6 +63,19 @@
         "Does NOT inline the full enum value list into the semantic object",
         "Points enum/code values to the command/contract layer (notes references contract)",
         "Keeps the semantic layer thin (shape, not concrete typed-in values)"
+      ],
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "review-report-before-emit",
+      "prompt": "接口：GET /v1/orders 返回 { orders: [ { order_id, store_id, total_amount } ] }，GET /v1/stores 返回 { stores: [ { store_id, store_name } ] }。信息都齐了，直接建语义层。",
+      "expected_output": "访谈收集后先出交互式 HTML 评审报告（$TMPDIR，卡片含证据出处+置信度徽章+批注控件，内联无 CDN），用户回粘批注 JSON、落盘 amendments.md 后才 Emit；不跳过评审直接生成。",
+      "expectations": [
+        "Generates an HTML review report in the temp directory before emitting, with per-card evidence and confidence badges (confirmed/inferred/assumed)",
+        "Report is self-contained (inline CSS/JS, no CDN) and includes verdict controls plus an export-annotations button (clipboard JSON)",
+        "Asks the user to review and paste annotations back; persists changes to amendments.md before re-emitting",
+        "Does not emit the final bundle before the review is approved"
       ],
       "files": []
     }

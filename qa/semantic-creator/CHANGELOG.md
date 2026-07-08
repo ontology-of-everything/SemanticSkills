@@ -2,6 +2,22 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 0.3.0 - 2026-07-08
+
+### Changed
+
+- Phase 2: four sequential chat confirmations replaced by a single interactive HTML design-review report (`references/review-report.md`) — per-card evidence, confidence badges (confirmed/inferred/assumed), verdict controls; annotations returned via clipboard JSON and persisted to `amendments.md` as iteration input
+- Default emit target flipped: Google OKF v0.1 bundle is now the default; repo-YAML demoted to optional target (eval #3 rewritten)
+- References restructured phase-aligned (one file per phase, each with entry/exit criteria): `ingest.md` (Phase 1), `review.md` (Phase 2 interview + HTML review + amendments), `emit-okf.md` / `emit-yaml.md` (Phase 3), `verify.md` (Phase 4, all checks consolidated); replaces `elicitation-playbook.md` / `okf-emitter.md` / `schema-spec.md`
+- Conformance extended with semantic lint: naming consistency (one business_key = one dimension name), dimension reuse (no redefinition of existing shared dimensions), escalation loop (non-mechanical failures go back to One blocking ask)
+- Multi-bundle support: thin root index (one line per bundle) generated only when ≥2 bundles exist
+- `semantic_catalog` slimmed to routing essentials (dropped constant `modeling_method` and derivable `primary_operations` / `primary_doc_urls`); OKF root `index.md` gains an `# Entry Points` section so both targets carry the same routing
+
+### Added
+
+- HTML review report spec in `references/review.md` (self-contained, inline CSS/JS, no CDN)
+- Eval #6 `review-report-before-emit`
+
 ## 0.2.0 - 2026-06-29
 
 ### Changed
