@@ -9,6 +9,12 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.3.0 - 2026-07-08
+
+### 新功能
+
+- **semantic-creator** **0.4.0**：Phase 2 评审改为模板+数据 — agent 将 model JSON 注入 `assets/review-template.html`（内联 vendored petite-vue，离线无 CDN）；剪贴板不可用时导出降级；支持上轮批注回填；未批准硬停不 Emit；eval #6 改写（详见技能 changelog）
+
 ## 3.2.0 - 2026-07-08
 
 ### 新功能

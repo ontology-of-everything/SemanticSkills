@@ -9,6 +9,12 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.3.0 - 2026-07-08
+
+### Features
+
+- **semantic-creator** **0.4.0**: Phase 2 review rebuilt as template+data — agent injects model JSON into `assets/review-template.html` (inline vendored petite-vue, offline, no CDN); annotation export degrades when clipboard unavailable; previous-round verdicts re-importable; hard stop before Emit; eval #6 rewritten (see skill changelog)
+
 ## 3.2.0 - 2026-07-08
 
 ### Features
