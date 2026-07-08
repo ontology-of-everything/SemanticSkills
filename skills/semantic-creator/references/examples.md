@@ -18,7 +18,7 @@ GET /v1/stores                   →  200: { stores: [ { store_id, store_name, r
 
 ## §2 Phase 2 · Review — 评审报告卡片（示意）
 
-访谈收集完毕后出 HTML 报告（规范见 `review.md` §2），卡片内容如：
+访谈收集完毕后生成 model JSON 注入壳模板出 HTML 报告（规范见 `review.md` §2），卡片内容如：
 
 > **SalesOrder** · Fact
 > 结论：grain = orders[] 每元素一条（一笔订单）；role=primary；退化维 order_id
@@ -32,7 +32,9 @@ GET /v1/stores                   →  200: { stores: [ { store_id, store_name, r
 > 证据：仅见 orders[].currency 字段，字典接口未给 → `TODO(verify)` · 置信度 **assumed**
 > 批注：…
 
-用户导出批注 JSON 回粘，如 `{"verdicts":[{"id":"dim/currency","action":"edit","field":"source_operations","note":"用 GET /v1/currencies"}],"approved_rest":true}` → 写 `amendments.md`、应用、重出报告，通过后进 Phase 3。
+出报告后停下等用户；用户导出批注 JSON 回传（clipboard 或下载/文本框降级），
+如 `{"verdicts":[{"id":"dim/currency","action":"edit","field":"source_operations","note":"用 GET /v1/currencies"}],"approved_rest":true}`
+→ 写 `amendments.md`、应用、重出报告，批准后进 Phase 3。
 
 ## §3 Phase 3 · Emit — OKF（默认）
 

@@ -5,7 +5,7 @@ license: Apache-2.0
 compatibility: No external tools or network; pure modeling + file generation. Review report is a self-contained HTML file (inline CSS/JS, no CDN).
 metadata:
   author: ontology-of-everything
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Semantic Creator（接口 → 语义层 元技能）
@@ -29,8 +29,8 @@ Phase 1 Ingest → Phase 2 Review → Phase 3 Emit → Phase 4 Verify
 
 ### Phase 2 · Review（`references/review.md`）
 
-访谈收集 fact/grain、dimension、measure、routing/boundary——每项带证据出处与置信度；汇成**交互式 HTML 评审报告**给用户批注；批注 JSON 回粘 → `amendments.md` → 应用 → 重出报告。
-**退出条件**：报告全部通过，无未决 never-assume 缺口。
+访谈收集 fact/grain、dimension、measure、routing/boundary——每项带证据出处与置信度；生成 model JSON 注入壳模板 `assets/review-template.html` 出**交互式 HTML 评审报告**给用户批注；批注 JSON 回传 → `amendments.md` → 应用 → 重出报告。
+**退出条件**：报告全部通过，无未决 never-assume 缺口。**出报告后必须停下等用户批准，未批准禁止进 Phase 3。**
 
 ### Phase 3 · Emit（`references/emit-okf.md` 默认 / `references/emit-yaml.md` 可选）
 
@@ -49,6 +49,7 @@ Phase 1 Ingest → Phase 2 Review → Phase 3 Emit → Phase 4 Verify
 3. **One blocking ask** — 仅在改变建模结果处停（一次一问，带候选），不连环问；批量确认走 HTML 评审。
 4. **Layer split** — 形态/路由/粒度归语义层；可键入或读取的取值（枚举、code、字段路径、命令）归契约层，语义层只指向。
 5. **Stable names** — 事实/维度名确认后不重命名（OKF 概念 ID = 文件路径，改名即断链）。
+6. **Review gate** — Phase 2 出报告后 MUST STOP：显式等待用户回传批注并批准（`approved_rest: true`）；未批准禁止进入 Phase 3，不得替用户批准或自动前进。
 
 ## Reference Index（按阶段加载）
 

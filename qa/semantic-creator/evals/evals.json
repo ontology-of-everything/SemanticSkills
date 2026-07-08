@@ -70,12 +70,13 @@
       "id": 6,
       "name": "review-report-before-emit",
       "prompt": "接口：GET /v1/orders 返回 { orders: [ { order_id, store_id, total_amount } ] }，GET /v1/stores 返回 { stores: [ { store_id, store_name } ] }。信息都齐了，直接建语义层。",
-      "expected_output": "访谈收集后先出交互式 HTML 评审报告（$TMPDIR，卡片含证据出处+置信度徽章+批注控件，内联无 CDN），用户回粘批注 JSON、落盘 amendments.md 后才 Emit；不跳过评审直接生成。",
+      "expected_output": "访谈收集后生成 model JSON 注入壳模板 assets/review-template.html，先在 $TMPDIR 出交互式 HTML 评审报告（卡片含证据+置信度徽章+批注控件，自足离线无 CDN），然后硬停等用户回传批注（clipboard 或下载/文本框降级）、落盘 amendments.md 后才 Emit；未批准禁止生成。",
       "expectations": [
-        "Generates an HTML review report in the temp directory before emitting, with per-card evidence and confidence badges (confirmed/inferred/assumed)",
-        "Report is self-contained (inline CSS/JS, no CDN) and includes verdict controls plus an export-annotations button (clipboard JSON)",
-        "Asks the user to review and paste annotations back; persists changes to amendments.md before re-emitting",
-        "Does not emit the final bundle before the review is approved"
+        "Builds the report by injecting a compact model JSON into the shell template (assets/review-template.html) instead of hand-writing the full HTML",
+        "Report lands in the temp directory, is self-contained/offline (no CDN), with per-card evidence, confidence badges (confirmed/inferred/assumed), and verdict controls",
+        "Annotation export is usable: clipboard JSON or the fallback (select-all textarea / verdicts.json download); user returns it in chat",
+        "Hard-stops after emitting the report: explicitly waits for user verdicts/approval and does not proceed to Phase 3 without approved_rest true",
+        "Persists returned verdicts to amendments.md before re-emitting the report or the final bundle"
       ],
       "files": []
     }

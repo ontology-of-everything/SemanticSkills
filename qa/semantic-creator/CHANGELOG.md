@@ -2,6 +2,20 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 0.4.0 - 2026-07-08
+
+### Changed
+
+- Phase 2 review report rebuilt as template + data: agent no longer hand-writes HTML — it emits a compact model JSON and injects it into the fixed shell `assets/review-template.html` (inline CSS + vendored petite-vue ~6KB, still self-contained, no CDN, no network); shrinks per-iteration output and stabilizes report structure
+- Report UX: sections collapsed by default with anchor nav and text filter; annotation export degrades gracefully when clipboard is unavailable under `file://` (select-all textarea + `verdicts.json` download); previous-round verdicts can be re-imported to refill card state
+- Review gate hardened: after emitting the report the agent MUST STOP and wait for user verdicts/approval (`approved_rest: true`); entering Phase 3 without approval is forbidden (SKILL.md Critical Rule 6 + review.md §5)
+- `amendments.md` location fixed: written next to the report in `$TMPDIR` during Phase 2, copied into the output directory at Phase 3 emit
+- Eval #6 rewritten for the template+data flow (export usable via clipboard or fallback; hard stop before approval)
+
+### Added
+
+- `assets/review-template.html` — review report shell (inline renderer + vendored petite-vue), the only new install-payload file
+
 ## 0.3.0 - 2026-07-08
 
 ### Changed
