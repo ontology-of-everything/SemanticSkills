@@ -3,7 +3,7 @@ name: semantic-creator
 description: Builds evidence-only Kimball semantic layers from APIs, CLIs, or tables with an HTML decision workbench; emits OKF/YAML. Use this skill when users request semantic layers, dimensional models, ontology, OKF, 语义层、接口转语义、维度建模或本体.
 license: Apache-2.0
 metadata:
-  version: "0.5.0"
+  version: "0.5.1"
 ---
 
 # Semantic Creator（接口 → 语义层 元技能）
@@ -27,9 +27,10 @@ Phase 1 Ingest → Phase 2 Review → Phase 3 Emit → Phase 4 Verify
 
 ### Phase 2 · Review（`references/review.md`）
 
-将对象拆为原子决策；显式展示目标、候选、证据、风险、依赖与权衡。生成
-model JSON 注入 `assets/review-template.html`，由用户确认、选择、修正、补证或
-拒绝；反馈写入 `amendments.md` 后重出报告。
+将对象拆为原子决策；显式展示目标、候选、证据、风险、依赖与权衡，并在
+事实、维度、度量、路由分区提供固定 YAGNI 判断指导。生成 model JSON 注入
+`assets/review-template.html`，由用户确认、选择、修正、补证或拒绝；反馈写入
+`amendments.md` 后重出报告。
 **退出条件**：收到 `approved:true`，且无未决或阻塞项。出报告后必须停下；
 未批准禁止进入 Phase 3。
 

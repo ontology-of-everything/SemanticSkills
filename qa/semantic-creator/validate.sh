@@ -78,6 +78,10 @@ required_template = [
     "allApproved()", "depends_on", "confirm", "select", "correct", "supplement",
     "reject", "approved: !!approve", "d._action = ''", "findDecision(r.target)",
     "接口明证（explicit）", "待决（pending）", ':disabled="!allApproved()"',
+    "先理解：", "判断依据：", "YAGNI：", "查看'+s.label+'决策指导",
+    "@mouseenter=\"guideOpen=s.key\"", "@focus=\"guideOpen=s.key\"",
+    "@click.stop=\"guideOpen=s.key\"", "@keydown.esc.stop=\"guideOpen=''\"",
+    "conformed", "semi-additive", "entry point",
 ]
 for token in required_template:
     if token not in template:
@@ -85,7 +89,8 @@ for token in required_template:
 
 required_review = [
     "object", "decision", "option", "relation", "constraint", "evidence",
-    "basis", "confidence", "status", "risk", "approved:true",
+    "basis", "confidence", "status", "risk", "approved:true", "固定决策指导",
+    "不由 agent", "YAGNI", "不得依赖仅 hover",
 ]
 for token in required_review:
     if token not in review:

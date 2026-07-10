@@ -70,10 +70,11 @@
       "id": 6,
       "name": "review-report-before-emit",
       "prompt": "接口：GET /v1/orders 返回 { orders: [ { order_id, store_id, total_amount } ] }，GET /v1/stores 返回 { stores: [ { store_id, store_name } ] }。信息都齐了，直接建语义层。",
-      "expected_output": "生成对象容器+原子决策的 model JSON 并注入 assets/review-template.html；工作台明确目标/范围/边界，每个低证据或低置信决定给 2–4 个互斥候选及适用条件、收益、代价、风险、证据和推荐理由；grain 未批准时硬阻塞依赖项；所有决定默认 pending，只有用户显式行动后才能 approved:true；反馈支持离线导出/导入并落盘 amendments.md，未批准禁止 Emit。",
+      "expected_output": "生成对象容器+原子决策的 model JSON 并注入 assets/review-template.html；工作台明确目标/范围/边界，每个低证据或低置信决定给 2–4 个互斥候选及适用条件、收益、代价、风险、证据和推荐理由；事实/维度/度量/路由分区提供固定、紧凑且无障碍的判断提示，解释证据判据、YAGNI 边界和短例；grain 未批准时硬阻塞依赖项；所有决定默认 pending，只有用户显式行动后才能 approved:true；反馈支持离线导出/导入并落盘 amendments.md，未批准禁止 Emit。",
       "expectations": [
         "Builds the report by injecting a compact model JSON into the shell template (assets/review-template.html) instead of hand-writing the full HTML",
         "Uses object containers with atomic decisions and keeps basis, confidence, and user status semantically separate",
+        "Shows fixed section-level guidance for facts, dimensions, measures, and routing with evidence criteria, YAGNI boundaries, short examples, and keyboard/touch-accessible tooltips",
         "Uncertain decisions offer 2–4 mutually exclusive options with applicability, benefit, cost, risk, evidence references, and recommendation reason",
         "Unresolved depends_on relations hard-block downstream decisions such as dimensions or measures before grain approval",
         "Starts every decision pending; only explicit confirm/select actions can produce approved true, while correct/supplement/reject require another iteration",

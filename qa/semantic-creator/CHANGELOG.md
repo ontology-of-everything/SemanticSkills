@@ -2,6 +2,20 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 0.5.1 - 2026-07-10
+
+### Added
+
+- Fact, dimension, measure, and routing sections now expose compact fixed guidance with
+  plain-language terminology, evidence criteria, YAGNI boundaries, and short examples
+- Guidance tooltips support hover, keyboard focus, click, and Escape without changing
+  the decision model or approval semantics
+
+### QA
+
+- Review validation and eval assertions now require all four guidance topics and
+  non-hover-only access
+
 ## 0.5.0 - 2026-07-10
 
 ### Changed

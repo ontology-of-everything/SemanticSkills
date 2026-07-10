@@ -49,6 +49,15 @@ border:1px solid var(--line);border-radius:8px;cursor:pointer;user-select:none}
 .sec-head h2{margin:0;font-size:14px;flex:1}
 .chev{transition:transform .18s ease}
 .chev.open{transform:rotate(90deg)}
+.guide-wrap{position:relative;display:flex;align-items:center}
+.guide-trigger{width:24px;height:24px;padding:0;border-radius:50%;font-weight:750;
+color:var(--accent);background:var(--surface);cursor:help}
+.guide-tip{position:absolute;right:0;top:calc(100% + 8px);z-index:30;
+width:min(560px,calc(100vw - 48px));padding:11px 13px;background:var(--surface);
+border:1px solid var(--line);border-radius:9px;box-shadow:0 12px 30px rgba(23,32,51,.18);
+color:var(--ink);cursor:default;user-select:text}
+.guide-tip p{margin:0 0 6px}.guide-tip p:last-child{margin-bottom:0}
+.guide-tip strong{color:var(--accent)}
 .object{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-top:10px;overflow:hidden}
 .object-head{display:flex;align-items:baseline;gap:8px;padding:12px 14px;background:#fafbfc}
 .object-head h3{margin:0;font-size:15px}
@@ -183,6 +192,21 @@ padding:9px;border:1px solid var(--line);border-radius:8px;resize:vertical}
         @keydown.enter="toggle(s.key)">
         <span class="chev" :class="{open:isOpen(s.key)}">▶</span>
         <h2>{{ s.label }}</h2>
+        <div class="guide-wrap" @mouseenter="guideOpen=s.key" @mouseleave="guideOpen=''"
+          @click.stop="guideOpen=s.key">
+          <button type="button" class="guide-trigger"
+            :aria-label="'查看'+s.label+'决策指导'" :aria-controls="'guide-'+s.key"
+            :aria-expanded="guideOpen===s.key"
+            @focus="guideOpen=s.key" @blur="guideOpen=''" @click.stop="guideOpen=s.key"
+            @keydown.enter.stop="guideOpen=s.key" @keydown.esc.stop="guideOpen=''">?</button>
+          <div class="guide-tip" role="tooltip" :id="'guide-'+s.key"
+            v-show="guideOpen===s.key">
+            <p><strong>先理解：</strong>{{ s.guide.summary }}</p>
+            <p><strong>判断依据：</strong>{{ s.guide.evidence }}</p>
+            <p><strong>YAGNI：</strong>{{ s.guide.yagni }}</p>
+            <p><strong>例：</strong>{{ s.guide.example }}</p>
+          </div>
+        </div>
         <span>{{ byKind(s.key).length }} / {{ count(s.key) }}</span>
       </div>
 
@@ -444,12 +468,33 @@ function App(){
     model_errors: modelErrors,
     objects: objects,
     sections: [
-      { key: 'fact', label: '事实' },
-      { key: 'dimension', label: '维度' },
-      { key: 'measure', label: '度量' },
-      { key: 'routing', label: '路由与边界' }
+      { key: 'fact', label: '事实', guide: {
+        summary: '事实记录可重复发生的业务事件；粒度（grain）说明一条记录究竟代表什么。',
+        evidence: '只依据数组元素、表主键或唯一键、明确的接口语义判断；父记录与一对多明细应分别核对。',
+        yagni: '只有存在独立事件、需要独立聚合或与父记录一对多时才拆新事实，不因“以后可能分析”提前拆分。',
+        example: '订单头与订单行应按真实一对多关系分开；把订单状态单独建成事实通常是误判。'
+      }},
+      { key: 'dimension', label: '维度', guide: {
+        summary: '维度描述事实的“谁、什么、哪里”等分析上下文，需要稳定业务标识（business key）和可信来源。',
+        evidence: '跨事实身份与口径一致才做共享维度（conformed）；上级实体可独立维护或复用才拆层级维度（snowflake）。',
+        yagni: '否则保留为属性；只有交易编号且无独立描述或查询来源时留在事实中（degenerate），不为潜在复用提前拆维。',
+        example: '多类事实共享的客户适合维度；只随订单出现的订单号不必建订单维度，枚举值仍留在契约层。'
+      }},
+      { key: 'measure', label: '度量', guide: {
+        summary: '度量必须回答当前分析问题，并明确单位、币种或口径及可聚合范围；数字字段不自动等于度量。',
+        evidence: '可跨相关维度相加是 additive；余额、库存等快照通常是 semi-additive；比率、均值、去重数是 non-additive。',
+        yagni: '优先保留可重算的基础量；没有明确分析用途或来源证据时不要预建度量。',
+        example: '同币种订单金额可相加；账户余额不可按日期求和。'
+      }},
+      { key: 'routing', label: '路由与边界', guide: {
+        summary: '按问题涉及的事实、维度、度量、时间和范围，选择能直接提供所需证据的最小入口（entry point）。',
+        evidence: '只有来源能力明确且输出字段足以回答时才建立路由；名称相似或相邻接口都不是充分依据。',
+        yagni: '不为“以后可能用到”预建入口；现有证据无法回答的内容应明确写入边界，不猜测或拼接。',
+        example: '列表接口可支持趋势分析，不代表它也能回答实时余额。'
+      }}
     ],
     expanded: { fact: true, dimension: false, measure: false, routing: false },
+    guideOpen: '',
     q: '',
     copied: false,
     io: { show: false, mode: 'export', text: '', approved: false },

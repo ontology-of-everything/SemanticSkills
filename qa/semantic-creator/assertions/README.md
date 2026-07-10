@@ -11,6 +11,8 @@ For the Phase 2 decision workbench, assert:
 
 - Object metadata and evidence are shared, while each decision asks exactly one question.
 - `basis`, `confidence`, and user `status` remain separate.
+- Facts, dimensions, measures, and routing expose fixed section-level guidance with
+  evidence criteria, YAGNI boundaries, a short example, and non-hover-only access.
 - Non-explicit decisions have complete, mutually exclusive options; no option hides its
   conditions, benefit, cost, risk, evidence, or recommendation reason.
 - `depends_on` blocks downstream decisions until its target is explicitly resolved.

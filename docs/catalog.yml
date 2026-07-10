@@ -51,9 +51,9 @@ skills:
     display_name_zh: "语义创建器 · 接口转语义元技能"
     domain: meta
     subdomains: [semantic-layer, dimensional-modeling, ontology, okf]
-    summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball semantic layer through an interactive HTML decision workbench with atomic decisions, explicit options, evidence, risks, dependencies, and user approval; emits Google OKF v0.1 by default or repo YAML; evidence-only
-    summary_zh: 元技能 · 把 REST/CLI/数据表接口经访谈与 HTML 决策工作台建成 Kimball 语义层；原子决定展示互斥候选、证据、风险、依赖与权衡，用户显式批准后输出；默认 Google OKF v0.1，可选仓库 YAML；不臆造
-    version: "0.5.0"
+    summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball semantic layer through an interactive HTML decision workbench with fixed YAGNI guidance, atomic decisions, explicit options, evidence, risks, dependencies, and user approval; emits Google OKF v0.1 by default or repo YAML; evidence-only
+    summary_zh: 元技能 · 把 REST/CLI/数据表接口经访谈与 HTML 决策工作台建成 Kimball 语义层；四类固定 YAGNI 指导帮助理解原子决定、候选、证据、风险、依赖与权衡，用户显式批准后输出；默认 Google OKF v0.1，可选仓库 YAML；不臆造
+    version: "0.5.1"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; pure modeling + file generation; review report is self-contained HTML (inline CSS/JS, no CDN)
     marketplaces: [skills-sh, skillsmp]
