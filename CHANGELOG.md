@@ -9,6 +9,12 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.4.1 - 2026-07-10
+
+### Features
+
+- **semantic-creator** **0.5.1**: fixed YAGNI guidance tooltips on fact/dimension/measure/routing sections — plain-language terminology, evidence criteria, short examples, keyboard/touch access; eval and validate gate updated (see skill changelog)
+
 ## 3.4.0 - 2026-07-10
 
 ### Features

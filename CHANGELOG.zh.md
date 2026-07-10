@@ -9,6 +9,12 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.4.1 - 2026-07-10
+
+### 新功能
+
+- **semantic-creator** **0.5.1**：事实/维度/度量/路由分区增加固定 YAGNI 决策指导 — 白话术语、证据判据、短例与键盘/触屏可访问提示；eval 与 validate 门禁同步更新（详见技能 changelog）
+
 ## 3.4.0 - 2026-07-10
 
 ### 新功能
