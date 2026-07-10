@@ -2,6 +2,28 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 0.5.0 - 2026-07-10
+
+### Changed
+
+- Phase 2 is now a decision workbench rather than a conclusion ledger: object containers
+  hold atomic decisions with explicit questions, impacts, risks, evidence basis,
+  confidence, priority, and user status
+- Uncertain decisions present 2–4 mutually exclusive options; every option states its
+  applicability, benefit, cost, risk, evidence references, and recommendation reason
+- Decision relations model dependencies, conflicts, and trade-offs; unresolved
+  dependencies hard-block downstream decisions
+- Approval is fully explicit: decisions start pending, non-recommended selections require
+  reasons, unresolved feedback exports as a draft, and only a complete user action set can
+  emit `approved:true`
+- User actions now distinguish confirm, select, correct, supplement, and reject; rejection
+  requests a reframed decision instead of silently deleting an object
+
+### QA
+
+- Review eval now checks the decision ontology, hard blocking, explicit approval, and
+  offline decision export/import
+
 ## 0.4.0 - 2026-07-08
 
 ### Changed

@@ -58,9 +58,69 @@ if meta.get("version") != expected:
 PY
 }
 
+check_review_workbench() {
+  need_cmd python3
+  need_cmd node
+  SKILL_DIR="$SKILL_DIR" QA_DIR="$QA_DIR" python3 - <<'PY'
+import json
+import os
+from pathlib import Path
+
+skill = Path(os.environ["SKILL_DIR"])
+qa = Path(os.environ["QA_DIR"])
+template = skill.joinpath("assets/review-template.html").read_text(encoding="utf-8")
+review = skill.joinpath("references/review.md").read_text(encoding="utf-8")
+
+if template.count("/*__MODEL_JSON__*/") != 1:
+    raise SystemExit("FAIL: review template must contain exactly one model placeholder")
+
+required_template = [
+    "allApproved()", "depends_on", "confirm", "select", "correct", "supplement",
+    "reject", "approved: !!approve", "d._action = ''", "findDecision(r.target)",
+    "接口明证（explicit）", "待决（pending）", ':disabled="!allApproved()"',
+]
+for token in required_template:
+    if token not in template:
+        raise SystemExit(f"FAIL: review template missing decision contract: {token}")
+
+required_review = [
+    "object", "decision", "option", "relation", "constraint", "evidence",
+    "basis", "confidence", "status", "risk", "approved:true",
+]
+for token in required_review:
+    if token not in review:
+        raise SystemExit(f"FAIL: review spec missing ontology concept: {token}")
+
+for stale in ("approved_rest", "verdicts.json", "c.verdict"):
+    if stale in template or stale in review:
+        raise SystemExit(f"FAIL: stale review contract remains: {stale}")
+
+evals = json.loads(qa.joinpath("evals/evals.json").read_text(encoding="utf-8"))
+review_eval = next(e for e in evals["evals"] if e["id"] == 6)
+if len(review_eval.get("expectations", [])) < 7:
+    raise SystemExit("FAIL: review eval does not cover the decision workbench")
+PY
+
+  local js
+  js="${TMPDIR:-/tmp}/semantic-review-check-$$.js"
+  python3 - "$SKILL_DIR/assets/review-template.html" >"$js" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+html = Path(sys.argv[1]).read_text(encoding="utf-8")
+for attrs, body in re.findall(r"<script([^>]*)>(.*?)</script>", html, re.S):
+    if "application/json" not in attrs:
+        print(body)
+PY
+  node --check "$js" || { rm -f "$js"; return 1; }
+  rm -f "$js"
+}
+
 need_cmd rg
 check_skill_layout
 check_version_sync
+check_review_workbench
 run_local_or_npx skills-ref validate "$SKILL_DIR"
 run_local_or_npx markdownlint-cli2 --config "$QA_DIR/.markdownlint.json" "$SKILL_DIR/**/*.md"
 need_cmd skillcheck

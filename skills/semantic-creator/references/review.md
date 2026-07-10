@@ -1,72 +1,125 @@
-# Phase 2 · Review（访谈收集 + HTML 评审 + 迭代）
+# Phase 2 · Review（决策建模 + HTML 工作台 + 迭代）
 
-输入：Phase 1 操作清单。产出：**用户批准的建模决策集**（含 `amendments.md` 迭代记录）。
-流程：§1 收集 → §2 出报告 → §3 批注回传 → §4 迭代，直到通过。
+输入：Phase 1 操作清单。产出：用户显式批准的建模决策集与
+`amendments.md`。流程：收集 → 建模 → 评审 → 修订，直到通过。
 
-## §1 访谈收集（按序，每项记录结论 + 证据出处 + 置信度）
+## §1 决策本体
 
-置信度三级：`confirmed`（用户或接口明证）/ `inferred`（由结构推断）/ `assumed`（safe-default）。
+不要把结论清单冒充决策界面。按以下概念建模：
 
-1. **Facts & Grain**（最先，最关键）— grain 必须**可证伪**（如「product_infos[] 每元素一条」）；请求头 vs 明细行 → header(primary) + line(child, parent_fact=header)；grain 不明 → 阻塞提问，给 2–4 候选（never-assume）。
-2. **Dimensions** — `kind` / `business_key` / `source_operations` / `attributes` / `parent_dimension`（字段约束见 `emit-yaml.md` §4）；同义维度跨事实复用一个；退化键（如 `id`）记入 fact.`degenerate_dimensions`，不单列。
-3. **Measures** — additivity：`additive`（跨所有维可加）/ `semi_additive`（如余额，不跨时间）/ `non_additive`（比率）+ 单位口径；单位枚举值归契约层。
-4. **Routing & Boundary** — `entry_points`（每场景 → primary_facts + 文件）；`evidence_boundary` 逐条写「不能回答什么」。
+- `brief`：用户目标、交付物、范围、证据边界。
+- `object`：事实、维度、度量或路由；只负责归组与共享证据。
+- `decision`：对象上的一个原子问题，如 grain 或 additivity。
+- `option`：同一问题下互斥的候选方案。
+- `relation`：决策间的依赖、冲突或权衡。
+- `constraint`：grain-first、evidence-only 等全局硬规则。
+- `evidence`：可定位的接口字段、文档或 DDL 出处。
+- `basis`：`explicit | inferred | missing`，描述证据基础。
+- `confidence`：`high | medium | low`，描述推荐可靠度。
+- `status`：`pending | approved | rejected | blocked`，只描述用户决策状态。
+- `risk`：选择错误的后果；`action`：用户的确认、选择、修正、补证或拒绝。
 
-> 阻塞提问只用于 never-assume 缺口（grain / business_key / 读写语义）；可选属性、命名等 safe-default 标 inferred/assumed，留给报告批注。
+`basis`、`confidence`、`status` 不得混用。用户批准只改变状态，不提高
+证据质量或置信度。
 
-出报告前自检：每个事实有 grain 草案、每个维度有 kind+business_key（或 `TODO(verify)`）、每个度量有 additivity、写操作已 frame、每项带证据与置信度。任一缺 → 补齐再出。
+## §2 收集顺序
 
-## §2 HTML 评审报告（模板 + 数据）
+1. **Facts & Grain**：grain 必须可证伪，如「`items[]` 每元素一条」。
+   请求头与明细行建 parent/child facts。grain 不明时先给 2–4 个候选。
+2. **Dimensions**：确认 `kind`、`business_key`、`source_operations`、
+   `attributes`、`parent_dimension`。同义维度复用；退化键留在 fact。
+3. **Measures**：确认 `additive | semi_additive | non_additive` 与单位口径。
+   枚举值仍归契约层。
+4. **Routing & Boundary**：确认 `entry_points` 与不能回答的问题。
 
-**不手写 HTML。** 壳模板 `assets/review-template.html` 已内联 CSS/JS/petite-vue（零外部依赖，无 CDN、无网络）；agent 只产出 model JSON 并注入：
+只在改变模型的 never-assume 缺口处一次一问。其余不确定项进入工作台，
+不得以默认值静默通过。
 
-1. 按下方 schema 生成紧凑 model JSON（只放数据，不放任何标记/样式）。
-2. 读模板，把占位符 `/*__MODEL_JSON__*/` 整体替换为该 JSON。
-3. 写到 `$TMPDIR`（缺省 `/tmp`）下 `semantic-review-<timestamp>.html`，不进 repo；macOS `open` / Linux `xdg-open` 打开，聊天里给绝对路径。
+## §3 紧凑模型
 
-```json
-{"meta": {"title": "<域名评审>", "generated_at": "<ISO 8601>", "iteration": 1},
- "cards": [
-   {"id": "fact/sales_order", "section": "fact", "title": "SalesOrder",
-    "confidence": "confirmed",
-    "conclusion": {"grain": "orders[] 每元素一条", "role": "primary",
-                   "degenerate_dimensions": ["order_id"]},
-    "evidence": ["ListOrders 响应 orders[] 数组结构"]}
- ],
- "open_questions": ["Dim_Currency 字典来源 TODO(verify)"]}
-```
-
-- `section`: `fact | dimension | measure | routing`；`confidence`: `confirmed | inferred | assumed`。
-- `conclusion` 是键值对象（grain / kind / business_key / additivity 等建模结论，值为字符串或数组）。
-- `evidence` 是字符串数组（接口字段路径 / doc url / DDL 行）；含 `TODO(verify)` 的项模板自动高亮。
-- 全部 `TODO(verify)` 与 assumed 项汇总进 `open_questions`。
-
-模板自带：分区折叠 + 锚点导航 + 文本过滤、置信度徽章、每卡批注控件（通过/修改/拒绝 + 备注）。
-
-## §3 批注回传
-
-「导出批注」优先复制到剪贴板；`file://` 下剪贴板不可用时模板自动降级为文本框全选 + 下载 `verdicts.json`，用户任选一种回传聊天。只含非 approve 项：
+不要手写报告 HTML。生成 JSON，替换 `assets/review-template.html` 中的
+`/*__MODEL_JSON__*/`，写入 `$TMPDIR/semantic-review-<timestamp>.html`。
+模板离线自足，无 CDN、无网络。
 
 ```json
-{"verdicts": [
-  {"id": "fact/sales_order", "action": "edit", "field": "grain", "note": "一行=一个订单行而非订单头"},
-  {"id": "dim/currency", "action": "reject", "note": "不需要"}
-], "approved_rest": true}
+{"meta":{"title":"订单语义评审","generated_at":"<ISO>","iteration":1},
+"brief":{"goal":"建立可聚合订单语义层","deliverable":"OKF v0.1",
+"scope":"订单与门店","boundary":"不含退款、履约"},
+"constraints":["grain-first：grain 未决时阻塞依赖项","evidence-only：不臆造字段或值"],
+"objects":[{"id":"fact/order","kind":"fact","title":"Order",
+"evidence":[{"id":"e1","source":"ListOrders.orders[]"}],
+"decisions":[{"id":"grain","question":"订单事实一行代表什么？",
+"impact":"决定维度挂接与度量可加性","risk":"错误 grain 会重复聚合金额",
+"basis":"inferred","confidence":"medium","status":"pending","priority":"blocking",
+"value":"orders[] 每元素一条","options":[
+{"id":"order","label":"每订单一条","when":"orders[] 元素是订单头",
+"benefit":"直接聚合订单金额","cost":"不能分析行项目","risk":"隐藏明细粒度",
+"evidence":["e1"],"recommended":true,"reason":"响应直接返回订单数组"},
+{"id":"line","label":"每订单行一条","when":"元素实际代表行项目",
+"benefit":"支持商品分析","cost":"需建立子事实","risk":"会重复订单级金额",
+"evidence":["e1"],"recommended":false,"reason":"仅在元素含行项目时成立"}],
+"relations":[]}]}]}
 ```
 
-迭代重出报告时，用户可用「导入上轮批注」把上一轮 verdicts 回填到卡片，不必从头点。
+### 原子性与候选规则
 
-## §4 Amendments 迭代
+- 一个 `decision` 只回答一个问题；引用格式为 `<object-id>#<decision-id>`。
+- `question` 必须点明正在决定什么；`impact` 必须解释为何现在决定。
+- `basis=explicit` 且 `confidence=high` 可只给 `value`，走轻量确认。
+- 其他决策必须给 2–4 个互斥 `options`，且恰有一个 `recommended=true`。
+- 每个 option 必须独立包含 `when / benefit / cost / risk / evidence /
+  recommended / reason`；值保持一句话，证据只引用对象内 evidence ID。
+- `basis=missing` 不得标 `confidence=high`。`TODO(verify)` 写入 evidence。
 
-1. 逐条追加到 `$TMPDIR` 下与报告同目录的 `amendments.md`：`日期 + 对象 / 原值 → 新值 / 理由`（新→旧）；Phase 3 落盘时随产物 copy 进输出目录。重跑 skill 时该文件是已确认决策，不再重问。
-2. 应用修改（rejected 对象移出模型或归 evidence_boundary）。
-3. 重新生成报告（`iteration` +1）再确认。批注与访谈证据冲突且不能机械取舍 → One blocking ask 回给用户，不自行择一。
+### 关系与优先级
 
-## §5 退出条件（硬门禁）
+- `priority` 仅为 `blocking | high | normal`。
+- relation 结构为
+  `{"type":"depends_on|conflicts_with|tradeoff_with","target":"...","note":"..."}`。
+- `depends_on` 目标未批准时，当前决策硬阻塞且不参与本轮批准。
+- 冲突与权衡必须双向可见；每条关系必须有 `note`。
+- 出报告前拒绝不存在的 target、self-reference 与循环依赖。
 
-**出报告后必须停下**，显式等待用户回传批注/批准；未拿到 `approved_rest: true` **禁止进入 Phase 3**，不得替用户批准或自动前进。
+## §4 用户行动与导出
 
-- [ ] 报告全部通过（`approved_rest: true` 且无未处理 verdicts）
-- [ ] 无未决 never-assume 缺口；剩余 `TODO(verify)` 已列入交付说明
+所有决策初始 `pending`，禁止默认批准。模板提供：
 
-满足 → 进 Phase 3（`emit-okf.md` 默认 / `emit-yaml.md` 可选）。
+- `confirm`：接受无候选项的当前值。
+- `select`：选择一个候选；选非推荐项必须说明理由。
+- `correct`：提交候选外的明确替代值与理由。
+- `supplement`：补充证据或约束，不自动改变结论。
+- `reject`：否定当前问题定义（framing）；不得自动删除对象，必须修订后重出报告。
+
+可主动批量确认 `basis=explicit + confidence=high` 的轻量项。仍有 pending、
+blocked、correct、supplement 或 reject 时只能导出草稿：
+
+```json
+{"decisions":[
+{"id":"fact/order#grain","action":"select","option":"line","reason":"接口说明元素为行项目"},
+{"id":"dim/currency#source","action":"supplement","value":"GET /v1/currencies"}
+],"approved":false}
+```
+
+全部可行动决策均为 `confirm | select` 后，用户才能显式“批准并导出”，产生
+`approved:true`。复制失败时显示可全选文本并下载 `decisions.json`；支持导入
+上轮 JSON。
+
+## §5 Amendments 迭代
+
+1. 将每项反馈追加到报告同目录的 `amendments.md`：
+   `日期 + 决策 ID / 原值 → 新值 / 理由`。
+2. 应用 correct、supplement、reject；reject 只触发重构，不隐式删对象。
+3. `iteration +1` 后重出报告。证据冲突且无法机械裁决时，一次只问一个
+   blocking question。
+4. Phase 3 将 `amendments.md` 复制到输出目录；重跑时复用已确认决策。
+
+## §6 出报告前检查与退出门禁
+
+- [ ] brief 明确目标、交付物、范围与边界。
+- [ ] 每个对象有证据，每个 decision 原子且有 question、impact、risk。
+- [ ] 低证据/低置信决策有完整、互斥、可解释的候选。
+- [ ] 关系 target 有效，依赖无环，阻塞状态可计算。
+- [ ] 每个事实有 grain；维度有 kind/business_key；度量有 additivity。
+
+出报告后必须停下。只有收到 `approved:true`，且无 unresolved/blocked
+决策与 never-assume 缺口，才能进入 Phase 3；不得替用户批准。

@@ -16,25 +16,32 @@ GET /v1/stores                   →  200: { stores: [ { store_id, store_name, r
 | ListOrders | GET | read | store_id, from, to | orders[] | fact（业务过程：下单） |
 | ListStores | GET | read | — | stores[] | dimension-lookup（门店字典） |
 
-## §2 Phase 2 · Review — 评审报告卡片（示意）
+## §2 Phase 2 · Review — 决策工作台（示意）
 
-访谈收集完毕后生成 model JSON 注入壳模板出 HTML 报告（规范见 `review.md` §2），卡片内容如：
+生成紧凑 model JSON，注入壳模板出 HTML 工作台（规范见 `review.md` §3）：
 
 > **SalesOrder** · Fact
-> 结论：grain = orders[] 每元素一条（一笔订单）；role=primary；退化维 order_id
-> 证据：ListOrders 响应 `orders[]` 数组结构 · 置信度 **confirmed**
-> 批注：( ) 通过 ( ) 修改 ( ) 拒绝
 >
-> ---
+> 决策：订单事实一行代表什么？
 >
-> **Dim_Currency** · Dimension
-> 结论：conformed；business_key=currency
-> 证据：仅见 orders[].currency 字段，字典接口未给 → `TODO(verify)` · 置信度 **assumed**
-> 批注：…
+> 为何决定：grain 决定维度挂接与金额可加性
+>
+> 推荐：`orders[]` 每元素一条；证据 `ListOrders.orders[]`
+>
+> 候选：每订单一条 / 每订单行一条（各自展示适用条件、收益、代价、风险、
+> 证据与推荐理由）
 
-出报告后停下等用户；用户导出批注 JSON 回传（clipboard 或下载/文本框降级），
-如 `{"verdicts":[{"id":"dim/currency","action":"edit","field":"source_operations","note":"用 GET /v1/currencies"}],"approved_rest":true}`
-→ 写 `amendments.md`、应用、重出报告，批准后进 Phase 3。
+grain 未批准时，依赖它的维度与度量决定硬阻塞。所有决定初始 pending；
+用户可确认、选择、修正、补证或拒绝问题 framing。草稿回传如：
+
+```json
+{"decisions":[
+  {"id":"dim/currency#source","action":"supplement","value":"GET /v1/currencies"}
+],"approved":false}
+```
+
+写入 `amendments.md`、应用并重出报告；只有全部决定显式确认后，
+`{"decisions":[...],"approved":true}` 才允许进入 Phase 3。
 
 ## §3 Phase 3 · Emit — OKF（默认）
 

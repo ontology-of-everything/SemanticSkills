@@ -3,69 +3,129 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Semantic Review</title>
+<title>语义决策工作台 · Semantic Review</title>
 <style>
-:root{--bg:#f6f7f9;--card:#fff;--ink:#1c2330;--muted:#6b7280;--line:#e5e7eb;--accent:#2563eb;
---ok:#16a34a;--ok-bg:#ecfdf5;--warn:#b45309;--warn-bg:#fffbeb;--dim:#6b7280;--dim-bg:#f3f4f6;
---todo:#b91c1c;--todo-bg:#fef2f2}
+:root{--bg:#f4f6f8;--surface:#fff;--ink:#172033;--muted:#526077;--line:#d8dee8;
+--accent:#1456d9;--accent-soft:#edf3ff;--ok:#08783e;--ok-soft:#eaf8f0;
+--warn:#925500;--warn-soft:#fff6df;--danger:#b42318;--danger-soft:#fff0ee;
+--blocked:#667085;--blocked-soft:#eef1f5;--focus:#7aa7ff}
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--ink);
-font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
-header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);padding:12px 20px}
-header h1{margin:0 0 2px;font-size:18px}
-header .sub{color:var(--muted);font-size:13px}
+font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif}
+button,input,textarea{font:inherit}
+button,input[type=radio],label{cursor:pointer}
+button:disabled,input:disabled{cursor:not-allowed}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,
+.sec-head:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.98);
+border-bottom:1px solid var(--line);padding:14px 20px}
+.head-inner,main{max-width:1080px;margin:0 auto}
+.title-row{display:flex;align-items:flex-start;gap:14px}
+.title-row h1{margin:0;font-size:20px;line-height:1.3;text-wrap:balance}
+.title-row .iteration{margin-left:auto;color:var(--muted);font-size:12px;white-space:nowrap}
+.sub{color:var(--muted);font-size:13px;margin-top:2px}
+.brief{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:12px;
+background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.brief div{background:var(--surface);padding:8px 10px;min-width:0}
+.brief dt{color:var(--muted);font-size:11px;margin:0}
+.brief dd{font-weight:600;margin:1px 0 0;overflow-wrap:anywhere}
+.constraints{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.constraint{color:#344054;background:#f2f4f7;border-radius:999px;padding:3px 9px;font-size:12px}
 .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
-.toolbar input[type=search]{flex:1;min-width:180px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px}
-.nav a{display:inline-block;padding:4px 10px;border:1px solid var(--line);border-radius:999px;
-font-size:13px;color:var(--ink);text-decoration:none;cursor:pointer;background:#fff}
-.nav a:hover{border-color:var(--accent);color:var(--accent)}
-.legend{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
-main{max-width:960px;margin:0 auto;padding:16px 20px 90px}
+.toolbar input[type=search]{flex:1;min-width:180px;padding:7px 10px;border:1px solid var(--line);
+border-radius:8px;color:var(--ink);background:#fff}
+.nav{display:flex;gap:5px;flex-wrap:wrap}
+.nav button{padding:5px 9px}
+main{padding:16px 20px 96px}
+.progress{display:flex;gap:14px;align-items:center;margin-bottom:14px;color:var(--muted)}
+.progress b{color:var(--ink)}
+.model-errors{background:var(--danger-soft);color:var(--danger);border:1px solid #f4b8b2;
+border-radius:9px;padding:10px 12px;margin-bottom:14px}
+.model-errors strong{display:block}.model-errors ul{margin:5px 0 0;padding-left:20px}
 section{margin-bottom:14px}
-.sec-head{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;
-padding:10px 14px;background:#fff;border:1px solid var(--line);border-radius:10px}
-.sec-head h2{margin:0;font-size:15px;flex:1}
-.sec-head .n{color:var(--muted);font-size:13px}
-.sec-head .chev{transition:transform .15s}
-.sec-head .chev.open{transform:rotate(90deg)}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-top:10px}
-.card.pending{border-color:var(--accent)}
-.card-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.card-head b{font-size:15px}
-.type{font-size:12px;color:var(--muted)}
-.badge{margin-left:auto;font-size:12px;padding:2px 10px;border-radius:999px;font-weight:600}
-.badge.confirmed{color:var(--ok);background:var(--ok-bg)}
-.badge.inferred{color:var(--warn);background:var(--warn-bg)}
-.badge.assumed{color:var(--dim);background:var(--dim-bg)}
-table.kv{border-collapse:collapse;margin:8px 0 4px;width:100%;font-size:14px}
-table.kv td{padding:3px 10px 3px 0;vertical-align:top;border:0}
-table.kv td.k{color:var(--muted);white-space:nowrap;width:1%}
-.evi{margin:6px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted)}
-.evi li{padding:2px 0}
-.evi li.todo{color:var(--todo);background:var(--todo-bg);padding:2px 8px;border-radius:6px;display:inline-block}
-.verdict{display:flex;gap:14px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:14px;flex-wrap:wrap}
-.verdict label{display:flex;gap:4px;align-items:center;cursor:pointer}
-.verdict .note-row{flex-basis:100%;display:flex;gap:8px}
-.verdict input[type=text],.verdict textarea{flex:1;padding:5px 8px;border:1px solid var(--line);border-radius:8px;font:inherit;font-size:13px}
-.openq{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
-.openq h2{margin:0 0 8px;font-size:15px}
-.openq li{margin:4px 0;font-size:14px}
-footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);
-padding:10px 20px;display:flex;gap:10px;align-items:center;z-index:10}
-footer .stat{color:var(--muted);font-size:13px;flex:1}
-button{padding:8px 16px;border:1px solid var(--line);border-radius:8px;background:#fff;
-font:inherit;font-size:14px;cursor:pointer}
-button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
-button:hover{filter:brightness(.97)}
-.modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:center;justify-content:center;z-index:20}
-.modal .box{background:#fff;border-radius:12px;padding:18px;width:min(680px,92vw);max-height:80vh;display:flex;flex-direction:column;gap:10px}
-.modal h3{margin:0;font-size:16px}
+.sec-head{display:flex;align-items:center;gap:8px;padding:9px 12px;background:#e9edf3;
+border:1px solid var(--line);border-radius:8px;cursor:pointer;user-select:none}
+.sec-head h2{margin:0;font-size:14px;flex:1}
+.chev{transition:transform .18s ease}
+.chev.open{transform:rotate(90deg)}
+.object{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-top:10px;overflow:hidden}
+.object-head{display:flex;align-items:baseline;gap:8px;padding:12px 14px;background:#fafbfc}
+.object-head h3{margin:0;font-size:15px}
+.object-id{color:var(--muted);font:12px ui-monospace,SFMono-Regular,Menlo,monospace}
+details.evidence{margin-left:auto;color:var(--muted);font-size:12px}
+details.evidence ul{position:absolute;right:20px;max-width:min(620px,85vw);z-index:10;
+background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px 10px 30px;
+box-shadow:0 12px 30px rgba(23,32,51,.16)}
+details.evidence li{margin:3px 0}
+.decision{padding:14px;border-top:1px solid var(--line);scroll-margin-top:210px}
+.object-head + .decision{border-top:0}
+.decision.blocked{background:var(--blocked-soft);color:var(--blocked);opacity:.86}
+.decision-head{display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap}
+.question{font-size:15px;font-weight:700;flex:1;min-width:240px}
+.badges{display:flex;gap:5px;flex-wrap:wrap}
+.badge{font-size:11px;font-weight:650;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.basis-explicit,.confidence-high,.status-approved{color:var(--ok);background:var(--ok-soft)}
+.basis-inferred,.confidence-medium,.priority-high{color:var(--warn);background:var(--warn-soft)}
+.basis-missing,.confidence-low,.priority-blocking,.status-rejected{color:var(--danger);background:var(--danger-soft)}
+.priority-normal{color:var(--muted);background:#eef1f5}
+.status-pending{color:var(--accent);background:var(--accent-soft)}
+.status-blocked{color:var(--blocked);background:var(--blocked-soft)}
+.context{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0;color:var(--muted)}
+.context p{margin:0}
+.context strong{color:var(--ink)}
+.relations{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.relation{border:1px solid var(--line);border-radius:6px;background:#fff;padding:3px 7px;
+font-size:12px;color:var(--muted)}
+.relation.depends_on{color:var(--accent)}
+.relation.conflicts_with{color:var(--danger)}
+.current{background:#f7f9fc;border-radius:8px;padding:9px 11px;margin:10px 0}
+.options{border:0;padding:0;margin:10px 0;display:grid;gap:8px}
+.option{display:grid;grid-template-columns:auto 1fr;gap:3px 9px;padding:10px;
+border:1px solid var(--line);border-radius:9px;background:#fff}
+.option:hover{border-color:#9eb9ee}
+.option.selected{border-color:var(--accent);background:var(--accent-soft)}
+.option input{grid-row:1/4;margin-top:4px}
+.option-title{display:flex;gap:7px;align-items:center;font-weight:700}
+.recommended{color:var(--ok);background:var(--ok-soft);font-size:11px;padding:1px 6px;border-radius:999px}
+.option-when{color:var(--muted);font-size:12px}
+.option-grid{grid-column:2;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:5px}
+.option-grid span{font-size:12px}
+.option-grid b{display:block;color:var(--muted);font-size:11px}
+.reason{grid-column:2;color:#344054;font-size:12px;margin-top:3px}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+button{border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);padding:7px 11px}
+button:hover:not(:disabled){border-color:#9eb9ee;background:#f7f9ff}
+button.active{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650}
+button.primary:hover:not(:disabled){background:#0f49bd}
+button:disabled{opacity:.48}
+.editor{display:grid;gap:7px;margin-top:8px}
+.editor input,.editor textarea{width:100%;padding:7px 9px;border:1px solid var(--line);
+border-radius:7px;background:#fff;color:var(--ink);resize:vertical}
+.help,.blocked-note{color:var(--muted);font-size:12px}
+.error{color:var(--danger);font-size:12px}
+footer{position:fixed;bottom:0;left:0;right:0;z-index:20;background:#fff;border-top:1px solid var(--line);
+padding:10px 20px}
+.footer-inner{max-width:1080px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.stat{color:var(--muted);font-size:13px;flex:1}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.48);display:flex;align-items:center;
+justify-content:center;z-index:40;padding:20px}
+.modal .box{background:#fff;border-radius:12px;padding:18px;width:min(680px,100%);
+max-height:85vh;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 70px rgba(15,23,42,.3)}
+.modal h3{margin:0;font-size:17px}
 .modal .hint{font-size:13px;color:var(--muted)}
-.modal textarea{width:100%;min-height:220px;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
-padding:8px;border:1px solid var(--line);border-radius:8px;resize:vertical}
-.modal .row{display:flex;gap:8px;justify-content:flex-end;align-items:center}
-.copied{color:var(--ok);font-size:13px}
+.modal textarea{width:100%;min-height:240px;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;
+padding:9px;border:1px solid var(--line);border-radius:8px;resize:vertical}
+.modal .row{display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+.copied{color:var(--ok);font-weight:650}
 [v-cloak]{display:none}
+@media(max-width:760px){
+  header{position:static}.brief{grid-template-columns:1fr 1fr}.context,.option-grid{grid-template-columns:1fr}
+  .toolbar input[type=search]{flex-basis:100%}.footer-inner{flex-wrap:wrap}.stat{flex-basis:100%}
+  details.evidence ul{right:10px}.decision{scroll-margin-top:10px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.chev{transition:none}}
 </style>
 </head>
 <body>
@@ -73,89 +133,188 @@ padding:8px;border:1px solid var(--line);border-radius:8px;resize:vertical}
 
 <div id="app" v-scope="App()" v-cloak>
   <header>
-    <h1>{{ meta.title || 'Semantic Review' }}</h1>
-    <div class="sub">
-      {{ meta.generated_at }} · 第 {{ meta.iteration || 1 }} 轮
-      · 逐卡批注（默认视为通过），完成后点底部「导出批注」回传聊天
-    </div>
-    <div class="toolbar">
-      <span class="nav">
-        <a v-for="s in sections" :key="s.key" v-show="count(s.key)" @click="goto(s.key)">{{ s.label }} ({{ count(s.key) }})</a>
-      </span>
-      <input type="search" placeholder="过滤：名称 / 结论 / 证据…" v-model="q">
-      <span class="legend">
-        <span class="badge confirmed">confirmed</span>
-        <span class="badge inferred">inferred</span>
-        <span class="badge assumed">assumed</span>
-      </span>
-      <button @click="openImport()">导入上轮批注</button>
+    <div class="head-inner">
+      <div class="title-row">
+        <div>
+          <h1>{{ meta.title || '语义决策工作台 · Semantic Decision Review' }}</h1>
+          <div class="sub">{{ meta.generated_at }} · 所有决定均需显式确认</div>
+        </div>
+        <span class="iteration">第 {{ meta.iteration || 1 }} 轮</span>
+      </div>
+
+      <dl class="brief">
+        <div><dt>目标</dt><dd>{{ brief.goal || '未提供' }}</dd></div>
+        <div><dt>交付物</dt><dd>{{ brief.deliverable || '未提供' }}</dd></div>
+        <div><dt>范围</dt><dd>{{ brief.scope || '未提供' }}</dd></div>
+        <div><dt>边界</dt><dd>{{ brief.boundary || '未提供' }}</dd></div>
+      </dl>
+
+      <div class="constraints" v-if="constraints.length" aria-label="建模约束">
+        <span class="constraint" v-for="c in constraints" :key="c">{{ c }}</span>
+      </div>
+
+      <div class="toolbar">
+        <span class="nav">
+          <button v-for="s in sections" :key="s.key" v-show="count(s.key)"
+            @click="goto(s.key)">{{ s.label }} ({{ count(s.key) }})</button>
+        </span>
+        <input type="search" aria-label="过滤决策"
+          placeholder="过滤：对象 / 问题 / 影响 / 证据…" v-model="q">
+        <button @click="bulkConfirm()">确认全部直接明证项</button>
+        <button @click="openImport()">导入上轮反馈</button>
+      </div>
     </div>
   </header>
 
   <main>
+    <div class="progress" aria-live="polite">
+      <span><b>{{ totalDecisions() }}</b> 项决定</span>
+      <span><b>{{ pendingCount() }}</b> 项待处理</span>
+      <span><b>{{ blockedCount() }}</b> 项被阻塞</span>
+    </div>
+
+    <div class="model-errors" v-if="model_errors.length" role="alert">
+      <strong>模型未通过出报告检查，批准功能已禁用：</strong>
+      <ul><li v-for="e in model_errors" :key="e">{{ e }}</li></ul>
+    </div>
+
     <section v-for="s in sections" :key="s.key" v-show="count(s.key)" :id="'sec-'+s.key">
-      <div class="sec-head" @click="toggle(s.key)">
+      <div class="sec-head" role="button" tabindex="0" @click="toggle(s.key)"
+        @keydown.enter="toggle(s.key)">
         <span class="chev" :class="{open:isOpen(s.key)}">▶</span>
         <h2>{{ s.label }}</h2>
-        <span class="n">{{ bySection(s.key).length }} / {{ count(s.key) }}</span>
+        <span>{{ byKind(s.key).length }} / {{ count(s.key) }}</span>
       </div>
+
       <div v-show="isOpen(s.key)">
-        <div class="card" v-for="c in bySection(s.key)" :key="c.id" :class="{pending:c.verdict!=='approve'}">
-          <div class="card-head">
-            <b>{{ c.title }}</b>
-            <span class="type">{{ c.id }}</span>
-            <span class="badge" :class="c.confidence">{{ c.confidence }}</span>
+        <article class="object" v-for="o in byKind(s.key)" :key="o.id">
+          <div class="object-head">
+            <h3>{{ o.title }}</h3>
+            <span class="object-id">{{ o.id }}</span>
+            <details class="evidence">
+              <summary>{{ o.evidence.length }} 条证据</summary>
+              <ul>
+                <li v-for="e in o.evidence" :key="e.id"><b>{{ e.id }}</b> · {{ e.source }}</li>
+              </ul>
+            </details>
           </div>
-          <table class="kv">
-            <tr v-for="e in c._conclusion" :key="e[0]"><td class="k">{{ e[0] }}</td><td>{{ e[1] }}</td></tr>
-          </table>
-          <ul class="evi">
-            <li v-for="(ev,i) in c._evidence" :key="i" :class="{todo:ev.todo}">证据：{{ ev.source }}</li>
-          </ul>
-          <div class="verdict">
-            <label><input type="radio" value="approve" v-model="c.verdict"> 通过</label>
-            <label><input type="radio" value="edit" v-model="c.verdict"> 修改</label>
-            <label><input type="radio" value="reject" v-model="c.verdict"> 拒绝</label>
-            <span class="note-row" v-if="c.verdict!=='approve'">
-              <input type="text" v-if="c.verdict==='edit'" v-model="c.field" placeholder="字段（如 grain）" style="max-width:160px">
-              <textarea rows="1" v-model="c.note" placeholder="备注 / 期望值"></textarea>
-            </span>
+
+          <div class="decision" v-for="d in o.decisions" :key="d._ref"
+            :id="'decision-'+safeRef(d._ref)" :class="{blocked:isBlocked(d)}">
+            <div class="decision-head">
+              <div class="question">{{ d.question }}</div>
+              <div class="badges">
+                <span class="badge" :class="'basis-'+d.basis">证据：{{ basisLabel(d.basis) }}</span>
+                <span class="badge" :class="'confidence-'+d.confidence">置信：{{ confidenceLabel(d.confidence) }}</span>
+                <span class="badge" :class="'priority-'+d.priority">{{ priorityLabel(d.priority) }}</span>
+                <span class="badge" :class="'status-'+decisionStatus(d)">{{ statusLabel(decisionStatus(d)) }}</span>
+              </div>
+            </div>
+
+            <div class="context">
+              <p><strong>为何决定：</strong>{{ d.impact }}</p>
+              <p><strong>错判风险：</strong>{{ d.risk }}</p>
+            </div>
+
+            <div class="relations" v-if="d.relations.length">
+              <button class="relation" :class="r.type" v-for="r in d.relations" :key="r.type+r.target"
+                :title="r.note" @click="gotoDecision(r.target)">
+                {{ relationLabel(r.type) }} · {{ r.target }}
+              </button>
+            </div>
+
+            <div class="blocked-note" v-if="isBlocked(d)">
+              先处理依赖项；此决定本轮不参与批准。
+            </div>
+
+            <div class="current" v-if="!d.options.length && !isBlocked(d)">
+              <strong>当前建议：</strong>{{ displayValue(d.value) }}
+            </div>
+
+            <fieldset class="options" v-if="d.options.length" :disabled="isBlocked(d)">
+              <legend class="help">选择一个互斥方案</legend>
+              <label class="option" v-for="opt in d.options" :key="opt.id"
+                :class="{selected:d._option===opt.id}">
+                <input type="radio" :name="d._ref" :value="opt.id"
+                  v-model="d._option" @change="choose(d,opt)">
+                <span class="option-title">
+                  {{ opt.label }}
+                  <span class="recommended" v-if="opt.recommended">推荐</span>
+                </span>
+                <span class="option-when">适用：{{ opt.when }}</span>
+                <span class="option-grid">
+                  <span><b>收益</b>{{ opt.benefit }}</span>
+                  <span><b>代价</b>{{ opt.cost }}</span>
+                  <span><b>风险</b>{{ opt.risk }}</span>
+                </span>
+                <span class="reason">理由：{{ opt.reason }} · 证据 {{ opt.evidence.join(', ') }}</span>
+              </label>
+            </fieldset>
+
+            <div v-if="!isBlocked(d)">
+              <div class="actions">
+                <button v-if="!d.options.length" @click="setAction(d,'confirm')"
+                  :class="{active:d._action==='confirm'}">确认当前建议</button>
+                <button @click="setAction(d,'correct')" :class="{active:d._action==='correct'}">修正</button>
+                <button @click="setAction(d,'supplement')" :class="{active:d._action==='supplement'}">补充证据</button>
+                <button @click="setAction(d,'reject')" :class="{active:d._action==='reject'}">拒绝问题</button>
+              </div>
+
+              <div class="editor" v-if="d._action==='select' && selectedOption(d) && !selectedOption(d).recommended">
+                <textarea rows="2" v-model="d._reason" placeholder="选择非推荐方案的理由（必填）"></textarea>
+              </div>
+              <div class="editor" v-if="d._action==='correct'">
+                <input v-model="d._value" placeholder="明确的替代值">
+                <textarea rows="2" v-model="d._reason" placeholder="修正理由（必填）"></textarea>
+              </div>
+              <div class="editor" v-if="d._action==='supplement'">
+                <textarea rows="2" v-model="d._value" placeholder="新增证据、出处或约束"></textarea>
+                <textarea rows="2" v-model="d._reason" placeholder="说明（可选）"></textarea>
+              </div>
+              <div class="editor" v-if="d._action==='reject'">
+                <textarea rows="2" v-model="d._reason"
+                  placeholder="说明为什么当前问题定义不成立（必填）"></textarea>
+              </div>
+              <div class="error" v-if="validationError(d)">{{ validationError(d) }}</div>
+            </div>
           </div>
-        </div>
+        </article>
       </div>
     </section>
-
-    <div class="openq" v-if="open_questions.length" id="sec-open">
-      <h2>开放问题（TODO(verify) 与 assumed）</h2>
-      <ol><li v-for="(t,i) in open_questions" :key="i">{{ t }}</li></ol>
-    </div>
   </main>
 
   <footer>
-    <span class="stat">{{ cards.length }} 张卡片 · {{ pendingCount() }} 项修改/拒绝，其余视为通过</span>
-    <button class="primary" @click="doExport()">导出批注</button>
+    <div class="footer-inner">
+      <span class="stat">
+        {{ pendingCount() }} 待处理 · {{ blockedCount() }} 被阻塞 ·
+        修正/补证/拒绝会进入下一轮
+      </span>
+      <button @click="doExport(false)">导出当前反馈</button>
+      <button class="primary" :disabled="!allApproved()" @click="doExport(true)">批准并导出</button>
+    </div>
   </footer>
 
   <div class="modal" v-if="io.show" @click.self="io.show=false">
     <div class="box">
       <div v-show="io.mode==='export'">
-        <h3>导出批注</h3>
+        <h3>{{ io.approved ? '已批准的决策' : '当前反馈草稿' }}</h3>
         <div class="hint">
-          <span v-if="copied" class="copied">已复制到剪贴板 —— 直接回聊天粘贴。</span>
-          <span v-else>剪贴板不可用（file:// 常见）：全选下方 JSON 复制，或下载文件后回传。</span>
+          <span v-if="copied" class="copied">已复制到剪贴板，可直接回传聊天。</span>
+          <span v-else>可全选下方 JSON 复制，或下载文件后回传。</span>
         </div>
         <textarea readonly v-model="io.text" onfocus="this.select()"></textarea>
         <div class="row">
-          <button @click="download()">下载 verdicts.json</button>
+          <button @click="download()">下载 decisions.json</button>
           <button class="primary" @click="io.show=false">完成</button>
         </div>
       </div>
       <div v-show="io.mode==='import'">
-        <h3>导入上轮批注</h3>
-        <div class="hint">粘贴上一轮导出的 JSON，或选择 verdicts.json 文件，卡片状态将自动回填。</div>
-        <textarea v-model="io.text" placeholder='{"verdicts":[...],"approved_rest":true}'></textarea>
+        <h3>导入上轮反馈</h3>
+        <div class="hint">粘贴上轮 JSON 或选择 decisions.json；只回填显式行动。</div>
+        <textarea v-model="io.text" placeholder='{"decisions":[...],"approved":false}'></textarea>
         <div class="row">
           <input type="file" accept=".json,application/json" @change="importFile($event)">
+          <button @click="io.show=false">取消</button>
           <button class="primary" @click="applyImport()">应用</button>
         </div>
       </div>
@@ -168,45 +327,146 @@ var pn=Object.defineProperty,hn=(e,t,n)=>t in e?pn(e,t,{enumerable:!0,configurab
 <script>
 function App(){
   var model = JSON.parse(document.getElementById('model').textContent);
-  var norm = function(c){
-    c.verdict = 'approve'; c.note = ''; c.field = '';
-    c._conclusion = Object.entries(c.conclusion || {}).map(function(e){
-      return [e[0], Array.isArray(e[1]) ? e[1].join(', ') : String(e[1])];
+  var decisionMap = {};
+  var modelErrors = [];
+  var objectIds = {};
+  var objects = (model.objects || []).map(function(o){
+    if (objectIds[o.id]) modelErrors.push('对象 ID 重复：' + o.id);
+    objectIds[o.id] = true;
+    o.kind = o.kind || 'fact';
+    o.evidence = (o.evidence || []).map(function(e, i){
+      return typeof e === 'string' ? { id: 'e' + (i + 1), source: e } : e;
     });
-    c._evidence = (c.evidence || []).map(function(ev){
-      if (typeof ev === 'string') return { source: ev, todo: /TODO\(verify\)/.test(ev) };
-      return { source: ev.source, todo: !!ev.todo || /TODO\(verify\)/.test(ev.source || '') };
+    o.decisions = (o.decisions || []).map(function(d){
+      d._ref = o.id + '#' + d.id;
+      if (decisionMap[d._ref]) modelErrors.push('决策 ID 重复：' + d._ref);
+      d.options = (d.options || []).map(function(opt){
+        opt.evidence = opt.evidence || [];
+        return opt;
+      });
+      d.relations = d.relations || [];
+      d.priority = d.priority || 'normal';
+      d.basis = d.basis || 'missing';
+      d.confidence = d.confidence || 'low';
+      d.status = d.status || 'pending';
+      d._option = '';
+      d._action = '';
+      d._value = '';
+      d._reason = '';
+      decisionMap[d._ref] = d;
+      return d;
     });
-    return c;
-  };
+    return o;
+  });
+  var briefLabels = { goal: '目标', deliverable: '交付物', scope: '范围', boundary: '边界' };
+  Object.keys(briefLabels).forEach(function(key){
+    if (!model.brief || !model.brief[key]) {
+      modelErrors.push(briefLabels[key] + '（brief.' + key + '）不能为空');
+    }
+  });
+  if (!objects.length) modelErrors.push('至少需要一个决策对象');
+  if (!(model.constraints || []).length) modelErrors.push('至少需要一条全局约束');
+  objects.forEach(function(o){
+    var evidenceIds = new Set(o.evidence.map(function(e){ return e.id; }));
+    if (evidenceIds.size !== o.evidence.length) modelErrors.push(o.id + ' 的证据 ID 重复');
+    if (!o.id || !o.title || !o.evidence.length) modelErrors.push((o.id || 'object') + ' 缺少 ID、标题或证据');
+    if (!['fact','dimension','measure','routing'].includes(o.kind)) {
+      modelErrors.push(o.id + ' 的对象类型（kind）非法');
+    }
+    o.decisions.forEach(function(d){
+      if (!d.id || !d.question || !d.impact || !d.risk) {
+        modelErrors.push(d._ref + ' 缺少原子问题、影响或风险');
+      }
+      if (!['explicit','inferred','missing'].includes(d.basis) ||
+          !['high','medium','low'].includes(d.confidence) ||
+          !['blocking','high','normal'].includes(d.priority)) {
+        modelErrors.push(d._ref + ' 的证据基础/置信度/优先级枚举非法');
+      }
+      if (d.status !== 'pending') modelErrors.push(d._ref + ' 初始状态必须是待决（pending）');
+      if (d.basis === 'missing' && d.confidence === 'high') {
+        modelErrors.push(d._ref + ' 待补证时不能标为高置信');
+      }
+      var needsOptions = d.basis !== 'explicit' || d.confidence !== 'high';
+      if (needsOptions && (d.options.length < 2 || d.options.length > 4)) {
+        modelErrors.push(d._ref + ' 必须提供 2–4 个候选');
+      }
+      if (!d.options.length && (d.value == null || d.value === '')) {
+        modelErrors.push(d._ref + ' 缺少当前建议值');
+      }
+      if (d.options.length) {
+        var optionIds = new Set(d.options.map(function(opt){ return opt.id; }));
+        if (optionIds.size !== d.options.length) modelErrors.push(d._ref + ' 的候选 ID 重复');
+        var recommended = d.options.filter(function(opt){ return opt.recommended; }).length;
+        if (recommended !== 1) modelErrors.push(d._ref + ' 必须且只能有一个推荐候选');
+        d.options.forEach(function(opt){
+          var fields = ['id','label','when','benefit','cost','risk','reason'];
+          if (fields.some(function(key){ return !opt[key]; }) || !opt.evidence.length) {
+            modelErrors.push(d._ref + '#' + (opt.id || 'option') + ' 候选字段不完整');
+          }
+          opt.evidence.forEach(function(id){
+            if (!evidenceIds.has(id)) modelErrors.push(d._ref + ' 引用了未知证据 ' + id);
+          });
+        });
+      }
+    });
+  });
+  Object.keys(decisionMap).forEach(function(ref){
+    var d = decisionMap[ref];
+    d.relations.forEach(function(r){
+      if (!r.note || !['depends_on','conflicts_with','tradeoff_with'].includes(r.type)) {
+        modelErrors.push(ref + ' 含无说明或非法关系');
+      }
+      if (!decisionMap[r.target] || r.target === ref) modelErrors.push(ref + ' 的关系目标无效：' + r.target);
+      if (r.type !== 'depends_on' && decisionMap[r.target]) {
+        var reverse = decisionMap[r.target].relations.some(function(back){
+          return back.type === r.type && back.target === ref;
+        });
+        if (!reverse) modelErrors.push(ref + ' 的 ' + r.type + ' 关系缺少反向声明');
+      }
+    });
+  });
+  var visiting = {}, visited = {};
+  function visit(ref){
+    if (visiting[ref]) { modelErrors.push('依赖关系（depends_on）存在循环：' + ref); return; }
+    if (visited[ref] || !decisionMap[ref]) return;
+    visiting[ref] = true;
+    decisionMap[ref].relations.forEach(function(r){
+      if (r.type === 'depends_on') visit(r.target);
+    });
+    visiting[ref] = false;
+    visited[ref] = true;
+  }
+  Object.keys(decisionMap).forEach(visit);
   return {
     meta: model.meta || {},
-    cards: (model.cards || []).map(norm),
-    open_questions: model.open_questions || [],
+    brief: model.brief || {},
+    constraints: model.constraints || [],
+    model_errors: modelErrors,
+    objects: objects,
     sections: [
-      { key: 'fact', label: 'Facts' },
-      { key: 'dimension', label: 'Dimensions' },
-      { key: 'measure', label: 'Measures' },
-      { key: 'routing', label: 'Routing' }
+      { key: 'fact', label: '事实' },
+      { key: 'dimension', label: '维度' },
+      { key: 'measure', label: '度量' },
+      { key: 'routing', label: '路由与边界' }
     ],
     expanded: { fact: true, dimension: false, measure: false, routing: false },
     q: '',
     copied: false,
-    io: { show: false, mode: 'export', text: '' },
+    io: { show: false, mode: 'export', text: '', approved: false },
     count: function(key){
-      return this.cards.filter(function(c){ return c.section === key; }).length;
+      return this.objects.filter(function(o){ return o.kind === key; }).length;
     },
-    match: function(c){
+    match: function(o){
       if (!this.q) return true;
-      var hay = JSON.stringify([c.id, c.title, c._conclusion, c._evidence]).toLowerCase();
+      var hay = JSON.stringify(o).toLowerCase();
       return hay.indexOf(this.q.toLowerCase()) !== -1;
     },
-    bySection: function(key){
+    byKind: function(key){
       var self = this;
-      return this.cards.filter(function(c){ return c.section === key && self.match(c); });
+      return this.objects.filter(function(o){ return o.kind === key && self.match(o); });
     },
     isOpen: function(key){
-      return this.q ? this.bySection(key).length > 0 : this.expanded[key];
+      return this.q ? this.byKind(key).length > 0 : this.expanded[key];
     },
     toggle: function(key){ this.expanded[key] = !this.expanded[key]; },
     goto: function(key){
@@ -214,18 +474,136 @@ function App(){
       var el = document.getElementById('sec-' + key);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
     },
-    pendingCount: function(){
-      return this.cards.filter(function(c){ return c.verdict !== 'approve'; }).length;
+    safeRef: function(ref){ return ref.replace(/[^a-zA-Z0-9_-]/g, '-'); },
+    gotoDecision: function(ref){
+      var el = document.getElementById('decision-' + this.safeRef(ref));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     },
-    doExport: function(){
-      var verdicts = this.cards.filter(function(c){ return c.verdict !== 'approve'; }).map(function(c){
-        var v = { id: c.id, action: c.verdict };
-        if (c.verdict === 'edit' && c.field) v.field = c.field;
-        if (c.note) v.note = c.note;
-        return v;
+    allDecisions: function(){
+      return this.objects.reduce(function(all, o){ return all.concat(o.decisions); }, []);
+    },
+    findDecision: function(ref){
+      return this.allDecisions().find(function(d){ return d._ref === ref; });
+    },
+    totalDecisions: function(){ return this.allDecisions().length; },
+    selectedOption: function(d){
+      return d.options.find(function(opt){ return opt.id === d._option; });
+    },
+    isResolved: function(d){
+      return (d._action === 'confirm' || d._action === 'select') && !this.validationError(d);
+    },
+    isBlocked: function(d){
+      var self = this;
+      return d.relations.some(function(r){
+        if (r.type !== 'depends_on') return false;
+        var target = self.findDecision(r.target);
+        return !target || !self.isResolved(target);
       });
-      var text = JSON.stringify({ verdicts: verdicts, approved_rest: true });
-      this.io = { show: true, mode: 'export', text: text };
+    },
+    decisionStatus: function(d){
+      if (this.isBlocked(d)) return 'blocked';
+      if (d._action === 'reject') return 'rejected';
+      return this.isResolved(d) ? 'approved' : 'pending';
+    },
+    pendingCount: function(){
+      var self = this;
+      return this.allDecisions().filter(function(d){
+        return !self.isBlocked(d) && !self.isResolved(d);
+      }).length;
+    },
+    blockedCount: function(){
+      var self = this;
+      return this.allDecisions().filter(function(d){ return self.isBlocked(d); }).length;
+    },
+    allApproved: function(){
+      var self = this;
+      return this.model_errors.length === 0 && this.blockedCount() === 0 &&
+        this.allDecisions().length > 0 && this.allDecisions().every(function(d){
+        return self.isResolved(d) && (d._action === 'confirm' || d._action === 'select');
+      });
+    },
+    relationLabel: function(type){
+      return { depends_on: '依赖', conflicts_with: '冲突', tradeoff_with: '权衡' }[type] || type;
+    },
+    basisLabel: function(value){
+      return {
+        explicit: '接口明证（explicit）',
+        inferred: '结构推断（inferred）',
+        missing: '待补证（missing）'
+      }[value] || value;
+    },
+    confidenceLabel: function(value){
+      return { high: '高（high）', medium: '中（medium）', low: '低（low）' }[value] || value;
+    },
+    priorityLabel: function(value){
+      return {
+        blocking: '阻塞优先（blocking）',
+        high: '高优先（high）',
+        normal: '普通（normal）'
+      }[value] || value;
+    },
+    statusLabel: function(value){
+      return {
+        pending: '待决（pending）',
+        approved: '已确认（approved）',
+        rejected: '已拒绝（rejected）',
+        blocked: '被阻塞（blocked）'
+      }[value] || value;
+    },
+    displayValue: function(value){
+      return Array.isArray(value) ? value.join(', ') : String(value == null ? '' : value);
+    },
+    choose: function(d, opt){
+      d._action = 'select';
+      d._option = opt.id;
+      if (opt.recommended) d._reason = '';
+    },
+    setAction: function(d, action){
+      d._action = action;
+      if (action !== 'select') d._option = '';
+    },
+    validationError: function(d){
+      if (!d._action) return '';
+      if (d._action === 'select') {
+        var opt = this.selectedOption(d);
+        if (!opt) return '请选择一个方案。';
+        if (!opt.recommended && !d._reason.trim()) return '选择非推荐方案时必须说明理由。';
+      }
+      if (d._action === 'correct' && (!d._value.trim() || !d._reason.trim())) {
+        return '修正需要替代值和理由。';
+      }
+      if (d._action === 'supplement' && !d._value.trim()) return '请填写新增证据或约束。';
+      if (d._action === 'reject' && !d._reason.trim()) return '拒绝问题必须说明理由。';
+      return '';
+    },
+    bulkConfirm: function(){
+      var self = this, changed = true;
+      while (changed) {
+        changed = false;
+        this.allDecisions().forEach(function(d){
+          if (!d.options.length && d.basis === 'explicit' && d.confidence === 'high' &&
+              !self.isBlocked(d) && !d._action) {
+            d._action = 'confirm';
+            changed = true;
+          }
+        });
+      }
+    },
+    serializeDecision: function(d){
+      var out = { id: d._ref, action: d._action };
+      if (d._action === 'select') out.option = d._option;
+      if (d._action === 'correct' || d._action === 'supplement') out.value = d._value;
+      if (d._reason) out.reason = d._reason;
+      return out;
+    },
+    doExport: function(approve){
+      if (approve && !this.allApproved()) return;
+      var self = this;
+      var decisions = this.allDecisions().filter(function(d){ return !!d._action; }).map(function(d){
+        return self.serializeDecision(d);
+      });
+      var text = JSON.stringify({ decisions: decisions, approved: !!approve });
+      this.io = { show: true, mode: 'export', text: text, approved: !!approve };
       this.copied = false;
       var self = this;
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -239,11 +617,13 @@ function App(){
       var blob = new Blob([this.io.text], { type: 'application/json' });
       var a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'verdicts.json';
+      a.download = 'decisions.json';
       a.click();
-      URL.revokeObjectURL(a.href);
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 0);
     },
-    openImport: function(){ this.io = { show: true, mode: 'import', text: '' }; },
+    openImport: function(){
+      this.io = { show: true, mode: 'import', text: '', approved: false };
+    },
     importFile: function(ev){
       var f = ev.target.files[0];
       if (!f) return;
@@ -256,12 +636,13 @@ function App(){
       try {
         var data = JSON.parse(this.io.text);
         var self = this;
-        (data.verdicts || []).forEach(function(v){
-          var c = self.cards.find(function(x){ return x.id === v.id; });
-          if (!c) return;
-          c.verdict = v.action === 'reject' ? 'reject' : 'edit';
-          c.note = v.note || '';
-          c.field = v.field || '';
+        (data.decisions || []).forEach(function(v){
+          var d = self.findDecision(v.id);
+          if (!d || !['confirm','select','correct','supplement','reject'].includes(v.action)) return;
+          d._action = v.action;
+          d._option = v.option || '';
+          d._value = v.value || '';
+          d._reason = v.reason || '';
         });
         this.io.show = false;
       } catch (e) {

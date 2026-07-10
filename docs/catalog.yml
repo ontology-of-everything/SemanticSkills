@@ -51,9 +51,9 @@ skills:
     display_name_zh: "语义创建器 · 接口转语义元技能"
     domain: meta
     subdomains: [semantic-layer, dimensional-modeling, ontology, okf]
-    summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball star-schema semantic layer via a guided interview plus an interactive HTML design-review report (template+data shell, evidence, confidence badges, JSON annotations with offline fallback, amendments.md iteration, hard stop before emit); emits a Google OKF v0.1 bundle by default, optional repo YAML; evidence-only, refuses to invent fields or values
-    summary_zh: 元技能 · 把 REST/CLI/数据表接口经访谈 + 交互式 HTML 评审（模板+数据、证据/置信度/批注回传含离线降级/amendments 迭代、未批准硬停）建成 Kimball 星型语义层；默认输出 Google OKF v0.1 bundle，仓库 YAML 为可选；只依据接口证据，不臆造
-    version: "0.4.0"
+    summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball semantic layer through an interactive HTML decision workbench with atomic decisions, explicit options, evidence, risks, dependencies, and user approval; emits Google OKF v0.1 by default or repo YAML; evidence-only
+    summary_zh: 元技能 · 把 REST/CLI/数据表接口经访谈与 HTML 决策工作台建成 Kimball 语义层；原子决定展示互斥候选、证据、风险、依赖与权衡，用户显式批准后输出；默认 Google OKF v0.1，可选仓库 YAML；不臆造
+    version: "0.5.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; pure modeling + file generation; review report is self-contained HTML (inline CSS/JS, no CDN)
     marketplaces: [skills-sh, skillsmp]
