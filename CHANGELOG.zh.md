@@ -9,6 +9,12 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.4.0 - 2026-07-10
+
+### 新功能
+
+- **semantic-creator** **0.5.0**：Phase 2 重构为 HTML 决策工作台 — 原子决策、互斥候选、依赖硬阻塞、显式批准（`approved:true`）、五种用户行动与中文标签；eval 与 validate 门禁同步更新（详见技能 changelog）
+
 ## 3.3.0 - 2026-07-08
 
 ### 新功能
