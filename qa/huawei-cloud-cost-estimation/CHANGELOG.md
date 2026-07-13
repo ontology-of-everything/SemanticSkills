@@ -2,6 +2,27 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 1.1.0 - 2026-07-13
+
+`resource_spec` resolution unified on the new `BSS/ListResourceSpecs` API ([qct_00008](https://support.huaweicloud.com/api-oce/qct_00008.html)); verified live against hcloud 7.2.2 (ECS code/name fuzzy search, bandwidth catalog).
+
+### Added
+
+- **related-commands.md**: `resource_spec_lookup` rewritten around `BSS/ListResourceSpecs` — full contract (required four params, `filters.[N].key=RESOURCE_SPEC` fuzzy search on spec code or name, `marker`+`limit` must be used together), query discipline (filter mandatory when any hint exists, `limit=100`, 3-page pagination circuit breaker, single 2s backoff on throttling, no retry loops), and a `resource_type`→`size_measure_id` pairing table for linear products
+- **Universal Trap #4**: spec values in quote templates are format examples only; real values must come from the live `ListResourceSpecs` response
+- **SKILL.md Critical Rule #7**: spec resolution is live-query only (same region, same charge_mode as the quote); no docs, no memory, no OS-suffix concatenation
+- **eval #12** `spec-resolve-8c16g-via-listresourcespecs` + grader assertions (ListResourceSpecs before quoting, RESOURCE_SPEC filter, charge_mode alignment)
+
+### Changed
+
+- **rfq-shared-dimensions.yml**: five `Dim_ResourceSpec_*` snowflakes collapsed into one conformed `Dim_ResourceSpec` (source: `BSS/ListResourceSpecs`) with charge_mode/region alignment pairing rules; `flavor_id + os_suffix` transform removed (API returns the complete spec code)
+- **iam-policies.md**: per-product ListFlavors permission layer replaced by BSS-dict-covered `ListResourceSpecs` (AZ lookup kept); error table adds 429 backoff, `CBC.0100`, `CBC.0151`
+- **catalog.yml**: `BSS/ListResourceSpecs` added to primary_operations
+
+### Removed
+
+- Product ListFlavors path (ECS/RDS/DCS/EVS) and the hardcoded bandwidth/EIP/EVS constant tables — specs are always queried live; only the linear `size_measure_id` pairing survives in the command layer
+
 ## 1.0.2 - 2026-06-02
 
 ### Added

@@ -12,8 +12,8 @@ IAM Action 会随账号类型、站点、服务版本变化。本文给权限设
 | 层级 | 用途 | 何时需要 |
 | --- | --- | --- |
 | BSS 询价只读 | 调用 `ListRateOnPeriodDetail`（包年包月）/ `ListOnDemandResourceRatings`（按需）拿报价 | 默认必需 |
-| BSS 字典只读 | 翻译 `cloud_service_type` / `resource_type` / `measure_id` | 默认必需 |
-| 产品规格只读 | 解析 `resource_spec`（ECS / RDS / DCS / EVS） | 询价目标产品涉及对应云服务时 |
+| BSS 字典只读 | 翻译 `cloud_service_type` / `resource_type` / `measure_id`，解析 `resource_spec` | 默认必需 |
+| 产品辅助只读 | AZ 候选（ECS） | 用户指定 AZ 询价时 |
 | 身份范围只读 | 解析 `project_id` 与可访问项目 | 当 hcloud profile 未直接配置 `project_id` 时 |
 
 **禁止**：支付、续费、退订、退款、回收、创建、修改、删除、发送验证码、划拨、改余额或资源。
@@ -47,6 +47,7 @@ IAM Action 会随账号类型、站点、服务版本变化。本文给权限设
 | `BSS/ListServiceTypes` | 云服务类型字典 |
 | `BSS/ListResourceTypes` | 资源类型字典 |
 | `BSS/ListServiceResources` | 服务 → 资源类型映射 |
+| `BSS/ListResourceSpecs` | 资源规格（`resource_spec` 唯一来源；官方文档标注"无需授权"，仍随 BSS 只读一并规划） |
 | `BSS/ListMeasureUnits` | 计量单位字典 |
 | `BSS/ListConversions` | 计量单位进制换算 |
 
@@ -68,17 +69,13 @@ IAM Action 会随账号类型、站点、服务版本变化。本文给权限设
 
 如 IAM 不接受通配只读 Action，按上表显式列出 Action。**不要**用写操作补权限。
 
-## 产品规格只读
+## 产品辅助只读
 
-仅用于解析 `resource_spec`；不读资源详情之外的内容。
+`resource_spec` 解析已由 `BSS/ListResourceSpecs` 覆盖（见字典只读层），不再需要各产品 ListFlavors 权限。仅当用户指定 AZ 询价时需要：
 
 | 服务 | KooCLI 操作 | 用途 |
 | --- | --- | --- |
-| ECS | `ListFlavors` / `NovaListFlavors` / `NovaListFlavorsDetails` | flavor_id 候选 |
 | ECS | `NovaListAvailabilityZones` | AZ 候选 |
-| RDS | `ListFlavors` / `ListEngineFlavors` | 数据库规格 |
-| DCS | `ListFlavors` | 缓存规格 |
-| EVS | `CinderListVolumeTypes` | 云硬盘类型码 |
 
 ```json
 {
@@ -87,12 +84,7 @@ IAM Action 会随账号类型、站点、服务版本变化。本文给权限设
     {
       "Effect": "Allow",
       "Action": [
-        "ecs:cloudServers:list",
-        "ecs:flavors:list",
-        "ecs:availabilityZones:list",
-        "rds:flavor:list",
-        "dcs:flavor:list",
-        "evs:volumeTypes:list"
+        "ecs:availabilityZones:list"
       ],
       "Resource": "*"
     }
@@ -138,8 +130,10 @@ IAM Action 会随账号类型、站点、服务版本变化。本文给权限设
 
 | 现象 | 处理 |
 | --- | --- |
-| `403 Forbidden` | 记录操作名、账号范围；建议补对应只读 Action |
-| `CBC.99006006 产品未发现` | 不是权限问题，回到 Spec Review / Clarify 重新核对四元组（cloud_service_type / resource_type / region / resource_spec） |
+| `403 Forbidden` / `CBC.0151 访问拒绝` | 记录操作名、账号范围；建议补对应只读 Action |
+| `429` / 限流类错误 | 等待 2 秒重试一次；再失败即停止并如实告知，禁止循环重试 |
+| `CBC.0100 参数错误` | 核对必填参数与取值格式（如 ListResourceSpecs 的 charge_mode/region_code，marker 须与 limit 同用） |
+| `CBC.99006006 产品未发现` | 不是权限问题，回到 Spec Review / Clarify 重新核对四元组（cloud_service_type / resource_type / region / resource_spec），并确认规格实查时 charge_mode/region 与询价一致 |
 | `CBC.99006055 询价结果超过金额最大限制` | 拆小 product_infos 或缩短 period_num |
 | 维度查不到 | 保留原始 code 写到小结，提示用户用 `ListServiceTypes` / `ListResourceTypes` 校对 |
 

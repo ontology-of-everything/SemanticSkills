@@ -38,6 +38,15 @@ def grade(expectations: list[str], text: str) -> dict:
         elif e.startswith("Names hcloud BSS ListRateOnPeriodDetail"):
             ok = "listrateonperioddetail" in lower.replace("_", "")
             add(e, ok, "found" if ok else "missing ListRateOnPeriodDetail")
+        elif "ListResourceSpecs" in e and "before quoting" in e:
+            ok = "listresourcespecs" in lower
+            add(e, ok, "found ListResourceSpecs" if ok else "missing ListResourceSpecs resolution")
+        elif "filters with key RESOURCE_SPEC" in e:
+            ok = bool(re.search(r"filters\.\d+\.key\s*=\s*RESOURCE_SPEC", t)) or "RESOURCE_SPEC" in t
+            add(e, ok, "filters used" if ok else "missing RESOURCE_SPEC filter")
+        elif "charge_mode=1" in e:
+            ok = bool(re.search(r"charge_mode\s*=\s*1\b", t))
+            add(e, ok, "matched" if ok else "missing charge_mode=1")
         elif "usage_factor=Duration" in e:
             ok = bool(re.search(r"usage_factor\s*=\s*Duration", t, re.I))
             add(e, ok, "matched" if ok else "missing usage_factor=Duration")

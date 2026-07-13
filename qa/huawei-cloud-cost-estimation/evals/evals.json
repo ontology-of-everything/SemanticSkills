@@ -154,6 +154,20 @@
         "Does not use product_infos region_id (must use region=)"
       ],
       "files": []
+    },
+    {
+      "id": 12,
+      "name": "spec-resolve-8c16g-via-listresourcespecs",
+      "prompt": "华为云 cn-north-4，8核16G 的 ECS 一台，包年 1 年，多少钱？",
+      "expected_output": "先 ListResourceSpecs 实查规格（带 filters 名称片段，charge_mode=1 与包年对齐），从返回候选选定/确认后再 ListRateOnPeriodDetail；不凭记忆编 spec。",
+      "expectations": [
+        "Resolves resource_spec via BSS ListResourceSpecs before quoting (not from memory or product docs)",
+        "ListResourceSpecs query includes filters with key RESOURCE_SPEC (fuzzy search, e.g. 8vCPUs|16GB or spec family)",
+        "ListResourceSpecs uses charge_mode=1 aligned with period quote",
+        "Names hcloud BSS ListRateOnPeriodDetail (not ListOnDemandResourceRatings)",
+        "ECS resource_spec includes .linux suffix or explicitly discloses default OS linux"
+      ],
+      "files": []
     }
   ]
 }

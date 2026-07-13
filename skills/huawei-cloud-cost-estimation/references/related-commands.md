@@ -6,7 +6,8 @@
 
 1. **数组参数仅 dot notation** — `--product_infos.1.region=xxx`；JSON 串或 `[...]` 形式 KooCLI 不识别。
 2. **询价 API 无分页** — `ListRateOnPeriodDetail` / `ListOnDemandResourceRatings` 不接受 `--limit/--offset`；多项一次性放进 `product_infos.N.*`。
-3. **code 大小写敏感** — `cloud_service_type` (`hws.service.type.ec2`)、`resource_type`、`region`、flavor 必须按维度查询返回的原文，不能小写化或拼接。
+3. **code 大小写敏感** — `cloud_service_type` (`hws.service.type.ec2`)、`resource_type`、`region`、spec 必须按维度查询返回的原文，不能小写化或拼接。
+4. **`resource_spec` 只认实查** — 询价模板中的规格值（如 `c6.2xlarge.2.linux`、`GPSSD`、`19_bgp`）仅示意格式；实际取值必须来自当次 `BSS/ListResourceSpecs` 返回（见 resource_spec_lookup），不得凭记忆或文档填写。
 
 ## CLI 格式要点
 
@@ -24,7 +25,7 @@
 > **required**: `project_id` + 每行 `id` / `cloud_service_type` / `resource_type` / `resource_spec` / `region` / `period_type` / `period_num` / `subscription_num`
 > **conditional**: `linear_product` → `resource_size` + `size_measure_id`
 
-ECS 包年示例（c6.2xlarge.2.linux，OS 未指定默认 `.linux`，1 年，1 台 → `period_type=3`）：
+ECS 包年示例（c6.2xlarge.2.linux，OS 未指定默认取 linux 变体，1 年，1 台 → `period_type=3`）：
 
 ```bash
 hcloud BSS ListRateOnPeriodDetail \
@@ -186,41 +187,61 @@ hcloud BSS ListUsageTypes    --cli-region=cn-north-1 --cli-output=json
 
 ## resource_spec_lookup
 
-### ECS（`Dim_ResourceSpec_ECS`）
+### `BSS/ListResourceSpecs` —— 规格解析唯一路径
 
-`flavor_id` 必须再追加 `.linux` 或 `.win`，由用户的 OS 选择决定。
+> **method**: POST · **safety**: readonly · **entities**: `Dim_ResourceSpec` · **pagination**: marker/limit · **doc**: [qct_00008](https://support.huaweicloud.com/api-oce/qct_00008.html)
+> **required**: `cloud_service_type` / `resource_type` / `region_code` / `charge_mode`（1 包年包月 / 3 按需，与询价模式对齐）
+> **optional**: `filters.[N].key=RESOURCE_SPEC` + `filters.[N].value`（模糊匹配：前缀/后缀/中间，同时匹配规格编码与规格名称）、`marker` + `limit`
+
+**契约陷阱**：
+
+1. `marker` 与 `limit` 必须同用才生效，单独传无效；首页不带 `marker`，翻页传上一页响应的 `page_info.next_marker`；`next_marker=null` 即末页。翻页途中不得改查询条件。
+2. `charge_mode` / `region_code` 必须与询价 line 一致，否则拿到的规格询价必报 `CBC.99006006`。
+3. 返回的 `resource_spec` 即询价可直接使用的完整编码（ECS 已含 `.linux`/`.win`/`.byol` OS 后缀，禁止再拼接）；`resource_spec_name` 为人类可读描述（ECS 含规格族/vCPU/内存/OS）。
+
+**查询纪律（限流与性能）**：
+
+- **必带 filter**：用户给了任何线索——规格编码片段（`c6.2xlarge`）、规格族（`c7`）、或 CPU/内存描述（转成 `8vCPUs|16GB` 名称片段）——必须带 `filters` 查询。禁止对 ECS 这类大目录做无 filter 全量翻页爬取；带宽/EVS 等小目录可无 filter 一页取全。
+- **limit 固定 100**（接口上限），最少调用次数拿最大返回。
+- **翻页熔断**：带 filter 仍翻到第 3 页（约 300 条）未收敛，停止翻页，归纳已有候选向用户澄清，不继续消耗配额。
+- **限流退避**：遇 429/限流类错误，等待 2 秒重试一次；再失败即停止并如实告知，禁止循环重试。
+- **多候选**：同族多 OS 按 safe-default（linux）选定并披露；跨族多候选（模糊匹配副作用，如 `c6` 命中 `ac6`）念候选让用户确认，不自动挑。
+
+命令示例（编码前缀检索 / 名称检索 / 小目录全量）：
 
 ```bash
-hcloud ECS ListFlavors --project_id=<project_id> --availability_zone=cn-north-1a \
-  --cli-region=cn-north-1 --cli-output=json
-hcloud ECS NovaListAvailabilityZones --project_id=<project_id> \
-  --cli-region=cn-north-1 --cli-output=json
+# ECS 包年包月，按规格族检索
+hcloud BSS ListResourceSpecs --charge_mode=1 \
+  --cloud_service_type=hws.service.type.ec2 --resource_type=hws.resource.type.vm \
+  --region_code=cn-north-4 \
+  --filters.1.key=RESOURCE_SPEC --filters.1.value=c6.2xlarge \
+  --limit=100 --cli-region=cn-north-1 --cli-output=json
+
+# ECS 按需，用户只说"8核16G"→ 名称片段检索
+hcloud BSS ListResourceSpecs --charge_mode=3 \
+  --cloud_service_type=hws.service.type.ec2 --resource_type=hws.resource.type.vm \
+  --region_code=cn-north-4 \
+  --filters.1.key=RESOURCE_SPEC --filters.1.value="8vCPUs|16GB" \
+  --limit=100 --cli-region=cn-north-1 --cli-output=json
+
+# 带宽小目录，无 filter 一页取全
+hcloud BSS ListResourceSpecs --charge_mode=1 \
+  --cloud_service_type=hws.service.type.vpc --resource_type=hws.resource.type.bandwidth \
+  --region_code=cn-north-4 \
+  --limit=100 --cli-region=cn-north-1 --cli-output=json
 ```
 
-### RDS / DCS / EVS（`Dim_ResourceSpec_RDS` / `_DCS` / `_EVS`）
+读法：候选取 `cloud_service_basics[].resource_spec`，向用户复述用 `resource_spec_name`；`page_info.next_marker` 非 null 则有下一页。
 
-```bash
-hcloud RDS ListFlavors        --cli-region=cn-north-1 --cli-output=json
-hcloud RDS ListEngineFlavors  --cli-region=cn-north-1 --cli-output=json
-hcloud DCS ListFlavors        --cli-region=cn-north-1 --cli-output=json
-hcloud EVS CinderListVolumeTypes --cli-region=cn-north-1 --cli-output=json
-```
+### 线性产品配对（`size_measure_id`）
 
-### 编码常量（`Dim_ResourceSpec_EncodedConstant`）
+ListResourceSpecs 不返回度量单位；线性产品询价须按 `resource_type` 配对（值不随规格变化）：
 
-带宽与 EIP 无 List API，直接抄文档常量：
-
-| 类型 | `resource_spec` | `size_measure_id` |
+| `resource_type` | `size_measure_id` | 单位 |
 | --- | --- | --- |
-| 动态 BGP 流量带宽 | `12_bgp` | 15 |
-| 静态 BGP 流量带宽 | `12_sbgp` | 15 |
-| 动态 BGP 带宽 | `19_bgp` | 15 |
-| 静态 BGP 带宽 | `19_sbgp` | 15 |
-| 共享带宽 | `19_share` | 15 |
-| 动态 BGP EIP | `5_bgp` | - |
-| 静态 BGP EIP | `5_sbgp` | - |
-
-云硬盘常量：`SATA` / `SAS` / `GPSSD` / `SSD` / `ESSD` / `GPSSD2.storage`（通用型 SSD V2 容量）/ `GPSSD2.iops` / `GPSSD2.throughput`（均配 `resource_size` + `size_measure_id=17`）。
+| `hws.resource.type.volume` | 17 | GB |
+| `hws.resource.type.bandwidth` | 15 | Mbps |
+| `hws.resource.type.share_bandwidth` | 15 | Mbps |
 
 ---
 

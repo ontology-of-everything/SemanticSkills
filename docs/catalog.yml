@@ -23,9 +23,9 @@ skills:
     display_name_zh: "华为云成本估算"
     domain: cloud
     subdomains: [pricing, finops, procurement]
-    summary: Huawei Cloud BSS pre-order pricing—period (ListRateOnPeriodDetail) and on-demand (ListOnDemandResourceRatings) quotes; Spec Review before query; one-round clarification; independent skill; refuses order placement, credential intake, historical billing, and cross-cloud quotes
-    summary_zh: 华为云 · 询价员之笔；包年包月 + 按需；Spec Review 后取数；一轮 Clarify；独立技能；拒绝下单/凭证/历史账务/跨云
-    version: "1.0.2"
+    summary: Huawei Cloud BSS pre-order pricing—period (ListRateOnPeriodDetail) and on-demand (ListOnDemandResourceRatings) quotes; resource_spec resolved live via ListResourceSpecs (fuzzy search, throttle-aware); Spec Review before query; one-round clarification; independent skill; refuses order placement, credential intake, historical billing, and cross-cloud quotes
+    summary_zh: 华为云 · 询价员之笔；包年包月 + 按需；规格经 ListResourceSpecs 实查（模糊检索、限流友好）；Spec Review 后取数；一轮 Clarify；独立技能；拒绝下单/凭证/历史账务/跨云
+    version: "1.1.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, BSS IAM (bss:order:view permission), outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp]

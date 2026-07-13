@@ -27,8 +27,10 @@ entry_points:
 primary_operations:
   - BSS/ListRateOnPeriodDetail
   - BSS/ListOnDemandResourceRatings
+  - BSS/ListResourceSpecs
 primary_doc_urls:
   - https://support.huaweicloud.com/api-bpconsole/bcloud_01002.html
   - https://support.huaweicloud.com/api-bpconsole/bcloud_01001.html
+  - https://support.huaweicloud.com/api-oce/qct_00008.html
 hcloud_version: "7.2.2"
 command_contracts_file: ../related-commands.md

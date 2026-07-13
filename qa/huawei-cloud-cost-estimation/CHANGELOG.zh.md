@@ -2,6 +2,27 @@
 
 仅本技能变更。仓库级变更见 [../../CHANGELOG.zh.md](../../CHANGELOG.zh.md)。
 
+## 1.1.0 - 2026-07-13
+
+`resource_spec` 解析统一到新接口 `BSS/ListResourceSpecs`（[qct_00008](https://support.huaweicloud.com/api-oce/qct_00008.html)）；已对照 hcloud 7.2.2 实调验证（ECS 编码/名称模糊检索、带宽目录）。
+
+### 新增
+
+- **related-commands.md**：`resource_spec_lookup` 围绕 `BSS/ListResourceSpecs` 重写 — 完整契约（四个必填参数、`filters.[N].key=RESOURCE_SPEC` 对规格编码与名称模糊匹配、`marker`+`limit` 必须同用）、查询纪律（有线索必带 filter、`limit=100`、3 页翻页熔断、限流等 2 秒退避重试一次、禁循环重试）、线性产品 `resource_type`→`size_measure_id` 配对小表
+- **Universal Trap #4**：询价模板中的规格值仅示意格式，实际取值必须来自当次 `ListResourceSpecs` 返回
+- **SKILL.md Critical Rule #7**：规格只认实查（与询价同 region、同计费模式）；不查文档、不凭记忆、不拼 OS 后缀
+- **eval #12** `spec-resolve-8c16g-via-listresourcespecs` + 程序化断言（先实查再询价、RESOURCE_SPEC filter、charge_mode 对齐）
+
+### 变更
+
+- **rfq-shared-dimensions.yml**：五个 `Dim_ResourceSpec_*` 雪花收敛为单一 `Dim_ResourceSpec`（来源 `BSS/ListResourceSpecs`），新增 charge_mode/region 对齐配对规则；删除 `flavor_id + os_suffix` 拼接 transform（接口直接返回完整编码）
+- **iam-policies.md**：各产品 ListFlavors 权限层由 BSS 字典层的 `ListResourceSpecs` 覆盖（保留 AZ 查询）；错误表补 429 退避、`CBC.0100`、`CBC.0151`
+- **catalog.yml**：primary_operations 增加 `BSS/ListResourceSpecs`
+
+### 移除
+
+- 产品 ListFlavors 路径（ECS/RDS/DCS/EVS）与带宽/EIP/云硬盘硬编码常量表 — 规格一律现查；命令层仅保留线性 `size_measure_id` 配对
+
 ## 1.0.2 - 2026-06-02
 
 ### 新增

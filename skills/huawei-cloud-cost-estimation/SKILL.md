@@ -4,7 +4,7 @@ description: Estimates Huawei Cloud pre-order pricing via hcloud BSS — 包年/
 compatibility: hcloud KooCLI 7.2+, BSS IAM with bss:order:view permission, outbound network; no agent auto-install
 metadata:
   author: ontology-of-everything
-  version: "1.0.2"
+  version: "1.1.0"
   openclaw:
     requires:
       bins: [hcloud]
@@ -45,7 +45,7 @@ metadata:
 
 ### Phase 2 · Estimation
 
-1. **Query** — 按 `references/related-commands.md` 执行最小命令：period → `BSS/ListRateOnPeriodDetail`；on-demand → `BSS/ListOnDemandResourceRatings`。多产品一次性放进 `product_infos.N.*`。
+1. **Query** — 按 `references/related-commands.md`：先 `BSS/ListResourceSpecs` 实查规格，再询价（period → `ListRateOnPeriodDetail`；on-demand → `ListOnDemandResourceRatings`）。多产品一次放进 `product_infos.N.*`。
 2. **Calculate** — 多 `product_infos` 逐项展示再加和；跨万元乘法分步算。
 3. **Verify** — 分项加和 = 总价；币种、`period_type`、`subscription_num` 与用户口径一致。
 4. **Present** — 一句结论 + 分项 `[服务] [规格] [region] [数量×周期] = ¥<金额> [pricing_mode/币种]` + 加总 + 「非最终账单」声明。读数见 `related-commands.md` response_contract（默认官网价，有折扣附折后）。**Iteration**：换 region / 改规格 / 增删项 → 只重跑受影响项。
@@ -58,6 +58,7 @@ metadata:
 4. **Never accept credentials in chat** — 用户粘 AK/SK/Token 立即拒收，指向 `references/cli-installation.md` 让用户自行 `hcloud configure`。
 5. **Route, don't refuse blankly** — 历史账单 / 余额 / 对账 → 明确超出本技能（仅下单前询价），指向费用中心或 BSS 账单只读 API；非华为云 → 仅服务华为云 BSS；写操作 → 给控制台指引。
 6. **BSS 端点** — 所有 `hcloud BSS` 调用固定 `--cli-region=cn-north-1`；`product_infos.N.region` 仍是资源部署区，勿与 CLI region 混用。
+7. **Spec 只认响应** — `resource_spec` 仅取当次 `ListResourceSpecs` 响应，且 region/charge_mode 与询价一致；禁用文档值、记忆值和手工拼接值。
 
 > 输出禁忌：对用户消息不用 GFM 表格（IM 渲染差），用 `·` 分项或编号。`product_infos` 等命令级陷阱（dot notation、无分页、code 大小写）见 `references/related-commands.md` 顶部。
 
@@ -67,6 +68,6 @@ metadata:
 | --- | --- |
 | 每次 Phase 1 入口 | `references/semantic/catalog.yml` |
 | period / on-demand 询价场景 | `references/semantic/rfq-{period,ondemand}-model.yml` + `rfq-shared-dimensions.yml` |
-| 命令模板 / 字段对照 / 响应字段路径 / 维度查 code / flavor 查询 / 通用陷阱 | `references/related-commands.md` |
+| 规格实查 / 询价命令 / 响应字段 / 陷阱 | `references/related-commands.md` |
 | 403 或权限问题 | `references/iam-policies.md` |
 | hcloud 未就绪 | `references/cli-installation.md`（**仅转述给用户**，不代为执行） |

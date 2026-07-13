@@ -2,11 +2,11 @@
 
 `huawei-cloud-cost-estimation` · **Huawei Cloud Pre-Order Cost Estimation — Period & On-Demand via hcloud (Read-Only)**
 
-Deterministic **pre-order** quotes via hcloud BSS: period (`ListRateOnPeriodDetail`) and on-demand (`ListOnDemandResourceRatings`). Prices come only from the live hcloud response—never guessed. Clarify before quoting when the four-tuple (service / resource / region / spec) or duration/usage is incomplete.
+Deterministic **pre-order** quotes via hcloud BSS: period (`ListRateOnPeriodDetail`) and on-demand (`ListOnDemandResourceRatings`). Prices come only from the live hcloud response—never guessed. `resource_spec` is resolved live via `BSS/ListResourceSpecs` (fuzzy search on spec code or name, throttle-aware pagination)—never from docs or memory. Clarify before quoting when the four-tuple (service / resource / region / spec) or duration/usage is incomplete.
 
 > **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud/BSS 响应为准。
 
-**Version:** 1.0.2 · Changelog: [qa/huawei-cloud-cost-estimation/CHANGELOG.md](../../qa/huawei-cloud-cost-estimation/CHANGELOG.md) · 中文仓库说明：[README-CN.md](../../README-CN.md)
+**Version:** 1.1.0 · Changelog: [qa/huawei-cloud-cost-estimation/CHANGELOG.md](../../qa/huawei-cloud-cost-estimation/CHANGELOG.md) · 中文仓库说明：[README-CN.md](../../README-CN.md)
 
 ## What it does
 
@@ -15,7 +15,7 @@ Deterministic **pre-order** quotes via hcloud BSS: period (`ListRateOnPeriodDeta
 | Period RFQ | 包年/包月 ECS、RDS、EVS、带宽等多少钱 |
 | On-demand RFQ | 按小时/按量跑 N 小时/GB 多少钱 |
 | Multi-product | 一套环境（多台 ECS + 盘 + 带宽）分项加总 |
-| Dimension lookup | 查 `cloud_service_type` / flavor / measure unit |
+| Dimension lookup | 查 `cloud_service_type` / `resource_spec`（ListResourceSpecs 模糊检索）/ measure unit |
 | Out of scope | 历史账单、余额、对账 → 费用中心或 BSS 账单只读 API；跨云；下单/支付；对话中 AK/SK |
 
 Independent from [huawei-cloud-billing-scout](huawei-cloud-billing-scout.md) (past spend)—install either or both; skills do not cross-route.
@@ -59,7 +59,7 @@ Phase 2 · Query ─── related-commands.md minimal hcloud command
 Phase 2 · Calculate / Verify / Present ─ line items + basis labels + total
 ```
 
-Primary operations: `BSS/ListRateOnPeriodDetail`, `BSS/ListOnDemandResourceRatings`, plus dimension/flavor lookups documented in `related-commands.md`.
+Primary operations: `BSS/ListRateOnPeriodDetail`, `BSS/ListOnDemandResourceRatings`, `BSS/ListResourceSpecs` (spec resolution), plus dimension lookups documented in `related-commands.md`.
 
 ## SKILL.md structure
 
@@ -72,7 +72,7 @@ Primary operations: `BSS/ListRateOnPeriodDetail`, `BSS/ListOnDemandResourceRatin
 ## Safety boundary
 
 ```text
-Allowed: BSS RFQ read APIs; IAM project scope; dimension/flavor List* helpers in related-commands.md
+Allowed: BSS RFQ read APIs; IAM project scope; BSS dimension/spec List* helpers in related-commands.md
 Refused: order placement, payment, credential intake in chat, cross-cloud quotes
 Note: estimate ≠ final bill; discounts are account-view only
 ```
@@ -84,7 +84,7 @@ IM-safe delivery: use `·` bullets or numbered lines—no GFM pipe tables in use
 ```text
 qa/huawei-cloud-cost-estimation/
 ├── validate.sh
-├── evals/evals.json          # 7 offline eval cases
+├── evals/evals.json          # 12 offline eval cases
 ├── assertions/README.md
 └── .markdownlint.json
 ```

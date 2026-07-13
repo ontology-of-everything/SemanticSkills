@@ -57,63 +57,29 @@ dimensions:
     notes: RFQ 用到的 measure_id 取值与用途见 related-commands.md 字段对照（size_measure_id / usage_measure_id）
 
 # ============================================================
-# RESOURCE_SPEC SNOWFLAKE
+# RESOURCE_SPEC（唯一来源：BSS/ListResourceSpecs）
 # ============================================================
   - name: Dim_ResourceSpec
-    kind: abstract_dimension
+    kind: conformed_dimension
     business_key: resource_spec
-    resolved_by:
-      - Dim_ResourceSpec_ECS
-      - Dim_ResourceSpec_RDS
-      - Dim_ResourceSpec_DCS
-      - Dim_ResourceSpec_EVS
-      - Dim_ResourceSpec_EncodedConstant
-    selection_rule:
-      - { when: "cloud_service_type == hws.service.type.ec2",        use: Dim_ResourceSpec_ECS }
-      - { when: "cloud_service_type == hws.service.type.ebs",        use: Dim_ResourceSpec_EVS }
-      - { when: "cloud_service_type in [hws.service.type.vpc, hws.service.type.eip]", use: Dim_ResourceSpec_EncodedConstant }
-      - { when: "cloud_service_type starts_with hws.service.type.rds", use: Dim_ResourceSpec_RDS }
-      - { when: "cloud_service_type == hws.service.type.dcs",        use: Dim_ResourceSpec_DCS }
-      - { default: ask_user_or_consult_official_doc }
-
-  - name: Dim_ResourceSpec_ECS
-    kind: snowflake_dimension
-    business_key: flavor_id
-    source_operations: [ECS/ListFlavors, ECS/NovaListFlavors, ECS/NovaListFlavorsDetails]
-    rfq_transform:
-      rule: "resource_spec = flavor_id + os_suffix（.linux / .win）"   # OS 默认策略见 SKILL.md
-    attributes: [flavor_id, name, vcpus, ram]
-
-  - name: Dim_ResourceSpec_RDS
-    kind: snowflake_dimension
-    business_key: spec_code
-    source_operations: [RDS/ListFlavors, RDS/ListEngineFlavors]
-    attributes: [spec_code, db_engine, instance_mode]
-    notes: spec_code 直接作为 resource_spec；无 OS 后缀
-
-  - name: Dim_ResourceSpec_DCS
-    kind: snowflake_dimension
-    business_key: spec_code
-    source_operations: [DCS/ListFlavors]
-    attributes: [spec_code, capacity, cache_mode]
-
-  - name: Dim_ResourceSpec_EVS
-    kind: encoded_or_catalog_dimension
-    business_key: volume_type_code
-    source_operations: [EVS/CinderListVolumeTypes]
-    rfq_pairing: { requires_resource_size: true, size_measure_id: 17 }
-    notes: 云硬盘类型码清单见 related-commands.md resource_spec_lookup（命令层为唯一真源）
-
-  - name: Dim_ResourceSpec_EncodedConstant
-    kind: encoded_constant_dimension
-    business_key: constant_code
-    source_documents: [https://support.huaweicloud.com/api-bpconsole/bcloud_01002.html]
-    rfq_pairing:
-      bandwidth: { requires_resource_size: true, size_measure_id: 15 }
-      eip:       { requires_resource_size: false }
-    notes: 无 List API；带宽/EIP 常量表（code + size_measure_id）见 related-commands.md resource_spec_lookup 编码常量段（命令层为唯一真源）
+    source_operations: [BSS/ListResourceSpecs]
+    source_documents: [https://support.huaweicloud.com/api-oce/qct_00008.html]
+    query_keys: [cloud_service_type, resource_type, region_code, charge_mode]
+    attributes: [resource_spec, resource_spec_name, cloud_service_type, resource_type, charge_mode, region_code]
+    pairing_rules:
+      - name: charge_mode_alignment
+        rule: "charge_mode 由询价模式决定：rfq_period_quote → 1；rfq_ondemand_quote → 3。规格必须在与询价相同的计费模式下在售，否则询价报 CBC.99006006。"
+      - name: region_alignment
+        rule: "region_code 必须等于询价 line 的 region；规格在售是区域级事实。"
+    selection_rules:
+      - "resource_spec 一律取自当次 ListResourceSpecs 返回，不查产品文档、不凭记忆、不手工拼接。"
+      - "OS 后缀（.linux/.win/.byol）已内含在返回的 resource_spec 中；同族多 OS 变体按 SKILL.md safe-default（linux）选定并披露。"
+      - "跨族多候选（模糊匹配副作用，如 c6 命中 ac6）时向用户确认，不自动挑。"
+    notes: 检索策略（filter 语法 / 分页 / 熔断 / 限流退避）与命令示例见 related-commands.md resource_spec_lookup（命令层为唯一真源）。
+    rfq_pairing_linear:
+      rule: "线性产品（volume/bandwidth/share_bandwidth）询价时须配 resource_size + size_measure_id；resource_type→size_measure_id 配对小表见 related-commands.md。"
 
 evidence_boundary:
-  - ECS resource_spec 必须带 .linux/.win 后缀；OS 未指定时的默认策略归 SKILL.md（safe-default .linux，Spec Review 披露）。
-  - 具体 code / spec / measure 取值清单归 related-commands.md；本表只描述维度形态与配对规则，不复制取值。
+  - resource_spec 唯一来源为当次 BSS/ListResourceSpecs 响应；OS 未指定时的默认策略归 SKILL.md（safe-default linux，Spec Review 披露）。
+  - 具体 code / spec / measure 取值与检索纪律归 related-commands.md；本表只描述维度形态与配对规则，不复制取值。
   - 维度样本为 partner 视角；客户/伙伴账号可见范围可能不同。
