@@ -19,13 +19,13 @@ skills:
   - id: huawei-cloud-cost-estimation
     path: skills/huawei-cloud-cost-estimation
     qa: qa/huawei-cloud-cost-estimation
-    display_name: "Huawei Cloud Pre-Order Cost Estimation — Period & On-Demand via hcloud"
-    display_name_zh: "华为云成本估算"
+    display_name: "Huawei Cloud Cost Estimation & Controlled Provisioning — Quote, Create, Unsubscribe via hcloud"
+    display_name_zh: "华为云成本估算与资源开通"
     domain: cloud
-    subdomains: [pricing, finops, procurement]
-    summary: Huawei Cloud BSS pre-order pricing—period (ListRateOnPeriodDetail) and on-demand (ListOnDemandResourceRatings) quotes; resource_spec resolved live via ListResourceSpecs (fuzzy search, throttle-aware); Spec Review before query; one-round clarification; independent skill; refuses order placement, credential intake, historical billing, and cross-cloud quotes
-    summary_zh: 华为云 · 询价员之笔；包年包月 + 按需；规格经 ListResourceSpecs 实查（模糊检索、限流友好）；Spec Review 后取数；一轮 Clarify；独立技能；拒绝下单/凭证/历史账务/跨云
-    version: "1.1.0"
+    subdomains: [pricing, finops, procurement, provisioning]
+    summary: Huawei Cloud pre-order pricing (period + on-demand, specs resolved live via ListResourceSpecs) plus controlled lifecycle—73 allowlisted create ops and unified unsubscribe (BSS CancelResourcesSubscription); every write requires runtime help, mandatory --dryrun, fee echo (or unknown-fee extra confirm) and explicit confirmation; fail-fast batches, no auto-rollback; refuses credential intake, payment/renewal/delete, non-allowlisted writes, cross-cloud
+    summary_zh: 华为云 · 询价 + 受控开通/退订；包年包月与按需询价、规格实查；73 个白名单开通命令 + BSS 统一退订；写操作必经运行时 help、强制 --dryrun、费用回表（未知费用额外确认）与显式确认；批次失败即停不自动回滚；拒凭证/支付续费删除/白名单外写/跨云
+    version: "2.0.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, BSS IAM (bss:order:view permission), outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp]

@@ -2,6 +2,24 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 2.0.0 - 2026-07-13
+
+Major capability change: controlled resource lifecycle (create + unified unsubscribe) added on top of pricing. Safety boundary shifted from "refuse all writes" to "allowlisted writes behind --dryrun + explicit confirmation". Evidence: KooCLI 7.2.2 service-level help; see `docs/hcloud/evidence/normative-allowlist.md`.
+
+### Added
+
+- **references/lifecycle/** — thin-flow, no semantic layer: `concepts.md` (help/lookup/--dryrun/fee-state/batch/cancel semantics) + `commands.md` (73 canonical create ops + `BSS/CancelResourcesSubscription`, command bodies and dependency pointers only; parameters resolved via runtime `--help`)
+- **SKILL.md Route/Lifecycle sections** — create flow: allowlist → help → resolve → cost (quote or unknown-fee extra confirm) → mandatory local `--dryrun` → batch echo + explicit confirm → fail-fast execute, no auto-rollback; cancel flow: independent high-intensity confirmation
+- **qa/fixtures/ops_contracts.yml** — write allowlist single source (73 create + 1 cancel); `validate.sh` `check_write_allowlist` enforces fixture ↔ `lifecycle/commands.md` 1:1, BSS mutable = cancel only, forbidden BSS write prefixes, dry-only write evals
+- **evals #13–18** — create fee-echo/dry/confirm, unknown-fee extra confirm, refuse skip-dry, batch fail-fast, cancel high-intensity, refuse non-allowlist writes; grader branches for each
+- **docs/hcloud/evidence/normative-allowlist.md** — manual evidence snapshot (canonical list, `--dryrun` vs server-side `dry_run`, known help gaps)
+
+### Changed
+
+- **references/ reorganized by domain** — pricing files moved to `references/pricing/` (`commands.md`, `iam-policies.md`, `semantic/*`); `related-commands.md` renamed to `pricing/commands.md`
+- **eval #4** re-scoped: still refuses chat AK/SK, but routes ordering intent to the controlled create flow instead of blanket refusal
+- Original interface list normalized against live CLI: CDN/CSS/MRS/ELB expanded to version suffixes; Kafka → `CreatePostPaidKafkaInstance`; RocketMQ → `CreateInstanceByEngine`; `GaussDB CreateClickHouseInstance` dropped (absent in current CLI; StarRocks is not an equivalent)
+
 ## 1.1.0 - 2026-07-13
 
 `resource_spec` resolution unified on the new `BSS/ListResourceSpecs` API ([qct_00008](https://support.huaweicloud.com/api-oce/qct_00008.html)); verified live against hcloud 7.2.2 (ECS code/name fuzzy search, bandwidth catalog).

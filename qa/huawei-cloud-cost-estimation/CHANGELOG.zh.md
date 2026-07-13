@@ -2,6 +2,24 @@
 
 仅本技能变更。仓库级变更见 [../../CHANGELOG.zh.md](../../CHANGELOG.zh.md)。
 
+## 2.0.0 - 2026-07-13
+
+重大能力变更：在询价之上加入受控资源生命周期（开通 + 统一退订）。安全边界从「拒绝一切写操作」改为「白名单写操作 + 强制 `--dryrun` + 显式确认」。证据来自 KooCLI 7.2.2 服务级 help；见 `docs/hcloud/evidence/normative-allowlist.md`。
+
+### 新增
+
+- **references/lifecycle/** — 薄流程、无语义层：`concepts.md`（help/依赖查询/`--dryrun`/费用状态/批次/退订语义）+ `commands.md`（73 个规范开通主体 + `BSS/CancelResourcesSubscription`；只存命令主体与依赖指针，参数一律运行时 `--help` 解析）
+- **SKILL.md Route/Lifecycle** — 开通：白名单 → help → 依赖解析 → 费用回表（可询价先报价；未知费用额外确认）→ 强制本地 `--dryrun` → 批次回显统一确认 → 顺序执行失败即停、不自动回滚；退订：独立高强度确认
+- **qa/fixtures/ops_contracts.yml** — 写白名单唯一真源（73 开通 + 1 退订）；`validate.sh` 新增 `check_write_allowlist`：fixture ↔ `lifecycle/commands.md` 1:1、BSS 可变仅退订、禁 BSS 写前缀、写场景 eval 必须 dry-only
+- **evals #13–18** — 开通费用回显/dry/确认、未知费用额外确认、拒跳过 dry、批次 fail-fast、退订高强度确认、拒白名单外写操作；grader 对应分支
+- **docs/hcloud/evidence/normative-allowlist.md** — 手工证据快照（规范清单、`--dryrun` 与服务端 `dry_run` 的区别、已知 help 缺口）
+
+### 变更
+
+- **references/ 按域重组** — 询价文件迁入 `references/pricing/`（`commands.md`、`iam-policies.md`、`semantic/*`）；`related-commands.md` 更名为 `pricing/commands.md`
+- **eval #4** 语义调整：仍拒收对话 AK/SK，但下单意图路由到受控开通流程，不再一刀切拒绝
+- 原始接口清单对照本机 CLI 归一化：CDN/CSS/MRS/ELB 展开版本后缀；Kafka → `CreatePostPaidKafkaInstance`；RocketMQ → `CreateInstanceByEngine`；删除 `GaussDB CreateClickHouseInstance`（当前 CLI 不存在，StarRocks 非等价替代）
+
 ## 1.1.0 - 2026-07-13
 
 `resource_spec` 解析统一到新接口 `BSS/ListResourceSpecs`（[qct_00008](https://support.huaweicloud.com/api-oce/qct_00008.html)）；已对照 hcloud 7.2.2 实调验证（ECS 编码/名称模糊检索、带宽目录）。

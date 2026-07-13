@@ -1,0 +1,68 @@
+name: RFQSharedDimensions
+type: semantic_ontology
+description: |
+  RFQ 共享一致性维度。被 period 与 on-demand 模型共同引用；
+  具体 code、spec、measure 与命令纪律由 ../commands.md 维护。
+source_evidence:
+  partner_api_doc: https://support.huaweicloud.com/api-bpconsole/bcloud_01002.html
+
+dimensions:
+  - name: Dim_Project
+    kind: scope_dimension
+    business_key: project_id
+    source_operations: [IAM/KeystoneListProjects, IAM/KeystoneListAuthProjects]
+    attributes: [id, name, domain_id, parent_id, enabled]
+
+  - name: Dim_CloudServiceType
+    kind: conformed_dimension
+    business_key: service_type_code
+    source_operations: [BSS/ListServiceTypes]
+    attributes: [service_type_code, service_type_name, abbreviation]
+
+  - name: Dim_ResourceType
+    kind: conformed_dimension
+    business_key: resource_type_code
+    parent_dimension: Dim_CloudServiceType
+    source_operations: [BSS/ListResourceTypes, BSS/ListServiceResources]
+    attributes: [resource_type_code, resource_type_name, resource_type_desc, service_type_code]
+
+  - name: Dim_Region
+    kind: conformed_dimension
+    business_key: region_code
+    source_documents: [https://developer.huaweicloud.com/endpoint]
+    attributes: [region_code, region_name, site]
+    notes: hcloud 无统一 region 字典 API；以官方 endpoint 页为准
+
+  - name: Dim_AvailabilityZone
+    kind: snowflake_dimension
+    business_key: az_code
+    parent_dimension: Dim_Region
+    source_operations: [ECS/NovaListAvailabilityZones]
+    attributes: [az_code, az_state]
+
+  - name: Dim_MeasureUnit
+    kind: conformed_dimension
+    business_key: measure_id
+    source_operations: [BSS/ListMeasureUnits]
+    attributes: [measure_id, measure_name, abbreviation, measure_type]
+
+  - name: Dim_ResourceSpec
+    kind: conformed_dimension
+    business_key: resource_spec
+    source_operations: [BSS/ListResourceSpecs]
+    source_documents: [https://support.huaweicloud.com/api-oce/qct_00008.html]
+    query_keys: [cloud_service_type, resource_type, region_code, charge_mode]
+    attributes: [resource_spec, resource_spec_name, cloud_service_type, resource_type, charge_mode, region_code]
+    pairing_rules:
+      - name: charge_mode_alignment
+        rule: "rfq_period_quote → 1；rfq_ondemand_quote → 3。"
+      - name: region_alignment
+        rule: "region_code 必须等于询价 line 的 region。"
+    selection_rules:
+      - "resource_spec 一律取自当次 ListResourceSpecs 返回。"
+      - "OS 后缀已内含在返回值中；同族多 OS 变体按 SKILL.md 默认策略选择并披露。"
+      - "跨规格族多候选时让用户选择，不自动挑。"
+
+evidence_boundary:
+  - resource_spec 唯一来源为当次 BSS/ListResourceSpecs 响应。
+  - 具体取值与检索纪律只在 references/pricing/commands.md。

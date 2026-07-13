@@ -33,4 +33,4 @@ primary_doc_urls:
   - https://support.huaweicloud.com/api-bpconsole/bcloud_01001.html
   - https://support.huaweicloud.com/api-oce/qct_00008.html
 hcloud_version: "7.2.2"
-command_contracts_file: ../related-commands.md
+command_contracts_file: ../commands.md

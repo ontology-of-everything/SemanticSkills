@@ -1,0 +1,85 @@
+# Write-operation contract. Single source for lifecycle allowlist checks.
+# Keys must match `Service/Operation` rows in
+# skills/huawei-cloud-cost-estimation/references/lifecycle/commands.md 1:1.
+coverage:
+  source_version: KooCLI 7.2.2
+  expected_create_operations: 73
+  expected_cancel_operations: 1
+create_ops:
+  - APIG/CreateInstanceV2
+  - APIG/CreateOrder
+  - BMS/CreateBareMetalServers
+  - CBH/CreateCbh
+  - CBH/CreateInstance
+  - CBH/CreateInstanceOrder
+  - CBR/CreatePolicy
+  - CBR/CreatePostPaidVault
+  - CBR/CreateVault
+  - CCE/CreateAutopilotCluster
+  - CCE/CreateCluster
+  - CCE/CreateNode
+  - CCE/CreateNodePool
+  - CCE/SubscribePackageProducts
+  - CDM/CreateCluster
+  - CDN/CreateDomain/v1
+  - CDN/CreateDomain/v2
+  - CFW/CreateEastWestFirewall
+  - CFW/CreateFirewall
+  - CloudTable/CreateCloudTableCluster
+  - CloudTable/CreateCluster
+  - CodeArtsInspector/CreatePurchaseOrder
+  - CSE/CreateEngine
+  - CSS/CreateCluster/v1
+  - CSS/CreateCluster/v2
+  - DataArtsStudio/PayForDgcOneKey
+  - DBSS/CreateDbEncryptInstancePeriod
+  - DBSS/CreateDbOmInstancePeriod
+  - DBSS/CreateInstancesPeriodOrder
+  - DBSS/CreateInstancesPeriodOrderNew
+  - DCS/CreateInstance
+  - DDM/CreateDdmInstance
+  - DDM/CreateInstance
+  - DDS/CreateInstance
+  - DeH/CreateDedicatedHost
+  - DSC/CreateProductOrder
+  - DWS/CreateCluster
+  - DWS/CreateClusterV2
+  - ECS/CreatePostPaidServers
+  - ECS/CreateServers
+  - EIP/CreatePrePaidPublicip
+  - EIP/CreatePublicip
+  - EIP/CreateSharedBandwidth
+  - ELB/CreateLoadBalancer/v2
+  - ELB/CreateLoadBalancer/v3
+  - EPS/CreateEnterpriseProject
+  - ESW/CreateInstance
+  - EVS/CreateVolume
+  - GaussDB/CreateGaussMySqlInstance
+  - GaussDB/CreateStarrocksInstance
+  - GaussDBforNoSQL/CreateInstance
+  - GaussDBforopenGauss/CreateDatabaseInstance
+  - GaussDBforopenGauss/CreateDbInstance
+  - GaussDBforopenGauss/CreateGaussDbInstance
+  - GaussDBforopenGauss/CreateInstance
+  - HSS/CreateAntiVirusPaidTask
+  - HSS/CreateQuotasOrder
+  - IEC/CreateInstance
+  - Kafka/CreatePostPaidKafkaInstance
+  - MetaStudio/CreateMetaStudioOrders
+  - MRS/CreateCluster/v1
+  - MRS/CreateCluster/v2
+  - NAT/CreateNatGateway
+  - RabbitMQ/CreatePostPaidInstanceByEngine
+  - RDS/CreateInstance
+  - RDS/CreateInstanceIam5
+  - RocketMQ/CreateInstanceByEngine
+  - SCM/SubscribeCertificate
+  - SecMaster/CreateSubscriptionOrder
+  - VPN/CreateVpnServer
+  - WAF/CreateCloudWafPostPaidResource
+  - WAF/CreateInstance
+  - WAF/CreatePrepaidCloudWaf
+cancel_ops:
+  - BSS/CancelResourcesSubscription
+# BSS mutable operations other than cancel_ops must never appear in the skill tree.
+forbidden_bss_write_prefixes: [Pay, Renew, AutoRenew, Update, Send, Delete, Change, Claim, Reclaim, Set]

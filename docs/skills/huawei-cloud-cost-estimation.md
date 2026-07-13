@@ -1,22 +1,22 @@
-# 华为云成本估算
+# 华为云成本估算与资源开通
 
-`huawei-cloud-cost-estimation` · **Huawei Cloud Pre-Order Cost Estimation — Period & On-Demand via hcloud (Read-Only)**
+`huawei-cloud-cost-estimation` · **Huawei Cloud Cost Estimation & Controlled Provisioning — Quote, Create, Unsubscribe via hcloud**
 
-Deterministic **pre-order** quotes via hcloud BSS: period (`ListRateOnPeriodDetail`) and on-demand (`ListOnDemandResourceRatings`). Prices come only from the live hcloud response—never guessed. `resource_spec` is resolved live via `BSS/ListResourceSpecs` (fuzzy search on spec code or name, throttle-aware pagination)—never from docs or memory. Clarify before quoting when the four-tuple (service / resource / region / spec) or duration/usage is incomplete.
+Deterministic pre-order quotes via hcloud BSS (period `ListRateOnPeriodDetail`, on-demand `ListOnDemandResourceRatings`, specs resolved live via `ListResourceSpecs`) plus a controlled lifecycle: 73 allowlisted create operations and unified unsubscribe (`BSS CancelResourcesSubscription`). Every write goes through runtime `--help`, read-only dependency lookups, a fee echo (or an extra unknown-fee confirmation), a mandatory local `--dryrun`, and explicit user confirmation before the real call.
 
-> **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud/BSS 响应为准。
+> **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud 响应为准。
 
-**Version:** 1.1.0 · Changelog: [qa/huawei-cloud-cost-estimation/CHANGELOG.md](../../qa/huawei-cloud-cost-estimation/CHANGELOG.md) · 中文仓库说明：[README-CN.md](../../README-CN.md)
+**Version:** 2.0.0 · Changelog: [qa/huawei-cloud-cost-estimation/CHANGELOG.md](../../qa/huawei-cloud-cost-estimation/CHANGELOG.md) · 中文仓库说明：[README-CN.md](../../README-CN.md)
 
 ## What it does
 
-| Capability | Typical questions |
+| Capability | Typical requests |
 | --- | --- |
-| Period RFQ | 包年/包月 ECS、RDS、EVS、带宽等多少钱 |
-| On-demand RFQ | 按小时/按量跑 N 小时/GB 多少钱 |
-| Multi-product | 一套环境（多台 ECS + 盘 + 带宽）分项加总 |
-| Dimension lookup | 查 `cloud_service_type` / `resource_spec`（ListResourceSpecs 模糊检索）/ measure unit |
-| Out of scope | 历史账单、余额、对账 → 费用中心或 BSS 账单只读 API；跨云；下单/支付；对话中 AK/SK |
+| Period / on-demand RFQ | 包年包月、按小时/按量多少钱；多产品分项加总 |
+| Spec & dimension lookup | `ListResourceSpecs` 模糊实查规格；service/resource/measure 字典 |
+| Controlled create | 开通/购买白名单内资源（ECS/RDS/CCE/EIP/WAF 等 73 个命令主体） |
+| Unified unsubscribe | 退订包年/包月资源，仅 `BSS CancelResourcesSubscription`，独立高强度确认 |
+| Out of scope | 历史账单/余额/对账 → 费用中心或只读账单 API；跨云；支付/续费/删除；对话中 AK/SK |
 
 Independent from [huawei-cloud-billing-scout](huawei-cloud-billing-scout.md) (past spend)—install either or both; skills do not cross-route.
 
@@ -24,16 +24,16 @@ Independent from [huawei-cloud-billing-scout](huawei-cloud-billing-scout.md) (pa
 
 ```text
 skills/huawei-cloud-cost-estimation/
-├── SKILL.md
+├── SKILL.md                     # route + pricing flow + lifecycle gates
 └── references/
-    ├── related-commands.md
     ├── cli-installation.md
-    ├── iam-policies.md
-    └── semantic/
-        ├── catalog.yml
-        ├── rfq-period-model.yml
-        ├── rfq-ondemand-model.yml
-        └── rfq-shared-dimensions.yml
+    ├── pricing/
+    │   ├── commands.md          # RFQ command contracts, response paths, traps
+    │   ├── iam-policies.md
+    │   └── semantic/            # catalog + rfq-{period,ondemand,shared} models
+    └── lifecycle/               # thin flow, no semantic layer
+        ├── concepts.md          # help/lookup/--dryrun/fee-state/batch/cancel semantics
+        └── commands.md          # 73 create ops + 1 cancel op, bodies only
 ```
 
 No `evals/`, `qa/`, or `*-workspace/` under `skills/`.
@@ -41,52 +41,43 @@ No `evals/`, `qa/`, or `*-workspace/` under `skills/`.
 ## In-skill flow
 
 ```text
-User question
+User request
      │
-     ▼
-Phase 1 · Parse ─── catalog.yml → rfq-period | rfq-ondemand model
+     ├─ Quote ──► pricing/semantic catalog → spec lookup → RFQ → verify → present
      │
-     ▼
-Phase 1 · Clarify ─ one round with 2–4 candidates when ambiguous
+     ├─ Create ─► allowlist → runtime --help → resolve deps (read-only)
+     │            → cost echo (quote or unknown-fee extra confirm)
+     │            → mandatory --dryrun → batch echo + explicit confirm
+     │            → execute (remove --dryrun only) · fail-fast · no auto-rollback
      │
-     ▼
-Phase 1 · Spec Review ─ confirmed / missing / defaults table
-     │
-     ▼
-Phase 2 · Query ─── related-commands.md minimal hcloud command
-     │
-     ▼
-Phase 2 · Calculate / Verify / Present ─ line items + basis labels + total
+     └─ Cancel ─► BSS CancelResourcesSubscription only → help → --dryrun
+                  → independent high-intensity confirm → execute
 ```
 
-Primary operations: `BSS/ListRateOnPeriodDetail`, `BSS/ListOnDemandResourceRatings`, `BSS/ListResourceSpecs` (spec resolution), plus dimension lookups documented in `related-commands.md`.
-
-## SKILL.md structure
-
-| Section | Purpose |
-| --- | --- |
-| Workflow | Phase 1 Analysis (Parse, Clarify, Spec Review) → Phase 2 Estimation |
-| Critical Rules | Never guess; never-assume vs safe-default; label basis; no credentials in chat; route out-of-scope |
-| Reference Index | When to load each semantic / command file |
+Parameters are never stored in the skill: each write op is explored with `hcloud <Service> <Operation> --help` at run time; if help fails (`[APIE_ERROR]`), the flow stops. Local `--dryrun` (prints the request, skips the call) is distinct from the server-side `dry_run` parameter a few APIs offer.
 
 ## Safety boundary
 
 ```text
-Allowed: BSS RFQ read APIs; IAM project scope; BSS dimension/spec List* helpers in related-commands.md
-Refused: order placement, payment, credential intake in chat, cross-cloud quotes
-Note: estimate ≠ final bill; discounts are account-view only
+Allowed: BSS RFQ/dictionary reads; read-only dependency lookups;
+         73 allowlisted create ops + BSS CancelResourcesSubscription,
+         each behind --dryrun + fee echo + explicit confirmation
+Refused: chat AK/SK intake, payment, renewal, refund, delete,
+         non-allowlisted writes, vague bulk unsubscribe, cross-cloud
+Note:    estimate ≠ final bill; unsubscribe order id ≠ stopped/refunded
 ```
 
-IM-safe delivery: use `·` bullets or numbered lines—no GFM pipe tables in user-facing chat.
+Automated evals only exercise the `--dryrun` stage; real provisioning tests are manual. Evidence snapshot: [docs/hcloud/evidence/normative-allowlist.md](../hcloud/evidence/normative-allowlist.md).
 
 ## QA (not installed with skill)
 
 ```text
 qa/huawei-cloud-cost-estimation/
-├── validate.sh
-├── evals/evals.json          # 12 offline eval cases
+├── validate.sh                  # layout, version sync, write-allowlist gate, lint, skillcheck
+├── fixtures/ops_contracts.yml   # 73 create + 1 cancel, single source
+├── evals/evals.json             # 18 offline cases (13–18 lifecycle, dry-only)
 ├── assertions/README.md
-└── .markdownlint.json
+└── bin/                         # grade_response.py, run_ab_eval.py, aggregate_ab.py
 ```
 
 ```bash
@@ -110,4 +101,4 @@ npx skills add ontology-of-everything/SemanticSkills \
 rsync -a --delete ./skills/huawei-cloud-cost-estimation/ ~/.hermes/skills/huawei-cloud-cost-estimation/
 ```
 
-Requires hcloud ≥7.2 and BSS IAM with `bss:order:view`. Agent does not auto-install `hcloud`.
+Requires hcloud ≥7.2 and IAM permissions matching the requested read/write operations. Agent does not auto-install `hcloud`.
