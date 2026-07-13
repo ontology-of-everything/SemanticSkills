@@ -9,6 +9,12 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.5.0 - 2026-07-13
+
+### 新功能
+
+- **huawei-cloud-cost-estimation** **1.1.0**：`resource_spec` 解析统一为 `BSS/ListResourceSpecs` — 模糊检索实查、限流友好查询纪律、语义层单维度收敛；eval #12（详见技能 changelog）
+
 ## 3.4.1 - 2026-07-10
 
 ### 新功能

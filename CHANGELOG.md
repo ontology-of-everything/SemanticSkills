@@ -9,6 +9,12 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.5.0 - 2026-07-13
+
+### Features
+
+- **huawei-cloud-cost-estimation** **1.1.0**: `resource_spec` resolution unified on `BSS/ListResourceSpecs` — live fuzzy search, throttle-aware query discipline, collapsed semantic dimension; eval #12 (see skill changelog)
+
 ## 3.4.1 - 2026-07-10
 
 ### Features
