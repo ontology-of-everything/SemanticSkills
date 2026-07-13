@@ -9,6 +9,12 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.6.0 - 2026-07-13
+
+### 新功能
+
+- **huawei-cloud-cost-estimation** **2.0.0**：在询价之上加入受控生命周期 — 73 个白名单开通命令 + `BSS CancelResourcesSubscription`；强制本地 `--dryrun`、费用回表（未知费用额外确认）与显式确认；`pricing/` 与 `lifecycle/` 参考分离；写白名单门禁与 dry-only evals #13–18（详见技能 changelog）
+
 ## 3.5.0 - 2026-07-13
 
 ### 新功能

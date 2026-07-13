@@ -9,6 +9,12 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.6.0 - 2026-07-13
+
+### Features
+
+- **huawei-cloud-cost-estimation** **2.0.0**: controlled lifecycle on top of RFQ — 73 allowlisted create ops + `BSS CancelResourcesSubscription`; mandatory local `--dryrun`, fee echo (or unknown-fee extra confirm), explicit confirmation; `pricing/` + `lifecycle/` reference split; write allowlist gate and dry-only evals #13–18 (see skill changelog)
+
 ## 3.5.0 - 2026-07-13
 
 ### Features
