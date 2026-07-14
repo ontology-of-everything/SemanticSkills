@@ -9,6 +9,12 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.7.0 - 2026-07-14
+
+### Features
+
+- **huawei-cloud-cost-estimation** **3.0.0**: unsubscribe downgraded to console-guidance-only — no CLI/API execution or preview; 73 allowlisted create ops keep `--dryrun`/fee/confirmation gates; updated eval #17 and write-boundary validation (see skill changelog)
+
 ## 3.6.0 - 2026-07-13
 
 ### Features

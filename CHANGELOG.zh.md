@@ -9,6 +9,12 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.7.0 - 2026-07-14
+
+### 新功能
+
+- **huawei-cloud-cost-estimation** **3.0.0**：退订降级为仅控制台指引 — 不运行或输出退订 CLI/API；73 个白名单开通命令保留 `--dryrun`/费用/确认门禁；更新 eval #17 与写边界校验（详见技能 changelog）
+
 ## 3.6.0 - 2026-07-13
 
 ### 新功能
