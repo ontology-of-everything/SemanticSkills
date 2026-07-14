@@ -4,7 +4,6 @@
 coverage:
   source_version: KooCLI 7.2.2
   expected_create_operations: 73
-  expected_cancel_operations: 1
 create_ops:
   - APIG/CreateInstanceV2
   - APIG/CreateOrder
@@ -79,7 +78,8 @@ create_ops:
   - WAF/CreateCloudWafPostPaidResource
   - WAF/CreateInstance
   - WAF/CreatePrepaidCloudWaf
-cancel_ops:
+# Destructive lifecycle operations stay outside the executable skill boundary.
+forbidden_lifecycle_ops:
   - BSS/CancelResourcesSubscription
-# BSS mutable operations other than cancel_ops must never appear in the skill tree.
-forbidden_bss_write_prefixes: [Pay, Renew, AutoRenew, Update, Send, Delete, Change, Claim, Reclaim, Set]
+# No BSS mutable operation may appear in the skill tree.
+forbidden_bss_write_prefixes: [Pay, Renew, AutoRenew, Update, Send, Delete, Cancel, Change, Claim, Reclaim, Set]

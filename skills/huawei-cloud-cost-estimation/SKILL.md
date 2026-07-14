@@ -1,15 +1,14 @@
 ---
 name: huawei-cloud-cost-estimation
-description: Quotes Huawei Cloud pre-order pricing and runs controlled provisioning/unsubscribe via hcloud. Use whenever the user mentions 华为云 / Huawei Cloud / hcloud with 报价/询价/多少钱/价格/quote/pricing/budget, or asks to 开通/购买/创建 (provision/create) an allowlisted resource (ECS/RDS/CCE/EIP/WAF etc.), or to 退订 (unsubscribe) a yearly/monthly resource. Writes require allowlist + runtime help + --dryrun + explicit confirmation. Refuses cross-cloud, AK/SK intake, payment/renewal/delete, non-allowlisted writes.
+description: Generate Huawei Cloud pre-order price estimates, safely provision allowlisted resources via hcloud, and guide unsubscribe requests to the console only. Use this skill whenever the user mentions 华为云/Huawei Cloud/hcloud with 报价/询价/价格/quote/pricing/budget, 开通/购买/创建/provision/create, or 退订/unsubscribe. Create requires runtime help, --dryrun, fee review, and confirmation. Never run or emit unsubscribe CLI/API. Refuse other clouds, credentials, payment/renewal/delete, and non-allowlisted writes.
 compatibility: hcloud KooCLI 7.2+, IAM permissions matching requested read/write operations, outbound network; no agent auto-install
 metadata:
   author: ontology-of-everything
-  version: "2.0.0"
+  version: "3.0.0"
   openclaw:
     requires:
       bins: [hcloud]
     primaryEnv: HUAWEICLOUD_SDK_AK
-    homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/huawei-cloud-cost-estimation
     envVars:
       - {name: HUAWEICLOUD_SDK_AK, required: false}
       - {name: HUAWEICLOUD_SDK_SK, required: false}
@@ -20,13 +19,13 @@ metadata:
 
 > **华为社区版** · 社区维护，非华为云官方；结论以当次 hcloud 响应为准。
 
-价格只认当次响应，**不臆造、不类比、不记忆**；写操作只认白名单 + 运行时 help + `--dryrun` + 用户确认。
+价格只认当次响应，**不臆造、不类比、不记忆**；仅开通可写，退订只指引官网控制台。
 
 ## Route
 
 - **询价 / 预算 / 比价** → Pricing。
 - **开通 / 购买 / 创建资源** → Lifecycle Create（仅 `references/lifecycle/commands.md` 白名单内）。
-- **退订包年/包月资源** → Lifecycle Cancel（仅 `BSS CancelResourcesSubscription`）。
+- **退订 / 停止使用资源** → Unsubscribe Guidance（仅控制台指引，不调用 CLI/API）。
 - 历史账单/余额/对账 → 费用中心或 BSS 账单只读 API；非华为云 → 拒绝；白名单外写操作 → 给控制台指引。
 
 ## Pricing
@@ -50,17 +49,23 @@ metadata:
 
 任何参数、region、数量或 operation 变化 → dry 与确认作废，回到 Help 重来。
 
-## Lifecycle Cancel
+## Unsubscribe Guidance
 
-独立于开通批次，仅 `BSS CancelResourcesSubscription`：help → `--dryrun` → 独立回显（主资源、可能连带资源、退款未知、不可恢复）→ 用户输入明确退订确认 → 移除 `--dryrun` 执行。模糊批量退订（「全部退掉」）不执行；订单 ID ≠ 已停止/已退款，如实转述响应。
+不运行、不生成退订 CLI/API 命令，也不以 `--dryrun` 代替控制台预览：
+
+- **包年/包月**：引导登录华为云控制台 → 费用中心 → 订单管理 → 云服务退订（若显示「退订与退换货」，从该入口进入），按资源 ID/名称/订单号定位。提醒先备份或迁移数据，并在提交前核对账号、资源、关联资源、退款金额/手续费及退款流向。
+- **按需**：不适用退订；引导到对应云服务控制台，在备份后自行删除。本技能不代为删除。
+
+若用户坚持自动执行，仍保持上述边界，并附官方退订规则：<https://support.huaweicloud.com/usermanual-billing/unsubscription_topic_2000010.html>。
 
 ## Critical Rules
 
 1. **Never guess prices / params** — 价格只来自当次响应；参数只来自当次 help。
-2. **Never skip dry & confirm** — 无 `--dryrun` 成功 + 用户确认，不产生任何真实写调用。
-3. **Never accept credentials in chat** — AK/SK/Token 立即拒收，指向 `references/cli-installation.md` 自行配置。
-4. **BSS 端点** — `hcloud BSS` 固定 `--cli-region=cn-north-1`；`product_infos.N.region` 仍是资源部署区。
-5. **Route, don't refuse blankly** — 超范围请求给出正确去向（费用中心/控制台/只读账单）。
+2. **Never skip create dry & confirm** — 无 `--dryrun` 成功 + 用户确认，不产生真实开通调用。
+3. **Never automate unsubscribe** — 不运行或输出退订 CLI/API；只给控制台路径与核对清单。
+4. **Never accept credentials in chat** — AK/SK/Token 立即拒收，指向 `references/cli-installation.md` 自行配置。
+5. **BSS 端点** — `hcloud BSS` 固定 `--cli-region=cn-north-1`；`product_infos.N.region` 仍是资源部署区。
+6. **Route, don't refuse blankly** — 超范围请求给出正确去向（费用中心/控制台/只读账单）。
 
 > 输出禁忌：对用户消息不用 GFM 表格，用 `·` 分项或编号；命令级陷阱（dot notation、无分页、code 大小写）见 `references/pricing/commands.md` 顶部。
 
@@ -70,7 +75,7 @@ metadata:
 | --- | --- |
 | 询价入口 | `references/pricing/semantic/catalog.yml` + `rfq-*.yml` |
 | 询价命令 / 响应字段 / 陷阱 | `references/pricing/commands.md` |
-| 开通/退订语义与安全 | `references/lifecycle/concepts.md` |
-| 开通/退订命令白名单与依赖 | `references/lifecycle/commands.md` |
+| 开通安全 / 退订控制台指引 | `references/lifecycle/concepts.md` |
+| 开通命令白名单与依赖 | `references/lifecycle/commands.md` |
 | 403 或权限问题 | `references/pricing/iam-policies.md` |
 | hcloud 未就绪 | `references/cli-installation.md`（**仅转述给用户**，不代为执行） |

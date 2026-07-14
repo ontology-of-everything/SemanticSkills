@@ -2,6 +2,21 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 3.0.0 - 2026-07-14
+
+Breaking safety change: unsubscribe is now console-guidance-only. The skill no longer runs, previews, or emits unsubscribe CLI/API commands.
+
+### Changed
+
+- Route package subscriptions to Billing Center → Order Management → Cloud Service Unsubscription, with backup, exact-resource, linked-resource, refund/fee, and refund-destination checks
+- Route on-demand cleanup to the relevant service console; deletion remains outside the skill
+- Keep the 73-operation create allowlist and its `--dryrun`/fee/confirmation gates unchanged
+- Replace the cancel confirmation eval with an insistence-resistant console-only eval; validation now rejects destructive lifecycle operations from the install payload
+
+### Removed
+
+- Executable `BSS/CancelResourcesSubscription` allowlist entry and dry-run/confirmation flow
+
 ## 2.0.0 - 2026-07-13
 
 Major capability change: controlled resource lifecycle (create + unified unsubscribe) added on top of pricing. Safety boundary shifted from "refuse all writes" to "allowlisted writes behind --dryrun + explicit confirmation". Evidence: KooCLI 7.2.2 service-level help; see `docs/hcloud/evidence/normative-allowlist.md`.

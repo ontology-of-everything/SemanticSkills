@@ -58,7 +58,7 @@ if meta.get("version") != expected:
 PY
 }
 
-# 写操作白名单：fixture ↔ lifecycle/commands.md 1:1；evals 写场景必须 dry-only
+# 写操作白名单：仅 73 个开通主体；退订必须保持控制台-only
 check_write_allowlist() {
   need_cmd python3
   [[ -f "$QA_DIR/fixtures/ops_contracts.yml" ]] || fail "missing fixtures/ops_contracts.yml"
@@ -73,29 +73,30 @@ qa = Path(os.environ["QA_DIR"])
 skill = Path(os.environ["SKILL_DIR"])
 contracts = yaml.safe_load((qa / "fixtures/ops_contracts.yml").read_text(encoding="utf-8"))
 create_ops = set(contracts["create_ops"])
-cancel_ops = set(contracts["cancel_ops"])
+forbidden_ops = set(contracts["forbidden_lifecycle_ops"])
 cov = contracts["coverage"]
 if len(create_ops) != cov["expected_create_operations"]:
     sys.exit(f"FAIL: create_ops count {len(create_ops)} != coverage {cov['expected_create_operations']}")
-if len(cancel_ops) != cov["expected_cancel_operations"]:
-    sys.exit(f"FAIL: cancel_ops count {len(cancel_ops)} != coverage {cov['expected_cancel_operations']}")
 doc = (skill / "references/lifecycle/commands.md").read_text(encoding="utf-8")
 doc_ops = set(re.findall(r"^\| `([A-Za-z]+/[A-Za-z0-9/]+)`", doc, re.M))
 doc_ops -= {  # dependency-lookup read commands are not write ops
     op for op in doc_ops
     if re.search(r"/(List|Show|Keystone)", op)
 }
-want = create_ops | cancel_ops
-if doc_ops != want:
+if doc_ops != create_ops:
     sys.exit("FAIL: lifecycle/commands.md ops != ops_contracts.yml\n"
-             f"  only in doc: {sorted(doc_ops - want)}\n"
-             f"  only in fixture: {sorted(want - doc_ops)}")
+             f"  only in doc: {sorted(doc_ops - create_ops)}\n"
+             f"  only in fixture: {sorted(create_ops - doc_ops)}")
 bss_mutable = [op for op in doc_ops if op.startswith("BSS/")] 
-if set(bss_mutable) != cancel_ops:
-    sys.exit(f"FAIL: BSS mutable ops must be exactly {sorted(cancel_ops)}, got {sorted(bss_mutable)}")
+if bss_mutable:
+    sys.exit(f"FAIL: BSS mutable ops are forbidden, got {sorted(bss_mutable)}")
 prefixes = tuple(contracts["forbidden_bss_write_prefixes"])
 for md in skill.rglob("*.md"):
     text = md.read_text(encoding="utf-8")
+    for op in forbidden_ops:
+        operation = op.split("/", 1)[1]
+        if op in text or operation in text:
+            sys.exit(f"FAIL: forbidden lifecycle op {op!r} in {md}")
     for m in re.finditer(r"hcloud BSS (\w+)", text):
         op = m.group(1)
         if op.startswith(prefixes):
@@ -103,10 +104,14 @@ for md in skill.rglob("*.md"):
 evals = json.loads((qa / "evals/evals.json").read_text(encoding="utf-8"))
 for case in evals["evals"]:
     blob = json.dumps(case, ensure_ascii=False)
-    if "lifecycle" in case.get("name", "") or "cancel" in case.get("name", "") or "create-" in case.get("name", ""):
+    name = case.get("name", "")
+    if "create" in name:
         if "--dryrun" not in blob:
-            sys.exit(f"FAIL: write-path eval {case['name']!r} must assert --dryrun")
-print("OK: write allowlist consistent (73 create + 1 cancel)")
+            sys.exit(f"FAIL: create-path eval {name!r} must assert --dryrun")
+    if "unsubscribe" in name or "cancel" in name:
+        if "console" not in blob.lower() or "Does not run" not in blob:
+            sys.exit(f"FAIL: unsubscribe eval {name!r} must enforce console-only behavior")
+print("OK: write allowlist consistent (73 create; unsubscribe console-only)")
 PY
 }
 

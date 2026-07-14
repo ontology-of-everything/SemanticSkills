@@ -1,6 +1,6 @@
-# 开通与退订规范白名单
+# 开通白名单与退订排除证据
 
-手工证据快照；不由 `04_generate_docs.py` 生成。`commands.md` 是全量审计候选，本文件记录最终进入 `huawei-cloud-cost-estimation` 的规范主体。
+手工证据快照；不由 `04_generate_docs.py` 生成。`commands.md` 是全量审计候选，本文件记录最终进入 `huawei-cloud-cost-estimation` 的开通主体，以及退订接口为何仅保留证据、不进入执行白名单。
 
 ## 白名单
 
@@ -46,16 +46,18 @@
 - SecMaster: `CreateSubscriptionOrder`
 - VPN: `CreateVpnServer`
 - WAF: `CreateCloudWafPostPaidResource`, `CreateInstance`, `CreatePrepaidCloudWaf`
-- BSS: `CancelResourcesSubscription`（仅统一退订）
 
-合计：73 个开通主体 + 1 个统一退订主体。
+合计：73 个开通主体；无退订主体。
+
+## 退订排除
+
+KooCLI 可发现 `BSS CancelResourcesSubscription`，对应 `POST /v2/orders/subscriptions/resources/unsubscribe`。该接口不进入技能执行白名单：本地 `--dryrun` 不能展示关联资源、实际退款、手续费与退款流向，技能因此只引导用户在华为云控制台完成退订。
 
 ## 核验证据
 
 - KooCLI：7.2.2；服务级 help 可发现上述主体。
 - 全局本地预演参数为 `--dryrun`：打印请求并跳过业务调用。
 - `dry_run` / `dryRun` 是少数接口的服务端请求参数，会访问服务端，不能替代 `--dryrun`。
-- BSS 统一退订为 `POST /v2/orders/subscriptions/resources/unsubscribe`；KooCLI 主体是 `BSS CancelResourcesSubscription`。
 - 参数与依赖只在运行时 operation help 中解析；本文不保存参数模板。
 
 ## 规范化
@@ -73,4 +75,4 @@
 - `docs/hcloud` inventory 未覆盖 CDM、CloudTable、CodeArtsInspector、DDM、DeH、ESW、IEC、MetaStudio、SCM；本次只以当前服务级 help 补证，不改全量生成管线。
 - CCE `CreateCluster` / `CreateNodePool` 仍有 OPENAPI help 缺口；见 [help-gaps.md](help-gaps.md)。
 - CDN 与上述漏收服务的 operation help 在当前环境可能返回 endpoint metadata `Forbidden`。运行时 help 失败时必须停止，不能猜参数。
-- `--dryrun` 只证明请求可构造，不证明容量、资格、最终价格、退订影响或退款金额。
+- `--dryrun` 只证明请求可构造，不证明容量、资格或最终价格；更不能证明退订影响、退款金额和资金流向。
