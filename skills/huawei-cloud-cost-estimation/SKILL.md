@@ -4,7 +4,7 @@ description: Generate Huawei Cloud pre-order price estimates, safely provision a
 compatibility: hcloud KooCLI 7.2+, IAM permissions matching requested read/write operations, outbound network; no agent auto-install
 metadata:
   author: ontology-of-everything
-  version: "3.0.0"
+  version: "3.1.0"
   openclaw:
     requires:
       bins: [hcloud]

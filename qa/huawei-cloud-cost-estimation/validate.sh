@@ -58,7 +58,7 @@ if meta.get("version") != expected:
 PY
 }
 
-# 写操作白名单：仅 73 个开通主体；退订必须保持控制台-only
+# 写操作白名单：仅 74 个开通主体；退订必须保持控制台-only
 check_write_allowlist() {
   need_cmd python3
   [[ -f "$QA_DIR/fixtures/ops_contracts.yml" ]] || fail "missing fixtures/ops_contracts.yml"
@@ -111,7 +111,7 @@ for case in evals["evals"]:
     if "unsubscribe" in name or "cancel" in name:
         if "console" not in blob.lower() or "Does not run" not in blob:
             sys.exit(f"FAIL: unsubscribe eval {name!r} must enforce console-only behavior")
-print("OK: write allowlist consistent (73 create; unsubscribe console-only)")
+print("OK: write allowlist consistent (74 create; unsubscribe console-only)")
 PY
 }
 

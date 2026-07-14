@@ -4,7 +4,7 @@
 
 ## 四种证据
 
-1. **Allowlist**：只有 `commands.md` 中的 73 个开通主体可写。
+1. **Allowlist**：只有 `commands.md` 中的 74 个开通主体可写；其中前置或配置动作会明确标注为非独立计费。
 2. **Help**：先运行 `hcloud <Service> <Operation> --help`。若输出 `[APIE_ERROR]`、无参数定义或 operation 不存在，停止；不得凭文档、记忆或相似产品补参数。
 3. **Lookup**：根据 help 的必填/条件必填项运行必要的只读依赖命令；多候选让用户选择。
 4. **Dry run**：完整写命令必须先带全局 `--dryrun`。它只构造并打印请求，不访问业务接口。

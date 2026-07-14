@@ -23,9 +23,9 @@ skills:
     display_name_zh: "华为云成本估算与资源开通"
     domain: cloud
     subdomains: [pricing, finops, procurement, provisioning]
-    summary: Huawei Cloud pre-order pricing (period + on-demand, specs resolved live via ListResourceSpecs) plus 73 controlled create ops; creates require runtime help, mandatory --dryrun, fee review and explicit confirmation; unsubscribe is console-guidance-only with no CLI/API; fail-fast batches, no auto-rollback; refuses credential intake, payment/renewal/delete, non-allowlisted writes, cross-cloud
-    summary_zh: 华为云 · 询价 + 受控开通 + 退订控制台指引；包年包月与按需询价、规格实查；73 个白名单开通命令必经运行时 help、强制 --dryrun、费用回表与显式确认；退订不调用或输出 CLI/API，仅引导官网控制台核对资源、关联项与退款；批次失败即停不自动回滚
-    version: "3.0.0"
+    summary: Huawei Cloud pre-order pricing (period + on-demand, specs resolved live via ListResourceSpecs) plus 74 controlled create ops, including CodeArts IDE Online; creates require runtime help, mandatory --dryrun, fee review and explicit confirmation; unsubscribe is console-guidance-only with no CLI/API; fail-fast batches, no auto-rollback; refuses credential intake, payment/renewal/delete, non-allowlisted writes, cross-cloud
+    summary_zh: 华为云 · 询价 + 受控开通 + 退订控制台指引；包年包月与按需询价、规格实查；74 个白名单开通命令（含 CodeArts IDE Online）必经运行时 help、强制 --dryrun、费用回表与显式确认；退订不调用或输出 CLI/API，仅引导官网控制台核对资源、关联项与退款；批次失败即停不自动回滚
+    version: "3.1.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: hcloud KooCLI 7.2+, IAM permissions matching requested read/create operations, outbound network; no agent auto-install
     marketplaces: [skills-sh, skillsmp]

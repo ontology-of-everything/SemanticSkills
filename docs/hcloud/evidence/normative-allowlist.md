@@ -13,6 +13,7 @@
 - CDN: `CreateDomain/v1`, `CreateDomain/v2`
 - CFW: `CreateEastWestFirewall`, `CreateFirewall`
 - CloudTable: `CreateCloudTableCluster`, `CreateCluster`
+- CloudIDE: `CreateInstance`
 - CodeArtsInspector: `CreatePurchaseOrder`
 - CSE: `CreateEngine`
 - CSS: `CreateCluster/v1`, `CreateCluster/v2`
@@ -47,7 +48,7 @@
 - VPN: `CreateVpnServer`
 - WAF: `CreateCloudWafPostPaidResource`, `CreateInstance`, `CreatePrepaidCloudWaf`
 
-合计：73 个开通主体；无退订主体。
+合计：74 个开通主体；无退订主体。
 
 ## 退订排除
 
@@ -66,13 +67,14 @@ KooCLI 可发现 `BSS CancelResourcesSubscription`，对应 `POST /v2/orders/sub
 - 两条 CSS `CreateCluster` → `/v1` 与 `/v2`
 - `ELB CreateLoadbalancer/CreateLoadBalancer` → `CreateLoadBalancer/v2` 与 `/v3`
 - `MRS CreateCluster` → `/v1` 与 `/v2`
+- CodeArts IDE Online 使用 KooCLI 服务名 `CloudIDE`；仅保留标准用户路径 `CreateInstance`，排除第三方集成路径 `CreateInstanceBy3rd`
 - Kafka 仅保留 `CreatePostPaidKafkaInstance`
 - RocketMQ 仅保留 `CreateInstanceByEngine`
 - 删除 `GaussDB CreateClickHouseInstance`；当前 KooCLI 不存在，且 StarRocks 不是等价替代
 
 ## 已知缺口
 
-- `docs/hcloud` inventory 未覆盖 CDM、CloudTable、CodeArtsInspector、DDM、DeH、ESW、IEC、MetaStudio、SCM；本次只以当前服务级 help 补证，不改全量生成管线。
+- `docs/hcloud` inventory 未覆盖 CDM、CloudTable、CloudIDE、CodeArtsInspector、DDM、DeH、ESW、IEC、MetaStudio、SCM；本次只以当前服务级 help 补证，不改全量生成管线。
 - CCE `CreateCluster` / `CreateNodePool` 仍有 OPENAPI help 缺口；见 [help-gaps.md](help-gaps.md)。
 - CDN 与上述漏收服务的 operation help 在当前环境可能返回 endpoint metadata `Forbidden`。运行时 help 失败时必须停止，不能猜参数。
 - `--dryrun` 只证明请求可构造，不证明容量、资格或最终价格；更不能证明退订影响、退款金额和资金流向。

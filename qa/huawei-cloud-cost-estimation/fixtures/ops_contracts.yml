@@ -3,7 +3,7 @@
 # skills/huawei-cloud-cost-estimation/references/lifecycle/commands.md 1:1.
 coverage:
   source_version: KooCLI 7.2.2
-  expected_create_operations: 73
+  expected_create_operations: 74
 create_ops:
   - APIG/CreateInstanceV2
   - APIG/CreateOrder
@@ -26,6 +26,7 @@ create_ops:
   - CFW/CreateFirewall
   - CloudTable/CreateCloudTableCluster
   - CloudTable/CreateCluster
+  - CloudIDE/CreateInstance
   - CodeArtsInspector/CreatePurchaseOrder
   - CSE/CreateEngine
   - CSS/CreateCluster/v1

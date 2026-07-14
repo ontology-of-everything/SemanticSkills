@@ -2,6 +2,18 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 3.1.0 - 2026-07-14
+
+### Added
+
+- Allowlisted `CloudIDE/CreateInstance` for standard CodeArts IDE Online environment provisioning; the third-party integration path remains excluded
+
+### Changed
+
+- Rewrote all 74 lifecycle command semantics with official product names, exact resource/action scope, API generations, legacy status, and billing boundaries
+- Kept opening prerequisites and configuration actions compatible while explicitly marking them as non-independent billing operations
+- Confirmed that ordinary CodeArts repository, build, pipeline, artifact, check, deploy, and project `Create*` operations remain outside the provisioning allowlist
+
 ## 3.0.0 - 2026-07-14
 
 Breaking safety change: unsubscribe is now console-guidance-only. The skill no longer runs, previews, or emits unsubscribe CLI/API commands.
