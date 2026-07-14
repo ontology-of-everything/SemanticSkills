@@ -9,6 +9,12 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.8.0 - 2026-07-14
+
+### 新功能
+
+- **huawei-cloud-cost-estimation** **3.1.0**：新增 `CloudIDE/CreateInstance`；全面精修 74 个生命周期命令语义（官方产品名、API 版本、计费边界）；CodeArts 普通 `Create*` 继续排除；退订仍仅控制台指引（详见技能 changelog）
+
 ## 3.7.0 - 2026-07-14
 
 ### 新功能

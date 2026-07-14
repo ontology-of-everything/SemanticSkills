@@ -9,6 +9,12 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 
+## 3.8.0 - 2026-07-14
+
+### Features
+
+- **huawei-cloud-cost-estimation** **3.1.0**: add `CloudIDE/CreateInstance`; rewrite all 74 lifecycle command semantics with official product names, API versions, and billing boundaries; ordinary CodeArts `Create*` stay excluded; unsubscribe remains console-guidance-only (see skill changelog)
+
 ## 3.7.0 - 2026-07-14
 
 ### Features
