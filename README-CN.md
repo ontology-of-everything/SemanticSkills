@@ -37,7 +37,7 @@ English: [README.md](README.md)。
 | 技能 | 版本 | 做什么 |
 | --- | --- | --- |
 | [`semantic-creator`](docs/skills/semantic-creator.md) | 0.5.1 | 把一套接口、CLI 或表做成粒度先行的 Kimball 语义层，经 HTML 决策工作台推进，输出 OKF 或 YAML，每个字段可追溯到观察到的证据 |
-| [`semantic-sce-creator`](docs/skills/semantic-sce-creator.md) | 0.2.0 | 两轮从原文萃取场景、概念、实体：先扫骨架给人确认，再回填 IPO、分解、组装与八种关系 |
+| [`semantic-pkm-creator`](docs/skills/semantic-pkm-creator.md) | 0.3.0 | 两轮从原文萃取场景、概念、实体：先扫骨架给人确认，再回填 IPO、分解、组装与八种关系 |
 
 ### 华为云
 

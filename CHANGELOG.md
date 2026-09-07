@@ -8,7 +8,7 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.md](qa/huawei-cloud-cost-estimation/CHANGELOG.md) |
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
-| semantic-sce-creator | [qa/semantic-sce-creator/CHANGELOG.md](qa/semantic-sce-creator/CHANGELOG.md) |
+| semantic-pkm-creator | [qa/semantic-pkm-creator/CHANGELOG.md](qa/semantic-pkm-creator/CHANGELOG.md) |
 | concept-design | [qa/concept-design/CHANGELOG.md](qa/concept-design/CHANGELOG.md) |
 | concept-prd | [qa/concept-prd/CHANGELOG.md](qa/concept-prd/CHANGELOG.md) |
 | concept-implementation | [qa/concept-implementation/CHANGELOG.md](qa/concept-implementation/CHANGELOG.md) |

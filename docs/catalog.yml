@@ -61,18 +61,18 @@ skills:
     marketplaces: [skills-sh, skillsmp, clawhub]
     distribution: direct-skill
     clawhub_license: MIT-0 on ClawHub; repository source remains Apache-2.0
-  - id: semantic-sce-creator
-    path: skills/semantic-sce-creator
-    qa: qa/semantic-sce-creator
-    display_name: "Semantic SCE Creator — Scene, Concept, Entity Extract"
-    display_name_zh: "语义 · 场景-概念-实体萃取"
+  - id: semantic-pkm-creator
+    path: skills/semantic-pkm-creator
+    qa: qa/semantic-pkm-creator
+    display_name: "Semantic PKM Creator — Scene, Concept, Entity Extract"
+    display_name_zh: "语义 · 个人知识管理 · 场景-概念-实体萃取"
     domain: meta
     subdomains: [knowledge-extraction, ontology, sce]
-    summary: Two-round extract of callable scenes, concepts, and entities from source text—skeleton first with human confirm, then IPO/decompose/assemble and eight relation types; concept is the hub
-    summary_zh: 两轮从原文萃取可调用的场景、概念与实体：先扫骨架并确认，再回填 IPO/分解/组装与八种关系；概念是中枢
-    version: "0.2.0"
+    summary: Personal knowledge management—two-round extract of callable scenes, concepts, and entities from source text: skeleton first with human confirm, then IPO/decompose/assemble and eight relation types; concept is the hub
+    summary_zh: 个人知识管理 · 两轮从原文萃取可调用的场景、概念与实体：先扫骨架并确认，再回填 IPO/分解/组装与八种关系；概念是中枢
+    version: "0.3.0"
     agents: [cursor, claude-code, codex, openclaw]
-    compatibility: No external tools or network; writes three YAML files plus a round-1 progress note
+    compatibility: No external tools or network; writes three YAML files plus a round-1 progress note; relation reference loaded on demand
     marketplaces: []
     distribution: direct-skill
   - id: concept-design

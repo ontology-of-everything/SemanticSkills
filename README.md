@@ -37,7 +37,7 @@ Requirements to modules, with the concept model as the contract. Each skill stop
 | Skill | Version | What it does |
 | --- | --- | --- |
 | [`semantic-creator`](docs/skills/semantic-creator.md) | 0.5.1 | Turns an API, CLI, or table set into a grain-first Kimball semantic layer through an HTML decision workbench; emits OKF or YAML, every field traceable to observed evidence |
-| [`semantic-sce-creator`](docs/skills/semantic-sce-creator.md) | 0.2.0 | Extracts scenes, concepts, and entities from source text in two rounds — skeleton for human confirmation, then IPO, decomposition, assembly, and eight relation types |
+| [`semantic-pkm-creator`](docs/skills/semantic-pkm-creator.md) | 0.3.0 | Extracts scenes, concepts, and entities from source text in two rounds — skeleton for human confirmation, then IPO, decomposition, assembly, and eight relation types |
 
 ### Huawei Cloud
 
