@@ -38,7 +38,7 @@ check_skill_layout() {
 
 check_references() {
   local ref
-  for ref in rust java-spring typescript; do
+  for ref in composition-layer scaling sources rust java-spring typescript; do
     [[ -f "$SKILL_DIR/references/$ref.md" ]] || fail "missing reference: references/$ref.md"
     rg -q "references/$ref\\.md" "$SKILL_DIR/SKILL.md" || fail "SKILL.md does not route to references/$ref.md"
   done

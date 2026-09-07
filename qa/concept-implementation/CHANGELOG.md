@@ -8,7 +8,14 @@ Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANG
 
 - Rename the installable skill from `jackson-concept-implementation` to
   `concept-implementation` (concept-* family prefix); companion references
-  updated; content is unchanged
+  updated
+- Restructure SKILL.md into the six-section skeleton (目标 / 原则 / 流程 /
+  命题 / 记法与模板 / 参考) and cut it to ~48% of its size (10.3 KB → 5.0 KB).
+  Sync landing routes, timing/error isolation, syncs-layer discipline,
+  interface layer, failure paths, and spec colocation move to
+  `references/composition-layer.md`; concept grouping and sync packaging
+  to `references/scaling.md`; sources to `references/sources.md`. The
+  mapping table stays inline; no rules were dropped
 
 ## 0.3.0 - 2026-08-28
 

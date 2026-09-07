@@ -29,12 +29,15 @@
 
 ```text
 skills/concept-implementation/
-├── SKILL.md
+├── SKILL.md                     # 目标 / 原则 / 流程 / 命题 / 记法与模板 / 参考
 ├── agents/openai.yaml
 └── references/
+    ├── composition-layer.md     # sync 落地路线、时机与错误隔离、接口层、失败路径、规格共存
+    ├── scaling.md               # 概念分组与 syncs 拆包（十余个概念起）
     ├── rust.md
     ├── java-spring.md
-    └── typescript.md
+    ├── typescript.md
+    └── sources.md               # 取用原则的出处
 ```
 
 ```bash
