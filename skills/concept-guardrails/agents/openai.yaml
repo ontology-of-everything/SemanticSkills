@@ -1,0 +1,6 @@
+interface:
+  display_name: "概念护栏（wyx 架构护栏 · 中文版）"
+  short_description: "用 CONCEPT/PIPELINE/SYNCS 规格划定模块边界并检测规格漂移"
+  default_prompt: "Use $concept-guardrails to declare this module's boundaries as a wyx spec, or to check specs against code for drift."
+policy:
+  allow_implicit_invocation: false

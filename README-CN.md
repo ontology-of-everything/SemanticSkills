@@ -26,11 +26,11 @@ English: [README.md](README.md)。
 
 | 技能 | 版本 | 做什么 |
 | --- | --- | --- |
-| [`jackson-concept-design`](docs/skills/jackson-concept-design.md) | 0.3.0 | 把需求建成 concepts（purpose、operational principle、state、actions），用 sync 组合，给出依赖图与产品子集。停在模型确认——不出 PRD，不出代码 |
-| [`jackson-concept-prd`](docs/skills/jackson-concept-prd.md) | 0.2.0 | 把已确认的模型转录为集中的总体 PRD，加每概念一份共存的 `CONCEPT.md` 与一份按 flow 分节的 `SYNCS.md`。有缺口就退回建模 |
-| [`jackson-concept-implementation`](docs/skills/jackson-concept-implementation.md) | 0.2.0 | 把模型映射为模块单体：一个 concept 一个模块，sync 落在 mediator 或规则引擎，规格与代码共存。带 Rust、Java/Spring Modulith、TypeScript 说明 |
-| [`jackson-concept-audit`](docs/skills/jackson-concept-audit.md) | 0.2.0 | 只读五维审计代码与模型的偏差——漂移、边界、判据、组合、依赖——带严重度校准与修复路由 |
-| [`wyx-zh-cn`](docs/skills/wyx-zh-cn.md) | 0.26.1 | 仅显式调用；用同目录的 `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` 声明模块边界并检测规格与代码的漂移。五种模式：audit、concept、pipeline、sync、map |
+| [`concept-design`](docs/skills/concept-design.md) | 0.4.0 | 把需求建成 concepts（purpose、operational principle、state、actions），用 sync 组合，给出依赖图与产品子集。停在模型确认——不出 PRD，不出代码 |
+| [`concept-prd`](docs/skills/concept-prd.md) | 0.3.0 | 把已确认的模型转录为集中的总体 PRD，加每概念一份共存的 `CONCEPT.md` 与一份按 flow 分节的 `SYNCS.md`。有缺口就退回建模 |
+| [`concept-implementation`](docs/skills/concept-implementation.md) | 0.4.0 | 把模型映射为模块单体：一个 concept 一个模块，sync 落在 mediator 或规则引擎，规格与代码共存。带 Rust、Java/Spring Modulith、TypeScript 说明 |
+| [`concept-audit`](docs/skills/concept-audit.md) | 0.3.0 | 只读五维审计代码与模型的偏差——漂移、边界、判据、组合、依赖——带严重度校准与修复路由 |
+| [`concept-guardrails`](docs/skills/concept-guardrails.md) | 0.27.0 | 仅显式调用；用同目录的 `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` 声明模块边界并检测规格与代码的漂移。五种模式：audit、concept、pipeline、sync、map |
 
 ### 本体与语义
 
@@ -66,7 +66,7 @@ npx skills add ontology-of-everything/SemanticSkills \
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills \
-  --skill jackson-concept-design jackson-concept-prd wyx-zh-cn \
+  --skill concept-design concept-prd concept-guardrails \
   --agent cursor codex \
   --global --copy -y
 ```
@@ -84,12 +84,12 @@ npx skills add ./skills/<skill-name> --skill <skill-name> --agent cursor --copy 
 
 ## 用法
 
-技能通常按 description 自动触发，正常说话就够。在 Codex 中 `wyx-zh-cn` 例外，必须显式指名：
+技能通常按 description 自动触发，正常说话就够。在 Codex 中 `concept-guardrails` 例外，必须显式指名：
 
 ```text
-把这个需求建成概念模型                      → jackson-concept-design
-模型定了，出一份 PRD 规格                   → jackson-concept-prd
-$wyx-zh-cn 给 src/orders 写概念规格，然后查漂移
+把这个需求建成概念模型                      → concept-design
+模型定了，出一份 PRD 规格                   → concept-prd
+$concept-guardrails 给 src/orders 写概念规格，然后查漂移
 把这套接口做成语义层                        → semantic-creator
 3 月华为云为什么扣了这笔                     → huawei-cloud-billing-scout
 ```

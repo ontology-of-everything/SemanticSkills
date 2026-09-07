@@ -9,11 +9,11 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
 | semantic-sce-creator | [qa/semantic-sce-creator/CHANGELOG.md](qa/semantic-sce-creator/CHANGELOG.md) |
-| jackson-concept-design | [qa/jackson-concept-design/CHANGELOG.md](qa/jackson-concept-design/CHANGELOG.md) |
-| jackson-concept-prd | [qa/jackson-concept-prd/CHANGELOG.md](qa/jackson-concept-prd/CHANGELOG.md) |
-| jackson-concept-implementation | [qa/jackson-concept-implementation/CHANGELOG.md](qa/jackson-concept-implementation/CHANGELOG.md) |
-| jackson-concept-audit | [qa/jackson-concept-audit/CHANGELOG.md](qa/jackson-concept-audit/CHANGELOG.md) |
-| wyx-zh-cn | [qa/wyx-zh-cn/CHANGELOG.md](qa/wyx-zh-cn/CHANGELOG.md) |
+| concept-design | [qa/concept-design/CHANGELOG.md](qa/concept-design/CHANGELOG.md) |
+| concept-prd | [qa/concept-prd/CHANGELOG.md](qa/concept-prd/CHANGELOG.md) |
+| concept-implementation | [qa/concept-implementation/CHANGELOG.md](qa/concept-implementation/CHANGELOG.md) |
+| concept-audit | [qa/concept-audit/CHANGELOG.md](qa/concept-audit/CHANGELOG.md) |
+| concept-guardrails | [qa/concept-guardrails/CHANGELOG.md](qa/concept-guardrails/CHANGELOG.md) |
 
 ## 3.14.0 - 2026-08-28
 

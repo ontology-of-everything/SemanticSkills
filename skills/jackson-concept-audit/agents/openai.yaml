@@ -1,4 +1,0 @@
-interface:
-  display_name: "Jackson Concept Audit"
-  short_description: "五维审计存量工程：漂移、边界、判据、组合、依赖，只读输出修复路由"
-  default_prompt: "Use $jackson-concept-audit to audit the codebase against its concept model: spec drift, boundary violations, criteria review, composition issues, and dependency rules. Read-only; output findings with fix routing."

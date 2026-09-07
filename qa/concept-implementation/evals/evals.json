@@ -1,0 +1,16 @@
+{
+  "skill_name": "concept-implementation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "概念模型已经确认。请按 Jackson 映射把它落地成模块单体，目标语言是 TypeScript。不要重开概念讨论。",
+      "expected_output": "A modular-monolith mapping: one package per concept, syncs as mediators in the composition layer, TypeScript notes loaded, concept modules mutually unreferenced.",
+      "assertions": [
+        "Each concept maps to one compilation unit and concept packages do not depend on each other.",
+        "Syncs are placed in the composition layer as mediators or a rule engine, not inside concept modules.",
+        "The TypeScript reference is used; Rust and Java notes are not loaded as the working language.",
+        "Concept-boundary questions are sent back to concept-design instead of being redesigned here."
+      ]
+    }
+  ]
+}

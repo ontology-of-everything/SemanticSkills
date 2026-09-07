@@ -1,0 +1,17 @@
+{
+  "skill_name": "concept-design",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我们要做一个团队共享书签产品。成员可以保存链接、给链接加标签，并订阅某个标签的新内容。请先做概念设计，暂时不要写 PRD 或代码。",
+      "expected_output": "A concept model that separates independently purposeful concepts, defines each through purpose, operational principle, state, and actions, and composes cross-concept behavior through synchronizations.",
+      "assertions": [
+        "The response identifies user needs and misfits before settling concept boundaries.",
+        "Each retained concept has exactly one purpose and an end-to-end operational principle.",
+        "State and actions specify behavior without UI, protocol, database, or code details.",
+        "Cross-concept triggers appear in synchronizations rather than inside concept definitions.",
+        "The response stops at model confirmation and does not generate a PRD, architecture, or implementation."
+      ]
+    }
+  ]
+}

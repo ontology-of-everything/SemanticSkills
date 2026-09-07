@@ -68,13 +68,13 @@ Keep frontmatter concise; put long guidance in `references/`.
 
 ## Codex UI metadata (`agents/openai.yaml`)
 
-Optional per-skill file read by the harness, not the agent ([Codex skills docs](https://developers.openai.com/codex/skills)). Present in the `jackson-concept-*` and `wyx-zh-cn` bundles:
+Optional per-skill file read by the harness, not the agent ([Codex skills docs](https://developers.openai.com/codex/skills)). Present in the `concept-*` and `concept-guardrails` bundles:
 
 ```yaml
 interface:
   display_name: "Jackson Concept Design"   # required when the file exists
   short_description: "..."                 # required, 25–64 chars
-  default_prompt: "Use $jackson-concept-design to ..."   # must name the skill as $name
+  default_prompt: "Use $concept-design to ..."   # must name the skill as $name
 ```
 
 Add `policy.allow_implicit_invocation: false` only when a skill should stay out of automatic selection and be invoked as `$name`. Keep values consistent with `SKILL.md`; regenerate when the description changes.

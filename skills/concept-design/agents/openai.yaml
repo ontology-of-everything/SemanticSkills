@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jackson Concept Design"
+  short_description: "用 Jackson 的 Purpose、OP、State、Actions 与 Sync 审查需求"
+  default_prompt: "Use $concept-design to model this requirement through purposes, concepts, operational principles, state/actions, and synchronizations."

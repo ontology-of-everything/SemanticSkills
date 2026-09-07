@@ -1,0 +1,50 @@
+{
+  "skill_name": "concept-guardrails",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我给 src/payments/ 这个模块写一份概念规格。里面有 service.ts、repository.ts、refund.ts，其中 service.ts 从 ../orders/repository 直接读了订单总额。",
+      "expected_output": "A CONCEPT.md draft in the wyx format that declares purpose, state, actions, operational principle, and boundaries, plus an explicit boundary-violation finding for the direct orders/repository import.",
+      "assertions": [
+        "回答按 wyx 的 CONCEPT.md 结构给出草案，至少包含 purpose、state、actions、operational principle 四段。",
+        "把 service.ts 直接引用 ../orders/repository 标为边界破坏，并指出应通过 Orders 声明的动作访问。",
+        "在落盘之前先呈现草案并征求用户确认，而不是直接写文件。",
+        "纯编排型函数不被声明为概念动作。"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "查一下我们项目的规格漂移。",
+      "expected_output": "A two-phase drift run: a read-only structured drift report with per-spec findings grouped by severity, cross-spec reference validation, and only then a request to choose fix direction.",
+      "assertions": [
+        "第一阶段只做审计并呈现报告，不在未确认的情况下修改规格或代码。",
+        "发现按 Critical / High / Medium / Low 分组，且严重度取自检查表而非自行升级。",
+        "逐份规格结果之后给出跨规格引用校验。",
+        "对每份有漂移的规格询问是改规格还是改代码，并提示哪一边看起来更新。",
+        "报告之后提出记录 .claude/wyx-drift-history.jsonl 的 detect 记录。"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "这个项目还没有任何规格，我想开始用 wyx，从哪儿下手？",
+      "expected_output": "An audit-first response: a read-only coverage scan that lists uncovered modules, pipeline/sync candidates, and a dependency-ordered command plan, without generating any spec files.",
+      "assertions": [
+        "先走审计模式，而不是直接挑一个模块生成规格。",
+        "全程只读，不产出任何 CONCEPT.md / PIPELINE.md / SYNCS.md 文件。",
+        "输出按依赖顺序分阶段排列的命令清单，叶子模块在前。",
+        "跳过纯类型定义、工具函数、schema 等缺乏状态归属的目录，并说明跳过理由。"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "我们的 sync 目录 src/syncs/ 下有十来个处理器，帮我理清它们之间的协调关系。",
+      "expected_output": "A single SYNCS.md draft with a coordination graph, dispatching section, and per-sync blocks declaring trigger, timing, flow, qualification, and error strategy.",
+      "assertions": [
+        "所有 sync 流写进同一份 SYNCS.md，不拆分成多个文件。",
+        "每个 sync 归类为动作后、前置校验或定时三种时机之一。",
+        "错误策略与时机模式一致：动作后隔离，前置校验传播。",
+        "sync 内部为访问其他概念数据而直接引入数据库的做法被标为边界问题。"
+      ]
+    }
+  ]
+}
