@@ -4,6 +4,9 @@ description: >-
   Extracts callable scenes, concepts, and entities from source text for personal knowledge management in two rounds:
   skeleton with human confirmation, then IPO / decomposition / assembly and relations; concept is the hub.
   Use when 知识萃取、个人知识管理、PKM、semantic-pkm-creator、sce、三层萃取、IPO、场景/概念/实体.
+metadata:
+  openclaw:
+    homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/semantic-pkm-creator
 ---
 
 # 场景-概念-实体萃取（PKM）

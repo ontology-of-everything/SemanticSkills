@@ -31,8 +31,23 @@ skills/semantic-pkm-creator/
 ```
 
 ```bash
+npx skills add ontology-of-everything/SemanticSkills \
+  --skill semantic-pkm-creator \
+  --agent cursor \
+  --copy -y
+```
+
+Local checkout:
+
+```bash
 npx skills add ./skills/semantic-pkm-creator \
   --skill semantic-pkm-creator \
   --agent cursor \
-  --copy
+  --copy -y
 ```
+
+## Marketplaces
+
+- [skills.sh](https://skills.sh/ontology-of-everything/SemanticSkills/semantic-pkm-creator)
+- [SkillsMP](https://skillsmp.com/) — repo topics `claude-skills`, `claude-code-skill`
+- [ClawHub](https://clawhub.ai/agenticweb4/semantic-pkm-creator)

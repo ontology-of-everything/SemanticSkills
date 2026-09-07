@@ -1,0 +1,34 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Concept design",
+      "description": "Requirements to modules via concepts and synchronizations: design, PRD, implementation, audit, and colocated spec guardrails.",
+      "skills": [
+        "concept-design",
+        "concept-prd",
+        "concept-implementation",
+        "concept-audit",
+        "concept-guardrails"
+      ]
+    },
+    {
+      "title": "Ontology and semantics",
+      "description": "Evidence-only semantic layers and personal-knowledge extraction.",
+      "skills": [
+        "semantic-creator",
+        "semantic-pkm-creator"
+      ]
+    },
+    {
+      "title": "Huawei Cloud",
+      "description": "Community-maintained, read-only by default FinOps, quoting, and real-name onboarding via KooCLI/BSS.",
+      "skills": [
+        "huawei-cloud-billing-scout",
+        "huawei-cloud-cost-estimation",
+        "huawei-cloud-account-onboarding"
+      ]
+    }
+  ]
+}

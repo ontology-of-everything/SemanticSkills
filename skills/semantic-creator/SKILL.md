@@ -4,6 +4,8 @@ description: Builds evidence-only Kimball semantic layers from APIs, CLIs, or ta
 license: Apache-2.0
 metadata:
   version: "0.5.1"
+  openclaw:
+    homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/semantic-creator
 ---
 
 # Semantic Creator（接口 → 语义层 元技能）

@@ -60,7 +60,10 @@ metadata:
 - **SkillsMP**: public GitHub repo with `SKILL.md` frontmatter. Keep GitHub
   topics `claude-skills` and `claude-code-skill` on the monorepo; indexing is
   crawler-driven (no submit API)—recheck search after push.
-- **skills.sh**: same layout; promote `npx skills add <org>/SemanticSkills --skill <name> -y` in README; optional badge `https://skills.sh/b/<org>/SemanticSkills`.
+- **skills.sh**: listing is telemetry from `npx skills add <org>/SemanticSkills`
+  (no submit API). Promote that install in README; optional badge
+  `https://skills.sh/b/<org>/SemanticSkills`. Group the repo page with root
+  [`skills.sh.json`](../skills.sh.json) (display-only; does not change the CLI).
 - **ClawHub**: publish from `skills/<name>/` with `clawhub skill publish`.
   Declare `metadata.openclaw` so scans match runtime behavior.
 
