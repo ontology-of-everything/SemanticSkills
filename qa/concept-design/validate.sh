@@ -39,7 +39,7 @@ check_skill_layout() {
 # 流程步骤按需加载的参考文件必须存在，且 SKILL.md 的「参考」表指得到实处。
 check_references() {
   local ref
-  for ref in criteria sync-notation sources; do
+  for ref in criteria sync-notation example-reserving sources; do
     [[ -f "$SKILL_DIR/references/$ref.md" ]] || fail "missing reference: references/$ref.md"
     rg -q "references/$ref\.md" "$SKILL_DIR/SKILL.md" || fail "SKILL.md does not route to references/$ref.md"
   done

@@ -1,68 +1,66 @@
-# 组合：Sync 记法、语义、信号、依赖图
+# Sync 语义与组合检查
 
-流程第 5 步「组合再设计」读本文。Sync 是概念之外的独立组合层：按因果规则，某些动作发生后引发另一些动作。概念规范不点名其他 concepts；组合只写在 app 级的 syncs。
+概念之间保持独立，应用级 sync 把动作完成关联为后续调用。以下采用因果规则；具体符号和查询接口是本仓规格约定，不能与论文或引擎语法逐字等同。
 
-## 记法（when / where / then，作者现行版）
+## 一个有绑定来源的例子
 
-示例改写自 Daniel Jackson 的 ExpiringUserSession：
+示意契约：Session.start 返回 session；ExpiringResource.allocate 接收 resource；Requesting 的请求有 request 身份。错误 case 必须由对应动作实际声明。
 
 ```text
-app ExpiringUserSession
-  include User
-  include Session [User.User]
+app ExpiringSession
+  include Session [U]
   include ExpiringResource [Session.Session]
 
-  sync login
-    when Requesting.login (name, pass)
-    where User._authenticate (name, pass) : (user)
-    then Session.start (user), ExpiringResource.allocate (session, 300)
+  sync start
+    when Requesting.login (request: r, user: u)
+    then Session.start (user: u)
 
-  sync loginFailed
-    when Requesting.login (name, pass)
-    where User._authenticate (name, pass) : (error)
-    then Requesting.respond (error)
+  sync expireLater
+    when Session.start (user: u) : (session: s)
+    then ExpiringResource.allocate (resource: s, ttl: 300)
 
-  sync terminate
-    when ExpiringResource.expire (resource)
-    then Session.end (resource)
+  sync success
+    when Requesting.login (request: r),
+         Session.start () : (session: s)
+    then Requesting.respond (request: r, session: s)
+
+  sync failure
+    when Requesting.login (request: r),
+         Session.start () : (error: e)
+    then Requesting.respond (request: r, error: e)
 ```
 
-## 语义规则
+多 when 必须属于同一 flow/因果实例，不能任意拼接并发请求的历史。上例省略身份验证、allocate 失败与到期动作，仅说明数据依赖拆规则，不能直接作为完整登录方案。
 
-- **when** 匹配已完成的动作（completion）及其输出；参数全部具名，允许只匹配子集。
-- **where** 经 queries 读取概念状态并绑定变量；绑定不成立则本条 sync 不触发。
-- **then** 触发新的动作调用（invocation）；绑定变量跨段传递，sync 同时是数据流。
-- **外部请求也是动作**：端点、定时器等外部入口具体化为 `Requesting` 伪概念的动作，由 sync 接力，响应同样由 sync 产生；应用动作 = 由 Requesting 触发的 sync。
-- **错误即输出**：动作失败输出 `(error: …)` 这个普通的可匹配 case，由错误 sync 响应或补偿，不需要事务语义。
-- **行为保持**：sync 只能调用概念已声明的动作、只能经 queries 读状态，不能使概念做出孤立时不可能的行为；组合因此不破坏一致（Integrity）。
-- **旧版语义已废弃**：书（2021）的 CSP 对称约束与"全有或全无"事务语义被作者本人放弃（Beyond Objects：设计者难理解、实现需事务）。存量模型的旧记法按本节改写。
-- 未被任何 sync 提及的概念动作不在应用中出现；排除是设计决策（Yellkey 不开放 renew），记入排除与未决表。
-- **实现层**由 mediator 或规则引擎落地 sync：组合层引用概念，概念之间零相互引用。
+## 匹配、绑定与执行
 
-## 结构：flow 与同步图
+- **when** 匹配已完成动作及其输出，允许匹配部分具名参数；多个模式共同匹配。保留完成事件身份与 flow 关联，避免重复或跨请求组合。
+- **where** 求只读查询及关系/过滤条件，产生零、一或多组绑定。读取本仓概念状态只走声明 query。零行表示不触发；如果需要拒绝响应，必须另有可匹配分支，不能凭空给 query 添加 `(error)`。
+- **then** 对每组绑定发出动作调用。各调用使用 when/where 已绑定值或常量；同一 then 中前一调用的未来输出不能供后一调用使用，应在新 sync 的 when 匹配其完成。
+- **错误** 是已声明的输出 case，可由 sync 响应、重试或补偿；预期拒绝与运行时故障分开建模。失败不意味自动回滚已完成动作。
+- **行为保持**：只使用概念自身允许的动作/状态转移。接口访问是必要条件，还须满足前置条件、原子性及并发约束；query 检查不能替代写动作原子维护不变量。
+- 引擎应按选定语义抑制同一完成事件组合的重复触发，并保留溯源。它不自动保证外部副作用 exactly-once；重放/投递重试另需幂等与持久记录。
 
-- **Flow**：一个 `Requesting` 入口动作触发、多条细粒度 sync 接力的动作链。sync 按 flow 分组书写；每个 flow 至少有成功路径的响应 sync，可失败动作另有匹配 `(error)` 的错误 sync（或记入排除表）。flow 是后续 PRD（`SYNCS.md` 按 flow 分节）与实现（每 flow 一个 mediator）的拆解原子。
-- **同步图（coordination graph）**：每条 sync 一条边 `[Source.action] --(syncName)--> [Target.action]`；then 触发多个动作时一条 sync 多条边。它回答"谁触发谁"，与依赖图（"没有谁就不能有谁"）不同：同步图有边 A→B 不意味着 A 依赖 B——依赖只在应用层由 extrinsic 判断。
-- **级联**：sync 触发的动作可再触发 sync；设计层不限方向、不禁环，但每个环都要能说出终止条件，实现层声明级联深度上限。
-- **设计信号**：一个 flow 触达概念过多（经验 ≥5）或一条 sync 长成多步脚本 → 分解线索，回第 4 步；一组 sync 需要自有状态才能工作 → 升格为概念的信号。
+书版的对称/事务同步与当前因果规则不同；升级既有模型需核对其原子性与可观察行为，不能机械改写。mediator 或规则引擎只要保持这些语义都可落地。
 
-## 模式与信号
+## Flow、图与覆盖
 
-- **Placeholder 动作**：为同步而设计的概念提供占位动作，钉到其他概念的真实动作上——访问控制的 access、订阅的 notify。
-- **欠同步**：漏掉的自动化（Zoom 举手不随发言结束自动放下）→ tighten。
-- **过同步**：自动化抢走用户控制（日历删除事件即向邀请人发拒绝）→ loosen 或做成可配置。
-- **分解线索**：表面单概念、目的冲突，常是多概念同步（Facebook Like ≈ Upvote、Reaction 等的 sync）；回流程第 4 步拆分。
-- **Flow**：打穿概念的业务流程 = 一个外部请求触发、多条细粒度 sync 接力的动作链；流程本身不是另立概念的理由，升格判据见误判速查表末行。
-- **Synergy**：一个概念借另一概念实现自身功能，整体大于部分之和（Trash 做成 Folder，移动动作免费获得还原）；强求则反噬（Outlook 把系统日志装进邮件文件夹）。
+运行时 **flow** 是一个外部事件引发的因果执行实例。HTTP 请求可建模为 `Requesting`，定时/消息也可有明确的入口动作；不要求所有后台事件伪装成请求。
 
-## 依赖图与子集
+本仓用 `// flow:` 按入口/规则职责组织文档；一段分组覆盖多个运行时实例，共享规则可服务多个入口，不复制规则身份。需要同步响应的请求应覆盖成功、拒绝与故障策略并检查恰当关联；后台链允许无响应。未使用动作列入应用级排除表。
 
-- **Intrinsic dependency**：concept 定义引用另一 concept——必须消除（参数化或移至 sync）。
-- **Extrinsic dependency**：在具体应用中，没有 C2 则纳入 C1 没有意义（Comment 依赖 Post）；可以存在，但不写进 C1 的定义。
+**同步图** 每条 sync 一个规则节点：多个 when 连入、多 then 连出，where 以查询依赖另标。普通 A→B 图是有损简图，必须保留规则名与合取说明；它不表达“没有 B 就不能纳入 A”。循环合法，但需终止条件或有意持续运行的控制策略；深度上限只是工程保护，截断必须可观察。
 
-以 extrinsic 依赖画图（Parnas 的 uses relation）：节点为概念，边 C1 → C2 表示含 C1 的版本必须含 C2。Parnas 规则：**不能没有 B 就用 A，就永远不该想没有 B 用 A**。
+## 设计信号
 
-产出：
+- 欠同步：具体用户场景中遗漏应自动的联动 → tighten。
+- 过同步：自动化夺走需要的控制 → loosen/配置。
+- Placeholder action：用可同步的占位动作表达 access/notify 等功能；仍需明确契约。
+- Synergy：概念复用另一概念的能力带来额外价值；若扭曲被复用者的 purpose，重新拆分。
+- 多概念参与或长 flow 只是检查线索；有多个目的或自有业务状态才是重审边界的证据。溯源日志、队列不是新业务概念的充分理由。
 
-- **产品家族**：每个"不缺依赖"的概念子集是一个可行产品；用它圈定 MVP 与版本演进。
-- **顺序**：讲解与开发都先做被依赖者（先 Post 后 Comment）。
+## 依赖与产品子集
+
+Intrinsic dependency 指概念定义依赖另一概念，应通过参数化/组合消除。Extrinsic dependency 是应用选择：纳入 A 只有在纳入 B 时才有意义；在总体 PRD 写 `A → B`。
+
+Parnas 原则用于使实现限制与有意义的产品子集相符，不能以代码耦合倒推产品必须依赖。依赖闭包是候选子集的必要检查，还须核对该子集的入口、sync、目的与外部资源。分组不自动成为独立可交付产品；有环时按依赖组处理，不强行拓扑排序。

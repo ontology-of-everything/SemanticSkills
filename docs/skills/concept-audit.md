@@ -4,7 +4,7 @@
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-audit/SKILL.md`](../../skills/concept-audit/SKILL.md)。
 
-**Version:** 0.3.0 · Changelog:
+**Version:** 0.4.0 · Changelog:
 [qa/concept-audit/CHANGELOG.md](../../qa/concept-audit/CHANGELOG.md)
 
 ## 一句话
@@ -20,9 +20,9 @@
 ## 方法
 
 1. 定位规格（与代码共存的 CONCEPT.md / SYNCS.md 加 `docs/prd/`）与工程自带的模块/依赖图素材。
-2. 规格漂移按校准过的检查表逐类别对账（严重度只降不升、越级重新归类）；规格 ≥5 份时用只读子代理并行扫描。
+2. 规格漂移按校准过的检查表逐类别对账（默认类别与实际影响共同校准）；规格多时可分批或委派只读检查。
 3. 独立性：每个概念模块查互引、共享表、DTO 进签名、规格点名其他概念。
-4. 组合缺陷：对 SYNCS.md 与组合层代码过组合缺陷检查表——行为保持违规、缺错误 sync、入口无响应、冲突 / 死 sync、级联无界、欠 / 过同步、sync 积攒状态、直通概念动作等。
+4. 组合缺陷：对 SYNCS.md 与组合层代码过组合缺陷检查表——行为保持违规、缺错误 sync、入口无响应、冲突 / 死 sync、级联无界、欠 / 过同步、sync 自有业务状态、直通概念动作等。
 5. 跨规格校验 sync 引用、系统性模式聚合、跨维度合并根因，修复顺序上游优先。
 6. 全程只读，不修改任何文件。
 
@@ -39,8 +39,29 @@ skills/concept-audit/
 ```
 
 ```bash
+npx skills add ontology-of-everything/SemanticSkills \
+  --skill concept-audit \
+  --agent cursor \
+  --copy -y
+```
+
+Local checkout:
+
+```bash
 npx skills add ./skills/concept-audit \
   --skill concept-audit \
-  --agent codex \
-  --copy
+  --agent cursor \
+  --copy -y
 ```
+
+## Marketplaces
+
+- [skills.sh](https://skills.sh/ontology-of-everything/SemanticSkills/concept-audit)
+- [SkillsMP](https://skillsmp.com/) — repo topics `claude-skills`, `claude-code-skill`
+- [ClawHub](https://clawhub.ai/agenticweb4/concept-audit)
+
+## 2026-09-07 修订
+
+审计按行为与影响判定；补充绑定/合取/重放检查，消除合法循环、日志与组织方式误报。
+
+依据与检索边界见[研究记录](../references/jackson/2026-09-07-concept-research.md)。

@@ -1,6 +1,6 @@
 # Jackson 概念设计原始文献（本仓研究用镜像）
 
-`concept-*` 四技能（原 `jackson-concept-*`）2026-08-28 重构所依据的作者原文镜像与中文翻译。
+`concept-*` 技能族（原 `jackson-concept-*`）2026-08-28 重构所依据的作者原文镜像与中文翻译。
 每篇一对文件：`*.en.md`（原文抓取）与 `*.zh-CN.md`（中文全译）。
 版权归原作者（Daniel Jackson 等）；本目录仅供本仓库研究与核证引用，不作再分发。
 
@@ -36,3 +36,7 @@
   operational principle/OP、state、actions、queries）。
 - 代码块、规格示例、记法原样保留不翻译。
 - 每篇文件头注明来源 URL 与抓取日期；抓取如有截断在文末声明。
+
+## 后续核验
+
+2026-09-07 的版本核验及更近相关研究见 [concept research](2026-09-07-concept-research.md)；技能不要求加载本镜像，按需来源仍在各安装包内。

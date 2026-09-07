@@ -1,5 +1,10 @@
 # concept-implementation Changelog
 
+## 0.5.0 - 2026-09-07
+
+- 修复事务/错误处理、完成事件与并发隔离；纠正 Spring Modulith 与 Cargo 边界检查说明。
+- 核验最新相关论文，更新行为评估及文档。
+
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
 ## 0.4.0 - 2026-09-07

@@ -1,6 +1,18 @@
 # concept-design Changelog
 
+## 0.5.0 - 2026-09-07
+
+- 区分论文语义与本仓方言；修复 flow、绑定、查询空集与同步图；压缩模板并重写订位教学例。
+- 核验最新相关论文，更新行为评估及文档。
+
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
+
+## 0.4.1 - 2026-09-07
+
+### Added
+
+- `references/example-reserving.md`: filled Beyond Objects restaurant
+  example (Reserving [User, Slot], Availability [Venue], when/where/then)
 
 ## 0.4.0 - 2026-09-07
 

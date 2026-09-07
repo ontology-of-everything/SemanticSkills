@@ -1,5 +1,10 @@
 # concept-audit Changelog
 
+## 0.4.0 - 2026-09-07
+
+- 审计按行为与影响判定；补充绑定/合取/重放检查，消除合法循环、日志与组织方式误报。
+- 核验最新相关论文，更新行为评估及文档。
+
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
 ## 0.3.0 - 2026-09-07

@@ -11,6 +11,16 @@
         "Each finding includes location, evidence, severity, and a single routing target.",
         "Repair order prefers concept-design, then concept-prd, then concept-implementation."
       ]
+    },
+    {
+      "id": 2,
+      "prompt": "请只读审计：动作类型图 A.done -> B.tick -> A.done；每次剩余计数递减至0终止；引擎持久化 flow 日志；多 when 同 token 合取；规则分在不同目录；无 depth limit。规格允许这些行为，仅给上述材料。",
+      "expected_output": "A source-grounded result satisfying the behavioral assertions, with unresolved information explicitly identified.",
+      "assertions": [
+        "不单凭类型环、日志、分目录或无上限报缺陷。",
+        "区分所给事实与未读取实现的未核实项。",
+        "检查真实终止/流关联，不把因果DAG当终止证明。"
+      ]
     }
   ]
 }

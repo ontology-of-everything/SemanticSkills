@@ -26,11 +26,11 @@ English: [README.md](README.md)。
 
 | 技能 | 版本 | 做什么 |
 | --- | --- | --- |
-| [`concept-design`](docs/skills/concept-design.md) | 0.4.0 | 把需求建成 concepts（purpose、operational principle、state、actions），用 sync 组合，给出依赖图与产品子集。停在模型确认——不出 PRD，不出代码 |
-| [`concept-prd`](docs/skills/concept-prd.md) | 0.3.0 | 把已确认的模型转录为集中的总体 PRD，加每概念一份共存的 `CONCEPT.md` 与一份按 flow 分节的 `SYNCS.md`。有缺口就退回建模 |
-| [`concept-implementation`](docs/skills/concept-implementation.md) | 0.4.0 | 把模型映射为模块单体：一个 concept 一个模块，sync 落在 mediator 或规则引擎，规格与代码共存。带 Rust、Java/Spring Modulith、TypeScript 说明 |
-| [`concept-audit`](docs/skills/concept-audit.md) | 0.3.0 | 只读五维审计代码与模型的偏差——漂移、边界、判据、组合、依赖——带严重度校准与修复路由 |
-| [`concept-guardrails`](docs/skills/concept-guardrails.md) | 0.27.0 | 仅显式调用；用同目录的 `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` 声明模块边界并检测规格与代码的漂移。五种模式：audit、concept、pipeline、sync、map |
+| [`concept-design`](docs/skills/concept-design.md) | 0.5.0 | 把需求建成 concepts（purpose、operational principle、state、actions），用 sync 组合，给出依赖图与产品子集。交付模型；用户要求时继续 PRD 或代码 |
+| [`concept-prd`](docs/skills/concept-prd.md) | 0.4.0 | 把已确认的模型转录为集中的总体 PRD，加每概念一份共存的 `CONCEPT.md` 与一份按 flow 分组的 `SYNCS.md`。有缺口就退回建模 |
+| [`concept-implementation`](docs/skills/concept-implementation.md) | 0.5.0 | 把模型映射为模块单体：一个 concept 一个模块，sync 落在 mediator 或规则引擎，规格与代码共存。带 Rust、Java/Spring Modulith、TypeScript 说明 |
+| [`concept-audit`](docs/skills/concept-audit.md) | 0.4.0 | 只读五维审计代码与模型的偏差——漂移、边界、判据、组合、依赖——带严重度校准与修复路由 |
+| [`concept-guardrails`](docs/skills/concept-guardrails.md) | 0.28.0 | 仅显式调用；用同目录的 `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` 声明模块边界并检测规格与代码的漂移。六种路由：audit、concept、drift、pipeline、sync、map |
 
 ### 本体与语义
 
@@ -77,6 +77,8 @@ npx skills add ontology-of-everything/SemanticSkills \
 npx skills add ontology-of-everything/SemanticSkills --list
 npx skills add ./skills/<skill-name> --skill <skill-name> --agent cursor --copy -y
 ```
+
+收录：[skills.sh](https://skills.sh/ontology-of-everything/SemanticSkills)（分组见 [`skills.sh.json`](skills.sh.json)）· [SkillsMP](https://skillsmp.com/)（仓库 topics：`claude-skills`、`claude-code-skill`）· [ClawHub](https://clawhub.ai/)。
 
 [Hermes](docs/agents/hermes.md)：`hermes skills install ontology-of-everything/SemanticSkills/<skill-name> -y`。各 Agent 说明：[Cursor](docs/agents/cursor.md) · [Claude Code](docs/agents/claude-code.md) · [Codex](docs/agents/codex.md)。
 

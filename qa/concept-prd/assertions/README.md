@@ -6,6 +6,6 @@ Evaluate observable PRD-transcription behavior rather than exact headings.
   or exclusions.
 - Model gaps route back to `concept-design` instead of being filled in
   the documents.
-- Each concept gets its own sub-PRD that does not name other concepts.
+- Each concept gets its own sub-PRD that does not depend on other concept definitions; same-named local parameters are valid.
 - Syncs are grouped by flow, not by domain directory.
-- Acceptance scenarios trace to operational principles; no code is written.
+- Acceptance scenarios trace to principles or action/state contracts; no code is written.

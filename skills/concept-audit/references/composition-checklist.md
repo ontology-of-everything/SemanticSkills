@@ -1,39 +1,28 @@
 # 组合缺陷检查表
 
-流程第 4 步（组合缺陷维度）读本文。对象是 sync 层——`SYNCS.md` 与组合层代码（mediator 函数 / 规则引擎规则 / 接口适配器）。概念自身的独立性归「独立性」维度；这里只查概念**如何被组合**。
+检查 SYNCS、mediator/引擎及接口适配器。采用 WYSIWID 因果语义：when 匹配完成事件，where 产生绑定，then 发起调用；多 when 保持同 flow，错误须有声明。本仓使用公开 query API 读取状态是封装约定；论文也允许公开抽象状态关系，不把这种合法读法误报为理论违规。
 
-判据来自 sync 的因果语义：when 匹配已完成动作、where 只经 queries 读状态、then 触发已声明动作；应用动作 = `Requesting` 触发的 sync；错误是可匹配输出。凡违背其中一条即缺陷。
-
-## 检查表
-
-| 类别 | 如何识别 | 严重度 | 路由 |
+| 类别 | 需要的证据 | 默认严重度 | 路由 |
 | --- | --- | --- | --- |
-| **行为保持违规** | sync 调用概念未声明的动作，或绕过 queries 直读概念内部状态 | High | 规格漏声明 → `concept-design`；代码越权 → `concept-implementation` |
-| **隐式组合** | 跨概念联动写在某个概念内部（概念 A 的 action 里触发 B），未以 sync 声明 | Critical | `concept-implementation`（同时记入独立性维度） |
-| **缺错误 sync** | 可失败动作的 `(error: …)` case 无 sync 匹配，且未记入排除表 | High | `concept-design` |
-| **入口无响应** | `Requesting` 入口触发的 flow 没有成功路径或错误路径的响应 sync | High | `concept-design` |
-| **冲突 sync** | 同一 when 触发的多条 sync，then 效果互斥或结果依赖执行顺序 | High | `concept-design` |
-| **死 sync** | when 匹配的动作没有任何 flow / 入口会产生 | Low | `concept-prd`（规格过期）或 `concept-design` |
-| **级联无界** | sync 链成环，或实现未声明级联深度上限 | High | `concept-implementation` |
-| **欠同步** | 用户需手工重复本应自动的联动（规格与代码都缺） | Medium | `concept-design` |
-| **过同步** | 自动化抢走用户控制且不可关闭 / 配置 | Medium | `concept-design` |
-| **sync 含业务不变量** | 组合层里出现本属概念 domain 的校验或规则 | Medium | `concept-implementation` |
-| **sync 积攒状态** | 组合层持有自有持久状态（升格为概念的信号） | High | `concept-design` |
-| **直通概念动作** | 外部 API / 端点直接调用概念动作，不经 sync | Critical | `concept-implementation` |
-| **排除动作被组合** | 模型标为排除的动作被 sync 调用或经 API 暴露 | High | `concept-design` |
-| **flow 拆散或同步图不符** | 同一 flow 的 sync 散落多处；同步图与 sync 块 / 代码不一致 | Medium | `concept-prd` |
-| **流程脚本化** | 一条 sync 长成多步流程，或一个 flow 触达概念过多（经验 ≥5） | Medium | `concept-design`（分解线索：可能缺概念） |
-| **synergy 反噬** | 概念借用另一概念实现功能后，被借用方的 purpose 被扭曲 | Medium | `concept-design` |
+| 行为保持违规 | 调用不在概念允许行为内，绕过前置条件或私有状态边界 | High | implementation；模型缺契约则 design |
+| 隐式组合 | 概念 A 内直接调用 B，包含公开 API 互调 | High | implementation |
+| 错误/响应缺口 | 可达结果无处理策略，或需要响应的请求会悬挂/串请求 | High | design / implementation |
+| 绑定错误 | then 使用未绑定或未来输出；零/多 query 结果处理不符契约 | High | design / implementation |
+| 合取/flow 错误 | 多 when 被实现成任一触发，或完成事件来自不同请求 | High | implementation |
+| 冲突 sync | 可共同触发的效果造成可复现的不合法结果/顺序依赖 | High | design |
+| 重放缺陷 | 重复匹配/投递造成不允许的重复副作用 | High | implementation |
+| 死 sync | 证明所有支持入口均无法产生其触发事件 | Low | prd / design |
+| 级联无界 | 可达循环持续产生新动作且无终止或受控运行策略 | High | design / implementation |
+| 欠/过同步 | 用户场景证明漏联动或控制被自动化夺走 | Medium | design |
+| 不变量错位 | 只在组合查询校验本应由概念动作原子保持的不变量 | High | implementation |
+| sync 自有业务状态 | 编排积累独立目的及业务生命周期 | Medium | design |
+| 直通动作 | API 绕过已确认认证/协调约束；补充实际影响 | High | implementation |
+| 排除动作被使用 | 有应用级明确排除决策，实际路径仍可达 | High | implementation / design |
+| 图/规格不符 | 派生图丢失合取、查询/触发混淆或引用错误 | Medium | prd |
+| synergy 反噬 | 组合扭曲概念原 purpose，并有用户场景 | Medium | design |
 
-## 校准
+采用 [漂移校准](drift-checklist.md#严重度校准)。以下不单独构成缺陷：类型级图成环、未设 depth limit、flow 触达 ≥5 个概念、规则分散目录、后台无 HTTP 响应、运行时持久日志。检查实际行为及本项目约定；循环发生图可以仍是 DAG，DAG 也不保证终止。
 
-- 严重度逐字采用表中取值；比类别更严重的发现重新归类，不在类别内升级。
-- 「规格的沉默不是漂移」同样适用：规格未提的 sync 是未记录（归漂移维度的 Missing sync），不是组合缺陷；只有违背因果语义或用户可感的联动缺失才算缺陷。
-- 欠 / 过同步是设计判断：报告时必须写出用户视角的场景（谁在什么时候被迫手工做什么 / 被抢走什么控制），无场景不报。
-- 报 Medium 及以上前，用 grep 或读文件确认发现存在于**当前**代码。
+错误可响应、重试、补偿或有意忽略，不强制每种输出各一条错误 sync。完整读过支持入口后才能判死规则；未扫描的路径标未核实。查询接口合法也不自动保证系统性质或活性。
 
-## 与其他维度的分工
-
-- 概念模块互引、共享表、DTO 进签名、规格点名其他概念 → **独立性**维度。
-- `SYNCS.md` 引用的动作在目标 `CONCEPT.md` 不存在 → **规格漂移**的跨规格校验；若代码里该调用真实发生且动作未声明，同时记一条**行为保持违规**。
-- 依赖图与代码不符、Parnas 违规 → **依赖与子集**维度。
+同一根因在独立性/漂移/组合检查重复时合并；报告保留来源位置、行为证据、用户后果和唯一的当前修复步骤。

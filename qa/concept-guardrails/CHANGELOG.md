@@ -1,5 +1,10 @@
 # concept-guardrails Changelog
 
+## 0.28.0 - 2026-09-07
+
+- 统一 Jackson/wyx 消费规则；修复地图遗漏与新鲜度、只读历史冲突、重复授权及严重度；压缩共用流程。
+- 核验最新相关论文，更新行为评估及文档。
+
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
 ## 0.27.0 - 2026-09-07

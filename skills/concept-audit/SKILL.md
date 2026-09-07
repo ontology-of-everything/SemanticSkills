@@ -1,76 +1,45 @@
 ---
 name: concept-audit
-description: Audits a codebase against its concept model (Daniel Jackson's concept design)—are concepts truly independent, is their sync composition free of defects—plus spec drift, criteria, and dependency integrity, with calibrated severities and fix routing. Use whenever the user asks to audit a concept model, 概念审计, or mentions concept-audit; read-only.
+description: Audits code against a Daniel Jackson concept model for independence, composition defects, spec drift, design criteria, and product dependencies. Use when the user requests 概念审计 or concept-audit; read-only, with evidence and repair routing.
+metadata:
+  openclaw:
+    homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/concept-audit
 ---
 
 # 概念审计
 
-## 目标
+只读对照概念模型与代码，回答独立性和组合正确性，并检查漂移、判据与产品子集。输出带证据、影响与修复路由的报告；不修改文件。无规格时只审可验证的代码性质，注明不能判断的契约。
 
-输入：概念规格（与代码共存的 `CONCEPT.md` / `SYNCS.md`，以及集中 PRD 目录下的总体 PRD——两处都找）+ 代码库。输出：带证据与路由的发现清单和修复顺序。**只读**：不修改任何文件；修复由路由到的技能执行。无规格文档时降级为纯独立性、组合与判据审计，并在报告中声明。
+## 执行
 
-审计回答两个主问题：**概念是否真独立**（每个概念离开其他概念仍可理解、可实现、可测试），**概念的组合是否有缺陷**（sync 层是否违背因果语义、漏掉联动或抢走控制）。其余三维为这两问提供证据。
+1. **范围**：查全部 CONCEPT/SYNCS、总体 PRD 及其暂存规格链接，读取当前实现与测试。记录版本、方言、覆盖与未核实部分。
+2. **漂移**：读 [drift-checklist.md](references/drift-checklist.md)，逐规格/实现对账，含 schema、动作/query 签名与错误 case。规格多时按该文分批扫描。
+3. **独立性**：逐概念核对互引（包括公开 API）、共享可变状态、私有实现访问、传输类型污染及定义依赖。局部类型参数同名不算引用另一概念。
+4. **组合**：读 [composition-checklist.md](references/composition-checklist.md)，检查完成事件、绑定、flow 合取/隔离、失败、重放、循环与用户联动。
+5. **判据**：以单一目的、完整行为、独立性、熟悉性检查 conflation/fragmentation；新颖与基础设施身份本身不是缺陷，先明确使用者（含 API 程序员）与价值。
+6. **依赖/子集**：分别核验 PRD 产品依赖与代码约束；用具体合理子集判断是否被不当耦合阻断，并检查其剩余 sync/入口与构建支持。不能要求产品图与代码图同构。
+7. **聚合**：跨规格核对 include、动作/query、参数、输出与图。合并同一根因，保留受影响位置；未执行类别不算通过。
 
-## 原则
-
-1. 每条发现有位置与证据，可独立复核；无「疑似」空泛项。
-2. 严重度逐字出自检查表；只降不升，越级则重新归类。
-3. 规格的沉默不是漂移：只有针对规格明确陈述的矛盾、或违背因果语义的组合才算问题。
-4. 每条发现唯一路由；修复顺序上游优先——先模型（design）、再文档（prd）、后代码（implementation）。
-5. 报 Medium 及以上前，用 grep 或读文件确认发现存在于**当前**代码。
-
-## 流程
-
-1. **定位规格**：Glob 找全部 `CONCEPT.md` / `SYNCS.md` 与集中 PRD 目录；同时利用工程自带素材（Spring Modulith `Documenter` 文档、cargo / dependency-cruiser 依赖图）。
-2. **规格漂移**：读 `references/drift-checklist.md`，每份规格连同其实现代码过检查表；规格 ≥5 份时按该文「并行扫描」派发。
-3. **独立性**：每个概念模块查——互引其他概念模块、共享表或全局数据模型、DTO / 传输类型进签名、规格四节点名其他概念或含 interactions / dependencies 段。
-4. **组合缺陷**：读 `references/composition-checklist.md`，对 `SYNCS.md` 与组合层代码逐类别判定。
-5. **判据重审**：用资格五条与四词审存量模块——一模块多目的（conflation）、目的碎片化（fragmentation）、无理由背离熟悉概念、非 user-facing 的基础设施被当成概念。
-6. **依赖与子集**：总体 PRD 依赖图 ↔ 代码实际依赖；Parnas 违规（合理子集被不当依赖阻断）；MVP 子集能否裁剪构建。
-7. **跨规格校验与聚合**：`SYNCS.md` 引用的动作 / 查询逐一在目标 `CONCEPT.md` 核对；同一问题跨维度出现时合并指向根因；同一类别 + 描述出现在 3 份以上规格时归为系统性问题。
-8. **输出报告**（模板见下），逐条核对「命题」。
-
-## 命题
-
-- 五维度全部执行，或明确声明跳过原因；每个检查类别有判定或标「未核实」。
-- 每条发现有位置、证据、严重度、路由四项，严重度出自检查表且遵守校准。
-- 独立性维度对每个概念模块给出结论（独立 / 违规 + 证据）。
-- 组合缺陷维度对每个 flow 给出结论；欠 / 过同步的发现附用户视角场景。
-- 系统性模式合并陈述，不逐条重复；修复顺序按上游优先排列。
-- 未修改任何文件。
-
-## 记法与模板
-
-| 维度 | 问题 | 发现路由 |
-| --- | --- | --- |
-| 规格漂移 | 规格 ↔ 代码是否仍一致 | 文档过期 → `concept-prd`；模型过期 → `concept-design`；代码缺陷 → `concept-implementation` |
-| 独立性 | 概念是否真独立 | 代码耦合 → `concept-implementation`；规格点名 → `concept-prd` / `concept-design` |
-| 组合缺陷 | sync 层是否违背因果语义、漏联动、抢控制 | 模型层 → `concept-design`；代码层 → `concept-implementation` |
-| 判据重审 | 存量模块是否够格为概念 | `concept-design` |
-| 依赖与子集 | 依赖图是否真实、子集是否可裁剪 | `concept-design` |
+## 报告
 
 ```markdown
 # 审计报告 <日期>
-范围: <规格版本 / 代码版本>；跳过的维度及原因
-Summary: 规格 <N> 份，有漂移 <N> 份；Critical <N> / High <N> / Medium <N> / Low <N>
+范围：<规格/代码版本、未核实与跳过原因>
+Summary：<覆盖数量、发现数、严重度分布>
 
-## <维度名>
-| 发现 | 位置 | 证据 | 严重度 | 路由 |
+| 维度/发现 | 位置 | 当前证据及影响 | 严重度 | 修复路由 |
+| --- | --- | --- | --- | --- |
 
-## 跨规格校验
-（同表结构）
+## 独立性与组合覆盖
+<每个概念、入口/规则组的结论或未核实项>
 
-## 系统性模式
-- <出现在 3+ 份规格的同类问题，合并陈述并给批量处理建议>
+## 跨规格与系统性模式
+<合并根因并列受影响路径>
 
 ## 修复顺序
-1. <根因级发现，上游优先>
+<模型 → 文档 → 代码，按实际根因决定>
 ```
 
-## 参考
+严重度按漂移参考中的影响规则校准；规格沉默不等于禁止，新增遗漏与矛盾分开。没有当前证据不报 Medium 以上；只有完整核验后才断言不存在。每条发现一个当前修复目标：模型 → concept-design；文档 → concept-prd；代码 → concept-implementation。存在连续修复阶段时列依赖顺序，不让路由替代根因判断。
 
-| 何时读 | 文件 |
-| --- | --- |
-| 流程第 2 步：CONCEPT.md / SYNCS.md / 跨规格检查表、严重度校准、并行扫描派发 | `references/drift-checklist.md` |
-| 流程第 4 步：组合缺陷检查表与校准 | `references/composition-checklist.md` |
-| 核验判据出处 | `references/sources.md` |
+交付须覆盖五维、逐概念独立性与逐入口/规则组组合结论，或注明不足。欠/过同步附用户场景；报告全程只读。核验判据出处时读 [sources.md](references/sources.md)；安装包不依赖伴生技能文件才能审计。

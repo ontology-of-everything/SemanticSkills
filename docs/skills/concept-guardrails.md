@@ -4,7 +4,7 @@
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-guardrails/SKILL.md`](../../skills/concept-guardrails/SKILL.md)。
 
-**Version:** 0.27.0 · Changelog:
+**Version:** 0.28.0 · Changelog:
 [qa/concept-guardrails/CHANGELOG.md](../../qa/concept-guardrails/CHANGELOG.md)
 
 ## 一句话
@@ -37,14 +37,13 @@
 
 ## 与上游的差异
 
-本技能是 [jlifyio/wyx](https://github.com/jlifyio/wyx) v0.26.0 的中文改写版，遵循上游 MIT 许可（`skills/concept-guardrails/LICENSE.upstream`）。改动仅限于形式，不改判断规则：
+本技能是 [jlifyio/wyx](https://github.com/jlifyio/wyx) v0.26.0 的中文改写版，遵循上游 MIT 许可（`skills/concept-guardrails/LICENSE.upstream`）。本次适配同时修正语义与执行规则：
 
-- 上游是 Claude Code 插件的 5 个斜杠命令；这里合并成 1 个技能，`SKILL.md` 做模式路由，完整程序放在 `references/`。
-- 上游 `skills/concept/references/drift-detection.md` 平移为 `references/drift-detection.md`，检查表与严重度取值逐条保留。
-- 上游派发子 agent 时写死 `model: 'opus'`（漂移）/ `'sonnet'`（地图）；译文保留「必须在派发时显式指定模型、不得继承会话模型」这条规则与它的理由，措辞改为与具体 harness 无关。
-- 上游的开发期门禁 `scripts/check-rules.sh` 扫描插件自身的 `skills/` 目录，与运行时无关，未收录。
-- `runtime/` 下的 hooks 与脚本逐字节原样收录，未翻译；只有 `.claude-plugin/plugin.json` 的插件标识改名为 `concept-guardrails` 以避免与上游同名冲突。
-- 新增「方言」概念以与 concept-* 链对齐：**wyx 原生**（`CONCEPT.md` 含 `## interactions` / `## dependencies`）与**零点名**（`concept-prd` 产出：四节不点名其他概念，跨概念边只在 `SYNCS.md`）。一个仓库只用一种；参考文件在各自模式里注明零点名方言下的差异（不写边界段、SYNCS.md 按 flow 分节、按 syncs 包各一份、级联须声明 depth-limit）。
+- 六种模式共用授权、落位与交付约定，保留显式启用策略。
+- Jackson 新建采用四节和因果规则；已有原生格式按文件识别，完整迁移才切换。
+- 地图解析 when/where/then，保留联合触发；产品依赖不从同步边推导。
+- 审计按证据与实际影响校准，不因耦合已记录就掩盖风险；只读检查不写历史。
+- `runtime/` 脚本仍原样保留，只注入旧边界段；Jackson 规格需主动读取，不能宣称自动解析兼容。
 
 ## 与 concept-* 其他技能的分工
 
@@ -90,13 +89,34 @@ skills/concept-guardrails/
 ```
 
 ```bash
+npx skills add ontology-of-everything/SemanticSkills \
+  --skill concept-guardrails \
+  --agent cursor \
+  --copy -y
+```
+
+Local checkout:
+
+```bash
 npx skills add ./skills/concept-guardrails \
   --skill concept-guardrails \
-  --agent codex \
-  --copy
+  --agent cursor \
+  --copy -y
 ```
+
+## Marketplaces
+
+- [skills.sh](https://skills.sh/ontology-of-everything/SemanticSkills/concept-guardrails)
+- [SkillsMP](https://skillsmp.com/) — repo topics `claude-skills`, `claude-code-skill`
+- [ClawHub](https://clawhub.ai/agenticweb4/concept-guardrails)
 
 ## 来源
 
 - **WYSIWID** —— Eagon Meng & Daniel Jackson, "What You See Is What It Does"（MIT, Onward! 2025）。
 - **WYWIWID** —— Dr. Ernie, "What You Write Is What It Did"。
+
+## 2026-09-07 修订
+
+统一 Jackson/wyx 消费规则；修复地图遗漏与新鲜度、只读历史冲突、重复授权及严重度；压缩共用流程。
+
+依据与检索边界见[研究记录](../references/jackson/2026-09-07-concept-research.md)。

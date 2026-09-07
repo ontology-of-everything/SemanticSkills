@@ -1,0 +1,281 @@
+{
+  "date": "2026-09-07",
+  "baseline": "Working tree at task start, including pre-existing uncommitted changes",
+  "encoding": "o200k_base",
+  "tiktoken_version": "0.14.0",
+  "files": [
+    {
+      "path": "skills/concept-audit/SKILL.md",
+      "sha256": "12c2d146843a08e4ca1c5cdb19494ad4cd0e4a4e6c56f1c0d18174f0c19fff13",
+      "tokens": 1449,
+      "markdown": true,
+      "entrypoint": true
+    },
+    {
+      "path": "skills/concept-audit/agents/openai.yaml",
+      "sha256": "7519bb8595e9f9655208dac6f375a1a279265ebb7483b104bb67ef782d571e94",
+      "tokens": 89,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-audit/references/composition-checklist.md",
+      "sha256": "d33c8c2365135d3402c0b52d46ebeac3b0085436a91af31db907f989ea9e6817",
+      "tokens": 1086,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-audit/references/drift-checklist.md",
+      "sha256": "c7f75923b7f08f9d30dca04f0afc2f737ad441af928987a48a8fea17e5d77189",
+      "tokens": 1102,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-audit/references/sources.md",
+      "sha256": "f35bb8a18cf61e6c6aeb8ea82640a0e91f823a4d9faccab87bfae6acde92fe34",
+      "tokens": 402,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-design/SKILL.md",
+      "sha256": "a8ba0353ed557c2bbf2f061b7a58f23e3bf7b45e4d40e1b6f904fc56fdf57e40",
+      "tokens": 2275,
+      "markdown": true,
+      "entrypoint": true
+    },
+    {
+      "path": "skills/concept-design/agents/openai.yaml",
+      "sha256": "59447d20093814074aec24ff31911a9ee9c0737aca0e2ea30eaa1226286760a4",
+      "tokens": 61,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-design/references/criteria.md",
+      "sha256": "6ecdc40abb294c080c638f0de4abde3c92898719da38bf5a2fbc20328f36fcd5",
+      "tokens": 720,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-design/references/example-reserving.md",
+      "sha256": "4d431ef5dc834b347dd48eb6e6b2f5f74bfbb58235dae0a054a78b505dac2763",
+      "tokens": 1343,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-design/references/sources.md",
+      "sha256": "a5c049a66c5207846415931d2ef024acff122abc7d639443c596883b5e35ac2f",
+      "tokens": 484,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-design/references/sync-notation.md",
+      "sha256": "a1f070016dbf60f5db3fab9507ca241cbedaf40e3fb35b62a9326d20f7943928",
+      "tokens": 1398,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/LICENSE.upstream",
+      "sha256": "f3dc64274c9c965e12ea27326560e058e91eff22c66c7f479ce2fa5aff081011",
+      "tokens": 222,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/SKILL.md",
+      "sha256": "750ec64a23d94f4ecf1bf9f36e23f26f1e4f9ad81cbad088e680a9bfa51099e9",
+      "tokens": 1807,
+      "markdown": true,
+      "entrypoint": true
+    },
+    {
+      "path": "skills/concept-guardrails/agents/openai.yaml",
+      "sha256": "296445c286c7ec411d847559629b871bff95f26472a6c3bc8353008c9ff2f2c2",
+      "tokens": 94,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/references/audit.md",
+      "sha256": "532e0e18e05b6b211764a32d8f113ce990a75fd77f1253836f7758fe7b086d10",
+      "tokens": 1918,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/references/concept.md",
+      "sha256": "a4e5b1911a9a6ab31265191fe4886e077b97107e12c595f4ee08524dc9e9d7f1",
+      "tokens": 2623,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/references/drift-detection.md",
+      "sha256": "ab9d05e42998517b18af9762cbfceafd4bc8a7258ab4b966623ce5f023eae113",
+      "tokens": 4838,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/references/hooks-runtime.md",
+      "sha256": "8df12f733e7ea15ca0fdcab508d5e8692a68c1ea8b0ad9546995559bd8224ba4",
+      "tokens": 1285,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/references/map.md",
+      "sha256": "06f7c4b050d240254ac599da92a4755ed746a98d43e6514f832533551f89efc4",
+      "tokens": 3957,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/references/pipeline.md",
+      "sha256": "93f7406d02df9105eaa25a6f65f9a464e603f9939200684c034c6ab0f75a58a2",
+      "tokens": 1461,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/references/sync.md",
+      "sha256": "b7832e9195dfd2678751a93e0424efcf67b912a2c33eb0db295d907f5c247f48",
+      "tokens": 1543,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/runtime/.claude-plugin/plugin.json",
+      "sha256": "4a65e06c2fc946d930977612811efe87c8db54105e6b7098115978a90e8e6a26",
+      "tokens": 162,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/runtime/hooks/hooks.json",
+      "sha256": "749495275f5cb500eb8066fb8deee73e561d0f433bc91f31960bd44590916115",
+      "tokens": 242,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/runtime/scripts/drift-context.sh",
+      "sha256": "f0a6c256ece09f04d069900571e50fec646eb8195368074d4465fbbc1c4734b2",
+      "tokens": 2583,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/runtime/scripts/post-check.sh",
+      "sha256": "c9021d0d6af6e13ea5bed949b4db2db43215e3fb6317e6467e8759ea996269e1",
+      "tokens": 1216,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-guardrails/runtime/scripts/session-start.sh",
+      "sha256": "c5e81bff1db562495b998de5b12b2e8304b2b30a56e0933ba65f384b9b0216fe",
+      "tokens": 4169,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-implementation/SKILL.md",
+      "sha256": "01d691b05b093b3b9601b77949a42994fc2d6f4dd3856590a825c08160fb82a4",
+      "tokens": 1403,
+      "markdown": true,
+      "entrypoint": true
+    },
+    {
+      "path": "skills/concept-implementation/agents/openai.yaml",
+      "sha256": "6967d9c9462789cfb63085961ef03cf9c83dc56701609e017256ff3a33e11c21",
+      "tokens": 75,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-implementation/references/composition-layer.md",
+      "sha256": "a91de82f184acd0a3b584a3cd5f18888648e99edb6e7b3d85e2452761c65c9dc",
+      "tokens": 1060,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-implementation/references/java-spring.md",
+      "sha256": "0aa227c36e2f7a0d64b4952a20c97f5f31d2d967390510d4a377871db3914d33",
+      "tokens": 607,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-implementation/references/rust.md",
+      "sha256": "d0d415469e14156a8532e492f7e47f95245ce6c2e53cd6322f668a00a841702a",
+      "tokens": 759,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-implementation/references/scaling.md",
+      "sha256": "e71df64af3e6fb62c4003f26dc6e8df79c3dda9b16ee27d4d6d8fd0e8a142798",
+      "tokens": 490,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-implementation/references/sources.md",
+      "sha256": "19f215d0c1f1b4add7fab94f49cd56fb90c487db14299386fc260501049cbb92",
+      "tokens": 307,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-implementation/references/typescript.md",
+      "sha256": "672a5b304d19600ec9614ad5c22fd0c877ec2c63ffdaf2d70d588983e84bc6ac",
+      "tokens": 501,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-prd/SKILL.md",
+      "sha256": "c019934a2342d685910fec50c5cb2c1701f3d4733b1c46ce7e47e18874fd22cf",
+      "tokens": 946,
+      "markdown": true,
+      "entrypoint": true
+    },
+    {
+      "path": "skills/concept-prd/agents/openai.yaml",
+      "sha256": "02b6bc779106140612a47befc2daab3714049d49e29534fda599ae666c7b634e",
+      "tokens": 83,
+      "markdown": false,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-prd/references/example-reserving.md",
+      "sha256": "436f0a3aa901340673e65e000a49ef95c3bae84608a7c9aba4eb571da78a167b",
+      "tokens": 877,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-prd/references/sources.md",
+      "sha256": "5ec1210494850530b9c19daa3352c2a6d30f685cc32334b68a2c76c726eb1343",
+      "tokens": 180,
+      "markdown": true,
+      "entrypoint": false
+    },
+    {
+      "path": "skills/concept-prd/references/templates.md",
+      "sha256": "4e62719cc9c35c56bd642500a2a7b913ff4b4ad7a53717194b604f96467f323c",
+      "tokens": 786,
+      "markdown": true,
+      "entrypoint": false
+    }
+  ]
+}

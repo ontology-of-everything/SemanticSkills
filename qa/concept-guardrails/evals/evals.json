@@ -3,30 +3,29 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "帮我给 src/payments/ 这个模块写一份概念规格。里面有 service.ts、repository.ts、refund.ts，其中 service.ts 从 ../orders/repository 直接读了订单总额。",
-      "expected_output": "A CONCEPT.md draft in the wyx format that declares purpose, state, actions, operational principle, and boundaries, plus an explicit boundary-violation finding for the direct orders/repository import.",
+      "prompt": "$concept-guardrails 帮我给 src/payments/ 这个模块写一份概念规格。里面有 service.ts、repository.ts、refund.ts，其中 service.ts 从 ../orders/repository 直接读了订单总额。",
+      "expected_output": "Read current code, draft and write an authorized specification in the detected dialect, and report the direct internal access without legitimizing it.",
       "assertions": [
-        "回答按 wyx 的 CONCEPT.md 结构给出草案，至少包含 purpose、state、actions、operational principle 四段。",
-        "把 service.ts 直接引用 ../orders/repository 标为边界破坏，并指出应通过 Orders 声明的动作访问。",
-        "在落盘之前先呈现草案并征求用户确认，而不是直接写文件。",
-        "纯编排型函数不被声明为概念动作。"
+        "先读取代码及现有方言；新建使用 purpose/principle/state/actions，旧版保留原格式。",
+        "报告跨概念内部访问，修复通过组合层调用声明接口。",
+        "呈现草案/diff 后完成已授权写入，不重复要求确认。",
+        "纯编排不作为概念动作，未知行为不编造。"
       ]
     },
     {
       "id": 2,
-      "prompt": "查一下我们项目的规格漂移。",
+      "prompt": "$concept-guardrails 查一下我们项目的规格漂移。",
       "expected_output": "A two-phase drift run: a read-only structured drift report with per-spec findings grouped by severity, cross-spec reference validation, and only then a request to choose fix direction.",
       "assertions": [
-        "第一阶段只做审计并呈现报告，不在未确认的情况下修改规格或代码。",
-        "发现按 Critical / High / Medium / Low 分组，且严重度取自检查表而非自行升级。",
-        "逐份规格结果之后给出跨规格引用校验。",
-        "对每份有漂移的规格询问是改规格还是改代码，并提示哪一边看起来更新。",
-        "报告之后提出记录 .claude/wyx-drift-history.jsonl 的 detect 记录。"
+        "只读检查不修改规格/代码，也不追加历史记录。",
+        "按默认类别及可验证影响校准严重度，记录理由。",
+        "核对动作、查询、签名与跨规格引用。",
+        "仅当需求不能确定修复方向时询问，不逐份重复确认。"
       ]
     },
     {
       "id": 3,
-      "prompt": "这个项目还没有任何规格，我想开始用 wyx，从哪儿下手？",
+      "prompt": "$concept-guardrails 这个项目还没有任何规格，我想开始用 wyx，从哪儿下手？",
       "expected_output": "An audit-first response: a read-only coverage scan that lists uncovered modules, pipeline/sync candidates, and a dependency-ordered command plan, without generating any spec files.",
       "assertions": [
         "先走审计模式，而不是直接挑一个模块生成规格。",
@@ -37,13 +36,23 @@
     },
     {
       "id": 4,
-      "prompt": "我们的 sync 目录 src/syncs/ 下有十来个处理器，帮我理清它们之间的协调关系。",
-      "expected_output": "A single SYNCS.md draft with a coordination graph, dispatching section, and per-sync blocks declaring trigger, timing, flow, qualification, and error strategy.",
+      "prompt": "$concept-guardrails 我们的 sync 目录 src/syncs/ 下有十来个处理器，帮我理清它们之间的协调关系。",
+      "expected_output": "Read handlers and existing dialect, then map causal rules with binding sources, failures and scope; preserve existing legacy fields when present.",
       "assertions": [
-        "所有 sync 流写进同一份 SYNCS.md，不拆分成多个文件。",
-        "每个 sync 归类为动作后、前置校验或定时三种时机之一。",
-        "错误策略与时机模式一致：动作后隔离，前置校验传播。",
-        "sync 内部为访问其他概念数据而直接引入数据库的做法被标为边界问题。"
+        "每个 syncs 包一份权威 SYNCS，保留规则身份与归组。",
+        "Jackson 方言记录 when/where/then，原生保留旧字段，不混用。",
+        "查询空集不冒充错误；需要响应的请求有明确结果分支与关联。",
+        "组合层绕过其他概念公开接口的数据访问被标出。"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "$concept-guardrails wyx:map：SYNCS 是 Jackson 方言：when A.done 与 B.ready，where C._lookup，then D.apply。PRD 产品依赖只有 D -> A。原地图较新，但 B.ready 刚被删除（文件 mtime 被保留）。请更新地图。",
+      "expected_output": "Re-read authoritative specs, preserve conjunction and query distinction, update from content instead of mtime, and keep product dependency D -> A separate.",
+      "assertions": [
+        "不凭 mtime 跳过，检查删除/重命名及来源集合。",
+        "每条规则为节点，多 when 共同输入，query 仅读取。",
+        "不把 A/B/C/D 同步关系推成产品依赖。"
       ]
     }
   ]

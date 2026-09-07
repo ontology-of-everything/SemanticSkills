@@ -12,6 +12,17 @@
         "Cross-concept triggers appear in synchronizations rather than inside concept definitions.",
         "The response stops at model confirmation and does not generate a PRD, architecture, or implementation."
       ]
+    },
+    {
+      "id": 2,
+      "prompt": "用 concept-design 建模共享设备预约：两人并发选同一时段只能一人成功；无时段需回复；管理员可开放和关闭时段。先给模型。",
+      "expected_output": "A source-grounded result satisfying the behavioral assertions, with unresolved information explicitly identified.",
+      "assertions": [
+        "写动作原子维护预约唯一性，不只做查询前置检查。",
+        "空查询、多候选、拒绝及响应关联有明确策略。",
+        "类型参数不引用其他概念内部字段；同步图保留合取。",
+        "未决产品策略明确列出，教学片段不冒充完整模型。"
+      ]
     }
   ]
 }

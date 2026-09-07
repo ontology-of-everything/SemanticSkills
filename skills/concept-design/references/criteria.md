@@ -1,8 +1,8 @@
 # 判据：资格五条、四词、误判速查、design moves
 
-流程第 4 步「批评边界」读本文。结论只用：`保留`、`拆分`、`合并`、`参数化`、`降级为 type/action/implementation`、`移至 sync`、`待确认`。
+执行「批评边界」读本文。结论只用：`保留`、`拆分`、`合并`、`参数化`、`降级为 type/action/implementation`、`移至 sync`、`待确认`。
 
-## 资格五条——候选是否够格成为 concept
+## 资格五条——本仓分组，非原文条目总数
 
 - **用户可感（User-facing）**：用户能体验其功能；API 中程序员也是用户。
 - **语义性（Semantic）**：表达抽象意义，不是控件、样式或技术机制。
@@ -10,13 +10,13 @@
 - **目的性（Purposive）**：独立带来真实、可评价的价值。
 - **端到端（End-to-end）**：从动作延伸到兑现目的的结果。
 
-第六条资格——独立性——与四词中的**独立**是同一判据。
+作者教程列八项；本仓将 Independent/Familiar 放入下列四词，将 Reusable 放到组合后检查。专一/完整等为结合其他资料的操作性综合。
 
 ## 四词——批评边界与输出判断统一用词
 
 - **专一（Specificity）**：只承担一个不可分的目的；多目的即 conflation → 拆分。
 - **完整（Completeness）**：含兑现目的所需的全部功能；只有片段即 fragmentation → 合并或补齐。
-- **独立（Independence）**：无需引用其他 concept 即可理解；共享对象用类型参数抽象，如 `Comment [Target]` 而非 `Comment [Post]`。
+- **独立（Independence）**：无需引用其他 concept 即可理解；共享对象用类型参数列表抽象，如 `Comment [User, Target]`、`Reserving [User, Slot]`，而非把对方概念名写进定义。
 - **熟悉（Familiarity）**：优先沿用已知概念并保持惯例；新概念须提供熟悉概念或其组合给不了的价值。
 
 ## 组合后再查

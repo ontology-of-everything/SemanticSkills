@@ -1,53 +1,41 @@
-# 漂移检查表、严重度校准、并行扫描
+# 规格漂移与校准
 
-流程第 2–3 步（规格漂移维度）读本文。检查表与校准改编自 jlifyio/wyx，适配到零点名的概念规格格式。
+每份规格连同当前实现、schema/迁移和测试读取；同时沿总体 PRD 索引查暂存文件。兼容 principle/operational principle；明确旧版格式，不能把已有方言差异当新缺陷。queries 与动作同查签名，但查询不产生完成事件。
 
-## 每份 CONCEPT.md（queries 按 action 同规则对待）
+## 类别
 
-| 类别 | 如何识别 | 严重度 |
+| 对象/类别 | 判定依据 | 默认严重度 |
 | --- | --- | --- |
-| **Missing action** | 公开函数/方法在代码里存在，规格 `## actions` 没声明 | Medium |
-| **Removed action** | 规格声明了动作，代码里已不存在 | High |
-| **Changed signature** | 参数/返回与规格不一致（追踪实际 return，不只看类型标注；错误 case 增减也算） | Medium |
-| **New state** | 新表字段、类字段或持久化数据不在 `## state`（含 schema/迁移脚本里的） | Medium |
-| **Spec naming violation** | 四节点名其他概念，或出现 interactions / dependencies 段 | High（路由 prd/design） |
-| **Boundary violation** | 代码直接引用另一概念模块内部（未走声明的动作） | Critical |
-| **Cross-cutting parameter** | 某参数出现在 3 个以上动作实现里，`## actions` 任何签名都没记录 | Medium |
-| **OP 无测试** | OP 的 after/then 场景没有对应集成测试 | Medium |
-| **排除动作被使用** | 模型标为排除的动作被组合层调用或经 API 暴露 | High |
+| CONCEPT / Missing action | 未声明的公开动作 | Medium |
+| Removed action | 已声明动作在全部相关实现中不存在 | High |
+| Changed signature | 入参、真实返回或错误 case 改变契约 | Medium |
+| New state | 未声明且影响可观察行为的状态 | Medium |
+| Spec naming violation | Jackson 四节依赖其他概念定义；同名局部参数合法 | Medium |
+| Boundary violation | 绕过其他概念公开接口访问其内部状态/实现 | High |
+| Intrinsic coupling | 概念直接调用另一概念公开 API | High |
+| Cross-cutting parameter | 影响契约的公共参数未记录 | Medium |
+| OP 无测试 | 代表性故事无对应行为测试 | Medium |
+| 排除动作被使用 | 明确排除的应用动作实际可达 | High |
+| SYNCS / Missing/Removed sync | 新增协调未记录 / 旧规则无实现 | Medium / High |
+| Changed trigger | when 与真实触发不同 | Medium |
+| Changed binding/effect | where 资格/绑定或 then 目标/参数改变 | High |
+| New participant | 实际参与概念未声明 | High |
+| Graph inconsistency | 存在的派生图与规则不符 | Medium |
+| 跨规格 / Missing reference | sync 动作/query 无声明，或签名/实例化不匹配 | High |
+| Missing participant | 内部概念无规格或索引 | Medium |
 
-## 每份 SYNCS.md
-
-| 类别 | 如何识别 | 严重度 |
-| --- | --- | --- |
-| **Missing sync** | 代码里新增的跨概念协调未声明 | Medium |
-| **Removed sync** | 规格声明了 sync，代码处理器已不存在 | High |
-| **Changed trigger** | 代码触发方式与 when 声明不同（如定时 vs 动作后） | Medium |
-| **New participant** | sync 实现涉及规格没列出的概念 | High |
-| **Graph inconsistency** | coordination graph 与 sync 块互不对应 | Medium |
-
-## 跨规格校验（逐份检查完之后）
-
-| 类别 | 如何识别 | 严重度 |
-| --- | --- | --- |
-| **SYNCS→CONCEPT missing reference** | sync 块引用的 `Concept.action` / `Concept._query` 在目标 CONCEPT.md 里不存在 | High |
-| **SYNCS→CONCEPT missing participant** | sync 块点名的概念没有 CONCEPT.md | Medium |
-| **依赖图不符** | 总体 PRD 依赖图与 SYNCS.md/代码实际依赖不一致 | Medium（归依赖与子集维度） |
+Requesting 等明确的外部入口契约不要求 CONCEPT.md，仍需验证参数、结果与关联。同步图可只在总体 PRD，不要求 SYNCS 重复。PIPELINE 存在时另核对阶段/来源遗漏（Medium）、不变量矛盾或跨概念越界（High）。产品依赖按需求核验，代码耦合不能作为产品必须依赖的证明。
 
 ## 严重度校准
 
-- **规格的沉默不是漂移**：规格没提到的行为是未记录，不是被否定；只有针对规格明确陈述的矛盾才算矛盾。Missing action / New state 这类"暴露未记录新增"的检查不受此条影响。
-- **严重度逐字采用检查表取值**：不凭影响面在类别内升级；比类别更严重的发现应**重新归类**（如 Missing action 实为跨概念内部访问 → Boundary violation/Critical）。允许按下列规则下调。
-- 私有辅助函数、内部实现细节（私有缓存、派生值）→ Low；规格签名比语言包装（异步、Result 包装）更简单且不改变契约 → Low。
-- 命名风格差异（camelCase/snake_case）→ Low；但该名字出现在跨规格引用里时重新归类为跨规格类别（High）。
-- 同一条 Low 在一份规格多个动作重复 → 合并为一条，附注受影响动作；单份规格去重后 ≥5 条 Low → 在摘要注明并建议重审该规格。
-- 报 Medium 及以上前，用 grep 或读文件确认发现存在于**当前**代码，不凭记忆或旧印象。
+这是本仓审计约定，并非论文结论。默认值可按可复现影响调整并说明：Critical 仅用于有证据的权限绕过、数据破坏或核心功能不可用；High 为明确契约/边界破坏；Medium 为有影响的遗漏；Low 为局部文档维护。
 
-## 并行扫描（规格 ≥5 份）
+- 规格沉默不推出禁止；Missing 类记录新增遗漏，与明确矛盾分开。
+- 私有辅助函数、派生缓存、无语义变化的 Result/异步包装或命名映射不构成契约漂移；需维护说明时最多 Low。有显式名称映射时跨规格不误报不存在。
+- 记录在案的耦合不自动降级真实风险；标注授权例外的范围及后果。原生公开 API 调用可合法，Jackson 概念互调仍破坏独立性；组合层调用合法。
+- Medium 以上附当前代码/规格位置与证据。无法读全相关实现时标未核实，不能把搜索未命中当不存在。
+- 合并同一根因并列受影响路径；Low 数量只提示维护负担，不自动升级。
 
-用只读子代理并行对账：
+## 分批检查
 
-- **显式指定强档模型**，不继承会话档位——对账要给出「不存在」类断言（如 `Missing action: clean`），错误判定不产生可察觉输出，弱模型漏报无法被发现。
-- 每个子代理分配 2–3 份相邻规格；提示词附上「严重度校准」整段与对应检查表（严重度取值逐字照抄，不得自行上调）。
-- 每个检查类别都必须给判定，省略视为未核实；合并阶段把未核实类别标出。
-- 全部返回后，在主上下文做跨规格校验与系统性聚合。
+规格多时可委派只读子代理，每组 2–3 份相邻规格，继承用户模型设置；不可用时主代理分批执行。附检查表、校准及项目约定，每类返回通过/发现/未核实。主代理核对漏项、跨规格引用与重要证据，最后聚合；不以固定模型档位替代验证。

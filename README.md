@@ -26,11 +26,11 @@ Requirements to modules, with the concept model as the contract. Each skill stop
 
 | Skill | Version | What it does |
 | --- | --- | --- |
-| [`concept-design`](docs/skills/concept-design.md) | 0.4.0 | Models requirements as concepts (purpose, operational principle, state, actions) composed by syncs, with a dependency graph and product subset. Stops at model confirmation — no PRD, no code |
-| [`concept-prd`](docs/skills/concept-prd.md) | 0.3.0 | Transcribes a confirmed model into a central PRD plus one colocated `CONCEPT.md` per concept and a flow-grouped `SYNCS.md`. Gaps route back to design |
-| [`concept-implementation`](docs/skills/concept-implementation.md) | 0.4.0 | Maps the model onto a modular monolith: one module per concept, syncs as mediators or a rule engine, specs colocated with code. Notes for Rust, Java/Spring Modulith, TypeScript |
-| [`concept-audit`](docs/skills/concept-audit.md) | 0.3.0 | Read-only five-dimension audit of code against its model — drift, boundaries, criteria, composition, dependencies — with severity calibration and fix routing |
-| [`concept-guardrails`](docs/skills/concept-guardrails.md) | 0.27.0 | Explicit-only skill for colocated `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` boundaries and spec–code drift. Five modes: audit, concept, pipeline, sync, map |
+| [`concept-design`](docs/skills/concept-design.md) | 0.5.0 | Models requirements as concepts (purpose, operational principle, state, actions) composed by syncs, with a dependency graph and product subset. Produces the model; continues to PRD or code when requested |
+| [`concept-prd`](docs/skills/concept-prd.md) | 0.4.0 | Transcribes a confirmed model into a central PRD plus one colocated `CONCEPT.md` per concept and a flow-grouped `SYNCS.md`. Gaps route back to design |
+| [`concept-implementation`](docs/skills/concept-implementation.md) | 0.5.0 | Maps the model onto a modular monolith: one module per concept, syncs as mediators or a rule engine, specs colocated with code. Notes for Rust, Java/Spring Modulith, TypeScript |
+| [`concept-audit`](docs/skills/concept-audit.md) | 0.4.0 | Read-only five-dimension audit of code against its model — drift, boundaries, criteria, composition, dependencies — with severity calibration and fix routing |
+| [`concept-guardrails`](docs/skills/concept-guardrails.md) | 0.28.0 | Explicit-only skill for colocated `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` boundaries and spec–code drift. Six routes: audit, concept, drift, pipeline, sync, map |
 
 ### Ontology and semantics
 
@@ -77,6 +77,8 @@ List what's available, or install from a local checkout while developing:
 npx skills add ontology-of-everything/SemanticSkills --list
 npx skills add ./skills/<skill-name> --skill <skill-name> --agent cursor --copy -y
 ```
+
+Discovery: [skills.sh](https://skills.sh/ontology-of-everything/SemanticSkills) (groups in [`skills.sh.json`](skills.sh.json)) · [SkillsMP](https://skillsmp.com/) (GitHub topics `claude-skills`, `claude-code-skill`) · [ClawHub](https://clawhub.ai/).
 
 [Hermes](docs/agents/hermes.md): `hermes skills install ontology-of-everything/SemanticSkills/<skill-name> -y`. Agent-specific notes: [Cursor](docs/agents/cursor.md) · [Claude Code](docs/agents/claude-code.md) · [Codex](docs/agents/codex.md).
 

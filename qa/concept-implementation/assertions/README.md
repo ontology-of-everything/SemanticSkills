@@ -2,7 +2,7 @@
 
 Evaluate observable mapping behavior rather than exact folder names.
 
-- One concept becomes one compilation unit; concept modules do not import each
+- Each concept has a verifiable module boundary; concept modules do not import each
   other.
 - Syncs land only in the composition layer (mediator or rule engine).
 - Language-specific notes are loaded only for the requested language.

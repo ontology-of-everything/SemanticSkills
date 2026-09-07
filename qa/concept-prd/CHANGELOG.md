@@ -1,6 +1,27 @@
 # concept-prd Changelog
 
+## 0.4.0 - 2026-09-07
+
+- 明确权威规格与增量编辑；修复验收追溯、错误查询和文件格式；压缩重复示例。
+- 核验最新相关论文，更新行为评估及文档。
+
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
+
+## 0.3.2 - 2026-09-07
+
+### Added
+
+- `references/example-reserving.md`: the same restaurant example as
+  transcribed CONCEPT.md / SYNCS.md files
+
+## 0.3.1 - 2026-09-07
+
+### Changed
+
+- Expand `references/templates.md` to the CONCEPT.md spec format and SYNCS.md
+  format used by `concept-guardrails` (`###` actions, after/then `=>` OP,
+  `[Concept] --(action)--> (SyncName) --> [Concept]` graph, `## sync:`
+  entries); keep zero-naming and when / where / then bodies
 
 ## 0.3.0 - 2026-09-07
 
