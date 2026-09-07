@@ -58,6 +58,13 @@ then [动作]([参数])
 - [外部概念/资源]: [访问方式] — reason: [为什么] — status: keep|refactor|defer
 ```
 
+**零点名方言**（仓库在用 concept-* 链、规格由 `concept-prd` 产出）：
+`CONCEPT.md` 只写 `## purpose` / `## state` / `## actions` / `## operational principle`（可选 `## notes`），
+**不写** `## interactions` / `## dependencies` / `## known coupling`，四节不出现其他概念名；
+跨概念边只在 `SYNCS.md` 的 `## coordination graph`。
+回填存量代码时若发现绕过动作接口的耦合，报告为漂移的 Boundary violation，不写进规格。
+actions 签名可沿用 `concept-design` 的 `动作 (入参: 类型) : (出参: 类型)` 写法。
+
 ## 设计规则
 
 生成或评审概念规格时，应用这五条规则：
@@ -125,6 +132,20 @@ then [动作]([参数])
 边界注入 hook 从被编辑文件所在目录**向上**走，在**第一个含 `CONCEPT.md` 或 `PIPELINE.md` 的目录**停下（这两者提供边界）。`SYNCS.md` 会被识别并列出，但**不**终止向上查找——只有 `SYNCS.md` 的目录会让查找继续，直到找到祖先的 `CONCEPT.md` / `PIPELINE.md`。
 
 被提取的边界段落是：`CONCEPT.md` 的 `## interactions` 和 `## dependencies`，`PIPELINE.md` 的 `## data boundary`。
+
+```text
+src/lib/
+├── orders/              # 一个概念 = 一个目录
+│   ├── CONCEPT.md
+│   └── service.ts
+├── scoring/
+│   ├── CONCEPT.md
+│   ├── PIPELINE.md      # 与概念同目录共存
+│   └── calculate.ts
+└── syncs/
+    ├── SYNCS.md         # 本 syncs 目录的全部 flow
+    └── order-to-inventory.ts
+```
 
 **规格同目录共存**：当管道属于某个概念时，把 `CONCEPT.md` 与 `PIPELINE.md` 放在同一目录。hook 会同时找到两者，并正确提取 `CONCEPT.md` 的边界。
 

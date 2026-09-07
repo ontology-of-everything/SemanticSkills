@@ -44,6 +44,12 @@ error: [isolated | propagates | skip-and-log]
 file: [实现文件的相对路径]
 ```
 
+**零点名方言**：`SYNCS.md` 按 `concept-prd` 的格式——`## coordination graph` + 按 flow 分节，每条 sync 用 when / where / then；
+本文的 trigger≈when、qualification≈where、flow≈then、timing 对应 `concept-implementation` 的三类时机（动作后 / 前置校验 / 定时），error 对应其失败路径（错误 sync / 共享事务）。
+`wyx:sync` 在该方言下只回填与校验，不改格式。
+规模化后每个 syncs 包一份 `SYNCS.md`，同一 flow 不拆散；`wyx:map` 合成全局视图。
+下方规则 2 的「无环」在该方言下放宽为：级联合法但须声明 depth-limit，成环归 `concept-audit` 的组合缺陷。
+
 ## sync 模式的设计规则
 
 1. **sync 存在于概念之间**：一个 sync 永远不属于单个概念，它协调两个或更多概念。sync 代码放在专门的目录里，不要放进概念目录内部。

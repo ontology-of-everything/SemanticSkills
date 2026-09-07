@@ -35,6 +35,10 @@
 4. 项目约定：要求它读项目根目录的 `CLAUDE.md` / `AGENTS.md`，记下任何被记录在案的横切参数约定（如依赖注入参数、作用域参数）。这些约定在规格 `## actions` 里没有被记录的出现，即使只在单份规格范围内，也算 Medium 的「Cross-cutting parameter」发现。
 5. 输出要求：每个检查类别都要有判定——省略即视为未核实。
 
+**零点名方言**（`concept-prd` 产出的规格）：下表的 New dependency、Resolved known coupling 与跨规格校验中的 CONCEPT→CONCEPT 两项不适用（规格本就没有这些段）；
+改为检查 **Spec naming violation**——四节点名其他概念，或出现 `## interactions` / `## dependencies` 段（High，路由 `concept-prd` / `concept-design`）。
+其余类别与严重度不变，与 `concept-audit` 的漂移检查表同源。
+
 ## 每份 CONCEPT.md 检查什么
 
 | 类别 | 如何识别 | 严重度 |

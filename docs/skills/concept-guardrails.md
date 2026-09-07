@@ -44,6 +44,16 @@
 - 上游派发子 agent 时写死 `model: 'opus'`（漂移）/ `'sonnet'`（地图）；译文保留「必须在派发时显式指定模型、不得继承会话模型」这条规则与它的理由，措辞改为与具体 harness 无关。
 - 上游的开发期门禁 `scripts/check-rules.sh` 扫描插件自身的 `skills/` 目录，与运行时无关，未收录。
 - `runtime/` 下的 hooks 与脚本逐字节原样收录，未翻译；只有 `.claude-plugin/plugin.json` 的插件标识改名为 `concept-guardrails` 以避免与上游同名冲突。
+- 新增「方言」概念以与 concept-* 链对齐：**wyx 原生**（`CONCEPT.md` 含 `## interactions` / `## dependencies`）与**零点名**（`concept-prd` 产出：四节不点名其他概念，跨概念边只在 `SYNCS.md`）。一个仓库只用一种；参考文件在各自模式里注明零点名方言下的差异（不写边界段、SYNCS.md 按 flow 分节、按 syncs 包各一份、级联须声明 depth-limit）。
+
+## 与 concept-* 其他技能的分工
+
+| 用户要的是 | 用 |
+| --- | --- |
+| 哪些模块还没规格（覆盖审计） | 本技能 `wyx:audit` |
+| 对照概念模型审计代码：独立性、组合缺陷、五维度 | `concept-audit`（漂移检查表与本技能同源） |
+| 为存量代码回填规格、改单个模块规格、查单模块漂移 | 本技能 `wyx:concept` / `wyx:concept drift` |
+| 从需求设计新概念、拆边界 | `concept-design` → `concept-prd` |
 
 ## 边界自动注入（可选）
 

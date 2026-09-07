@@ -9,95 +9,74 @@ metadata:
 
 # 概念护栏（wyx 架构护栏 · 中文版）
 
-把模块边界写成规格，放在实现代码旁边，让 agent 在动手写代码之前就看见「什么可以碰、什么不可以碰」，并能定期核对规格是否已经和代码脱节。
+## 目标
 
-这套方法只有两个动作：**声明边界**（写规格）和**核对边界**（查漂移）。规格是加法——覆盖的模块越多，护栏越密；从一个模块开始就有价值。
+把模块边界写成规格放在实现代码旁，让 agent 动手前就看见「什么可以碰、什么不可以碰」，并定期核对规格是否已和代码脱节。两个动作：**声明边界**（写规格）、**核对边界**（查漂移）；从一个模块开始就有价值。
 
-## 五种模式
+[jlifyio/wyx](https://github.com/jlifyio/wyx) v0.26.0 的中文改写版（MIT，见 `LICENSE.upstream`）；在 concept-* 链中是看护环：`concept-design` → `concept-prd` → `concept-implementation` → 本技能日常看护共存规格 → `concept-audit` 周期性全面审计。仅在用户显式调用时运行。
 
-从用户的说法判断模式，然后读取对应的参考文件再动手。参考文件是完整的执行程序，不要凭记忆执行。
+## 原则
 
-| 模式 | 用户会怎么说 | 产出 | 参考文件 |
-| --- | --- | --- | --- |
-| `wyx:audit` | 审计规格覆盖、有哪些模块还没规格、给我待办清单 | 行动计划（只读，不产出规格） | `references/audit.md` |
-| `wyx:concept` | 给这个模块写概念规格、回填规格、设计新模块 | `CONCEPT.md` | `references/concept.md` |
-| `wyx:concept drift` | 查漂移、规格和代码对不上、drift 检测 | 漂移报告 | `references/drift-detection.md` |
-| `wyx:pipeline` | 记录数据流、描述转换阶段、写数据质量不变量 | `PIPELINE.md` | `references/pipeline.md` |
-| `wyx:sync` | 梳理跨概念协调、映射 sync 处理器 | `SYNCS.md` | `references/sync.md` |
-| `wyx:map` | 生成架构地图、可视化概念依赖 | `ARCHITECTURE.md` | `references/map.md` |
+1. **先给用户看，再落盘。** 写规格前先呈现草案或 diff，同意后才写；只有 `wyx:map` 例外（完全派生自规格，可直接覆盖）。
+2. **`wyx:audit` 与漂移报告全程只读。** 漂移分两段：先审计并呈现报告，用户确认后才改规格或改代码。
+3. **规格贴着代码。** `CONCEPT.md` 放在它描述的模块目录，根目录不放（会成为所有子目录的兜底边界）；`PIPELINE.md` 与所属概念同目录。
+4. **既有模块规格先行。** 先改 `## actions` / `## state` 再改实现；回填只用于首次为存量代码建规格。
+5. **一个仓库一种方言。** 规格格式按下节「方言」表二选一，不混用。
+6. 只在会改变路线时提问，一次只问一个阻塞性问题；不做问卷。
 
-模式名沿用上游 wyx 的命令名，便于与上游文档、`ARCHITECTURE.md` 里的提示互相对照；本技能里它们是模式，不是必须带斜杠的命令。用户说「wyx 审计」和用上游那条带斜杠的 audit 命令是一回事。
+## 流程
 
-**没有任何规格、也没指定模块时**：先走 `wyx:audit`，让用户看到从哪里开始收益最大，而不是直接挑一个模块写规格。
+1. **判定方言**：仓库已有 `concept-prd` 产出的规格、或用户在用 concept-* 链 → **零点名方言**；否则 → **wyx 原生方言**。
+2. **判定模式**，读对应参考文件后再动手（参考文件是完整执行程序，不凭记忆执行）：
 
-## 三类规格与它们的分工
+   | 模式 | 用户会怎么说 | 产出 | 参考文件 |
+   | --- | --- | --- | --- |
+   | `wyx:audit` | 哪些模块还没规格 | 行动计划（只读） | `references/audit.md` |
+   | `wyx:concept` | 写 / 回填概念规格 | `CONCEPT.md` | `references/concept.md` |
+   | `wyx:concept drift` | 查漂移 | 漂移报告 | `references/drift-detection.md` |
+   | `wyx:pipeline` | 记录数据流与质量不变量 | `PIPELINE.md` | `references/pipeline.md` |
+   | `wyx:sync` | 映射跨概念协调 | `SYNCS.md` | `references/sync.md` |
+   | `wyx:map` | 生成架构地图 | `ARCHITECTURE.md` | `references/map.md` |
 
-- **`CONCEPT.md`** —— 一个模块「是什么」：单一目的、自己拥有的状态、对外的动作、以及 `## interactions` / `## dependencies` 两段边界声明。
-- **`PIPELINE.md`** —— 数据「怎么流」：来源、阶段、输出、运行时可断言的质量不变量，以及 `## data boundary` 声明谁拥有输入输出数据。
-- **`SYNCS.md`** —— 概念之间「怎么协同」：触发时机、数据流向、跳过条件、错误传播策略。`CONCEPT.md` 的 `## interactions` 声明关系，`SYNCS.md` 描述执行机制。
+   没有任何规格、也没指定模块时先走 `wyx:audit`。模式名沿用上游命令名；「wyx 审计」与上游带斜杠的 audit 命令是一回事。
+3. **执行参考文件**中的程序；写规格的模式在落盘前呈现草案或 diff。
+4. **收尾**：规格有变更且项目里存在 `ARCHITECTURE.md` 时，提示用户跑 `wyx:map`。
 
-三者的关系是：概念定义边界，管道在边界内保证数据质量，sync 负责跨概念的编排；架构地图是它们的合成视图，不参与护栏，只给人看。
+## 命题
 
-## 规格放在哪里
+- 每份新写的 `CONCEPT.md` / `PIPELINE.md` 位于它描述的模块目录；根目录无 `CONCEPT.md`。
+- `wyx:audit` 与漂移第一段未写入任何文件；漂移修改发生在用户确认之后。
+- 零点名方言下，`CONCEPT.md` 只含 `## purpose` / `## state` / `## actions` / `## operational principle`（可选 `## notes`），跨概念边全部在 `SYNCS.md`。
+- 同一 flow 的 sync 不拆到多个文件；每个 syncs 目录（或 syncs 包）恰好一份 `SYNCS.md`。
+- 规格变更后，若存在 `ARCHITECTURE.md`，已提示重画。
 
-规格必须紧贴它描述的实现代码。边界注入 hook 从被编辑文件所在目录**向上**走，在**第一个含 `CONCEPT.md` 或 `PIPELINE.md` 的目录**停下；`SYNCS.md` 会被列出但不终止向上查找。
+## 记法与模板
 
-```text
-src/lib/
-├── orders/              # 一个概念 = 一个目录
-│   ├── CONCEPT.md       # 本模块的边界声明
-│   ├── service.ts
-│   └── repository.ts
-├── scoring/
-│   ├── CONCEPT.md       # 边界
-│   ├── PIPELINE.md      # 与概念同目录共存（安全）
-│   ├── calculate.ts
-│   └── aggregate.ts
-└── syncs/
-    ├── SYNCS.md         # 所有 sync 流写在同一个文件里（保持单文件）
-    ├── order-to-inventory.ts
-    └── order-to-scoring.ts
-```
+三类规格：`CONCEPT.md` 说模块**是什么**（目的、自有状态、对外动作）；`PIPELINE.md` 说数据**怎么流**（阶段、可断言的质量不变量、`## data boundary`）；`SYNCS.md` 说概念**怎么协同**（协调图 + 每条 sync）。地图是合成视图，不参与护栏。
 
-三个要避开的反模式：
+方言对照——漂移检查、地图与 hooks 两种都能处理，差别只在边界写在哪：
 
-- **根目录放 `CONCEPT.md`** —— 它会成为所有子目录的兜底边界，把过宽的约束套到没有自己规格的模块上。
-- **`PIPELINE.md` 单独放在没有 `CONCEPT.md` 的子目录** —— 例如把它放进 scoring 的 transforms 子目录，会让向上查找停在 transforms 这一层；hook 能识别缺失的 `CONCEPT.md` 并带 `[SHADOWED]` 标注注入祖先边界，但这说明放置位置不理想。
-- **拆分 `SYNCS.md`** —— 协调图需要完整视图，局部图只会给出虚假的信心。
+| | wyx 原生 | 零点名（concept-* 链） |
+| --- | --- | --- |
+| `CONCEPT.md` 边界段 | `## interactions` / `## dependencies` / `## known coupling` | 不写；跨概念边只在 `SYNCS.md` 的 `## coordination graph`（`wyx:map` 本就以它为最高优先级来源） |
+| `SYNCS.md` 结构 | `## dispatching` + `## sync:` 条目（trigger / timing / flow / qualification / error / file） | 按 flow 分节，sync 用 when / where / then（`concept-prd` 格式）；对应关系 trigger≈when、qualification≈where、flow≈then、timing = `concept-implementation` 的三类时机 |
+| 拆分 | 单文件 | 按 syncs 包各一份，flow 不拆散，`wyx:map` 合成全局视图 |
+| 级联 | 一个 sync 一个方向、图无环 | 级联合法但须声明 depth-limit；成环归 `concept-audit` 的组合缺陷 |
+| hooks 注入的边界 | interactions / dependencies 段 | 段为空，只列出规格；边界靠漂移检查与 `SYNCS.md` |
 
-## 通用纪律
+与 concept-* 其他技能的分工：
 
-- **先给用户看，再落盘。** `wyx:concept`、`wyx:pipeline`、`wyx:sync` 都必须先呈现草案、征得同意才写文件；文件已存在时先给 diff。只有 `wyx:map` 例外（它完全派生自规格，可直接覆盖重写）。
-- **`wyx:audit` 全程只读。** 它报告问题、输出该跑哪些命令，永远不产出规格文件。
-- **漂移分两段。** 第一段只做审计并呈现报告，第二段才在用户确认后改规格或改代码——不要把两段合成一步。
-- **规格改了就提醒重画地图。** 若项目里存在 `ARCHITECTURE.md`，在规格变更后提示用户跑 `wyx:map`。
-- **既有模块优先「规格先行」。** 已经有规格的模块，先改 `## actions` / `## state` 再改实现，这样边界注入立刻生效；回填模式（先代码后规格）只适合首次为存量代码建规格。
-
-## Agent 纪律
-
-只在会改变路线时提问；用户已经说明或已确定的事实不要重复追问；上下文足够就直接推进；确实需要用户判断时，一次只问一个阻塞性问题。领域必需的澄清项（模块范围、要不要落盘、改规格还是改代码）仍然要问——但不要做成问卷。
-
-## 边界自动注入运行时（可选）
-
-本技能的规格与检查流程与 agent 无关，任何 agent 都能执行。而「每次编辑前后自动注入边界」是上游 wyx 的 Claude Code hooks 机制，脚本原样收录在 `runtime/`，未作任何改动。接线方式见 `references/hooks-runtime.md`。
-
-没有这套运行时，规格依然有用（agent 按本技能主动读取规格、漂移检测照常工作）；有了它，边界会在每次写入前后被动送到模型眼前。
-
-## 参考文件
-
-| 主题 | 文件 |
+| 用户要的是 | 用 |
 | --- | --- |
-| 规格覆盖审计与命令排序 | `references/audit.md` |
-| 概念规格设计（回填 / 新建 / 发现） | `references/concept.md` |
-| 漂移检测完整程序与严重度校准 | `references/drift-detection.md` |
-| 数据管道规格与质量不变量 | `references/pipeline.md` |
-| Sync 协调映射 | `references/sync.md` |
-| 架构地图生成 | `references/map.md` |
-| hooks 运行时接线与排错 | `references/hooks-runtime.md` |
+| 哪些模块还没规格（覆盖审计） | 本技能 `wyx:audit` |
+| 对照概念模型审计代码：独立性、组合缺陷、五维度 | `concept-audit`（其漂移检查表与本技能同源） |
+| 为**存量代码**回填规格、改一个模块的规格、查单模块漂移 | 本技能 `wyx:concept` / `wyx:concept drift` |
+| 从**需求**设计新概念、拆边界 | `concept-design` → `concept-prd` |
 
-## 来源与致谢
+## 参考
 
-本技能是 [jlifyio/wyx](https://github.com/jlifyio/wyx) v0.26.0 的中文改写版，遵循上游 MIT 许可（见 `LICENSE.upstream`）。上游的思想来源：
-
-- **WYSIWID** —— Eagon Meng & Daniel Jackson, "What You See Is What It Does"（MIT, Onward! 2025）：把概念规格与边界声明作为让软件可读的结构化手段。
-- **WYWIWID** —— Dr. Ernie, "What You Write Is What It Did"：用漂移检测与数据管道不变量提供基于证据的可读性。
+| 何时读 | 文件 |
+| --- | --- |
+| 六种模式各自的完整程序 | 见「流程」第 2 步表 |
+| 接上「每次编辑前后自动注入边界」的 Claude Code hooks（`runtime/` 原样收录上游脚本） | `references/hooks-runtime.md` |
+| 上游思想来源（WYSIWID、WYWIWID）与改写差异 | 仓库文档 docs/skills 下本技能页（不随技能安装） |

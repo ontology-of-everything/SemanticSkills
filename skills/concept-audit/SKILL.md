@@ -1,6 +1,6 @@
 ---
 name: concept-audit
-description: Audits an existing codebase against its concept model (Daniel Jackson's concept design) along two lines—are concepts truly independent, and is their sync composition free of defects—plus spec drift, criteria review, and dependency/subset integrity, with calibrated severities and fix routing. Use this skill whenever the user asks to audit a concept model, 概念审计, or mentions concept-audit; read-only.
+description: Audits a codebase against its concept model (Daniel Jackson's concept design)—are concepts truly independent, is their sync composition free of defects—plus spec drift, criteria, and dependency integrity, with calibrated severities and fix routing. Use whenever the user asks to audit a concept model, 概念审计, or mentions concept-audit; read-only.
 ---
 
 # 概念审计

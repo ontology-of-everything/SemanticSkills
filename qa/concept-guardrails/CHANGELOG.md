@@ -11,6 +11,17 @@ Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANG
   前缀；显式调用改为 `$concept-guardrails`
 - `runtime/.claude-plugin/plugin.json` 的插件标识同步改为 `concept-guardrails`
 - 内容仍对应上游 jlifyio/wyx v0.26.0；版本号不再与上游同步
+- `SKILL.md` 改为六节骨架（目标 / 原则 / 流程 / 命题 / 记法与模板 / 参考），
+  正文压缩约 16%（7.2 KB → 6.0 KB；原有内容压缩逾三成，新增下述对齐内容）；
+  目录树与放置反模式并入 `references/concept.md`
+- 与 concept-* 链对齐：新增「方言」——wyx 原生（含 interactions / dependencies）
+  与零点名（`concept-prd` 产出，跨概念边只在 SYNCS.md）；一个仓库只用一种。
+  `references/concept.md`、`sync.md`、`drift-detection.md` 各加一段零点名方言
+  下的差异（不写边界段；SYNCS.md 按 flow 分节、按 syncs 包各一份、flow 不拆散；
+  级联合法但须声明 depth-limit；New dependency / CONCEPT→CONCEPT 校验改为
+  Spec naming violation）
+- 新增与 `concept-audit` / `concept-design` 的分工表，消除 `wyx:audit` 与
+  概念审计、`wyx:concept` 与概念设计的同名歧义
 
 ## 0.26.1 - 2026-09-03
 
