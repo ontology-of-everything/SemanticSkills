@@ -1,5 +1,6 @@
 # Semantic Skills
 
+[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.0.0)
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
 > 面向编码 Agent 的语义技能 —— 本体与概念设计。
@@ -10,12 +11,15 @@
 
 English: [README.md](README.md)。
 
+当前版本 **[v4.0.0](CHANGELOG.zh.md#400---2026-09-07)**（[English](CHANGELOG.md#400---2026-09-07)）。本版安装名：`concept-*`（原 `jackson-concept-*`）、`concept-guardrails`（原 `wyx-zh-cn`）、`semantic-pkm-creator`（原 `sce-creator`）。`constraint-charter` 已不再分发。
+
 ## 目录
 
 - [技能](#技能)
 - [安装](#安装)
 - [用法](#用法)
 - [贡献](#贡献)
+- [更新日志](CHANGELOG.zh.md)
 - [许可](#许可)
 
 ## 技能
@@ -49,7 +53,7 @@ English: [README.md](README.md)。
 | [`huawei-cloud-cost-estimation`](docs/skills/huawei-cloud-cost-estimation.md) | 3.2.4 | 买之前算钱：包年包月与按需报价；白名单创建须先 `--dryrun`、费用复核、显式确认。退订只引导控制台，绝不代执行 |
 | [`huawei-cloud-account-onboarding`](docs/skills/huawei-cloud-account-onboarding.md) | 1.0.0 | 只读查实名认证状态，未实名时把人脸二维码渲染到终端并轮询到通过。不收身份证、证件、银行卡与短信码 |
 
-各技能细节与安全边界见 [docs/skills/](docs/skills/)，机器可读索引见 [docs/catalog.yml](docs/catalog.yml)，变更记录在 `qa/<name>/CHANGELOG.md`。
+各技能细节与安全边界见 [docs/skills/](docs/skills/)，机器可读索引见 [docs/catalog.yml](docs/catalog.yml)，仓库更新日志见 [CHANGELOG.zh.md](CHANGELOG.zh.md)，各技能变更记录在 `qa/<name>/CHANGELOG.md`。
 
 ## 安装
 

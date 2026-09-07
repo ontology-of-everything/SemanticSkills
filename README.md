@@ -1,5 +1,6 @@
 # SemanticSkills
 
+[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.0.0)
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
 > Semantic skills for coding agents — ontology and concept design.
@@ -10,12 +11,15 @@ The concept-design skills adapt Daniel Jackson's concepts-and-synchronizations m
 
 中文说明见 [README-CN.md](README-CN.md).
 
+Current release **[v4.0.0](CHANGELOG.md#400---2026-09-07)** ([中文](CHANGELOG.zh.md#400---2026-09-07)). Install names in this release: `concept-*` (was `jackson-concept-*`), `concept-guardrails` (was `wyx-zh-cn`), `semantic-pkm-creator` (was `sce-creator`). `constraint-charter` is no longer shipped.
+
 ## Table of Contents
 
 - [Skills](#skills)
 - [Install](#install)
 - [Usage](#usage)
 - [Contributing](#contributing)
+- [Changelog](CHANGELOG.md)
 - [License](#license)
 
 ## Skills
@@ -49,7 +53,7 @@ Community-maintained, not official Huawei Cloud. Read-only by default; every fig
 | [`huawei-cloud-cost-estimation`](docs/skills/huawei-cloud-cost-estimation.md) | 3.2.4 | Period and on-demand quotes before you buy; allowlisted creates gated by `--dryrun`, fee review, and explicit confirmation. Unsubscribe is routed to the console, never executed |
 | [`huawei-cloud-account-onboarding`](docs/skills/huawei-cloud-account-onboarding.md) | 1.0.0 | Read-only real-name (实名认证) status check, then renders the face-scan QR in the terminal and polls until verified. No ID, document, bank-card, or SMS intake |
 
-Per-skill details and safety boundaries: [docs/skills/](docs/skills/). Machine-readable index: [docs/catalog.yml](docs/catalog.yml). Changelogs: `qa/<name>/CHANGELOG.md`.
+Per-skill details and safety boundaries: [docs/skills/](docs/skills/). Machine-readable index: [docs/catalog.yml](docs/catalog.yml). Monorepo changelog: [CHANGELOG.md](CHANGELOG.md). Per-skill changelogs: `qa/<name>/CHANGELOG.md`.
 
 ## Install
 
