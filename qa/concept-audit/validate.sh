@@ -36,8 +36,17 @@ check_skill_layout() {
   rg -q '\$concept-audit' "$SKILL_DIR/agents/openai.yaml" || fail "default prompt must name the skill"
 }
 
+check_references() {
+  local ref
+  for ref in drift-checklist composition-checklist sources; do
+    [[ -f "$SKILL_DIR/references/$ref.md" ]] || fail "missing reference: references/$ref.md"
+    rg -q "references/$ref\.md" "$SKILL_DIR/SKILL.md" || fail "SKILL.md does not route to references/$ref.md"
+  done
+}
+
 need_cmd rg
 check_skill_layout
+check_references
 run_local_or_npx skills-ref validate "$SKILL_DIR"
 run_local_or_npx markdownlint-cli2 --config "$QA_DIR/.markdownlint.json" "$SKILL_DIR/**/*.md"
 need_cmd skillcheck

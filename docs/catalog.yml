@@ -124,8 +124,8 @@ skills:
     display_name_zh: "概念审计"
     domain: meta
     subdomains: [concept-design, architecture-audit, spec-drift]
-    summary: Read-only five-dimension audit of a codebase against its concept model (Daniel Jackson's concept design)—spec drift with calibrated severity checklists and cross-spec validation (adapted from jlifyio/wyx), boundary violations, criteria review, composition quality, dependency/subset integrity—with parallel scans for 5+ specs and evidenced findings routed to design, prd, or implementation
-    summary_zh: 只读对照概念规格与代码：规格漂移用校准过的检查表与跨规格校验（改编自 jlifyio/wyx），加边界违规、判据重审、组合质量、依赖与子集共五维；规格多时并行扫描，发现带证据并路由到 design / prd / implementation
+    summary: Read-only audit of a codebase against its concept model (Daniel Jackson's concept design) around two questions—are concepts truly independent, and is their sync composition free of defects—plus spec drift with calibrated checklists and cross-spec validation (adapted from jlifyio/wyx), criteria review, and dependency/subset integrity; parallel scans for 5+ specs; evidenced findings routed to design, prd, or implementation
+    summary_zh: 只读对照概念规格与代码，回答两问：概念是否真独立、组合是否有缺陷（行为保持、错误 sync、入口响应、冲突/死 sync、级联、欠/过同步、直通动作）；加规格漂移（校准检查表与跨规格校验，改编自 jlifyio/wyx）、判据重审、依赖与子集；规格多时并行扫描，发现带证据并路由到 design / prd / implementation
     version: "0.3.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: Read-only; needs the codebase plus optional PRD or concept-model docs
