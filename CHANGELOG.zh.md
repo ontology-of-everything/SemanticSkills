@@ -15,6 +15,23 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | concept-audit | [qa/concept-audit/CHANGELOG.md](qa/concept-audit/CHANGELOG.md) |
 | concept-guardrails | [qa/concept-guardrails/CHANGELOG.md](qa/concept-guardrails/CHANGELOG.md) |
 
+## 4.0.0 - 2026-09-07
+
+### 破坏性变更
+
+- 安装名更名：`jackson-concept-*` → `concept-*`，`wyx-zh-cn` → `concept-guardrails`，`sce-creator` → `semantic-pkm-creator`。请用新的 `--skill` 名安装。
+- 从可安装集合中移除 `constraint-charter`。
+
+### 新功能
+
+- **concept-design** **0.5.0**：六节骨架；区分论文语义与本仓方言；修复 flow、绑定、查询空集与同步图；补齐订位教学例（详见技能 changelog）
+- **concept-prd** **0.4.0**：六节骨架；Jackson 格式 CONCEPT.md/SYNCS.md 模板；权威规格与增量编辑；订位例按转录后文件形态提供（详见技能 changelog）
+- **concept-implementation** **0.5.0**：六节骨架；修复事务/错误处理、完成事件与并发隔离；纠正 Spring Modulith 与 Cargo 边界检查说明（详见技能 changelog）
+- **concept-audit** **0.4.0**：按独立性与组合缺陷重框；按行为与影响判定；补充绑定/合取/重放检查（详见技能 changelog）
+- **concept-guardrails** **0.28.0**：由 wyx-zh-cn 更名；统一 Jackson/wyx 消费规则；仅显式调用（详见技能 changelog）
+- **semantic-pkm-creator** **0.3.0**：由 semantic-sce-creator 更名为个人知识管理萃取；六节骨架；关系表迁入 references（详见技能 changelog）
+- 新增 `skills.sh.json`，在 skills.sh 仓库页按组展示十个技能
+
 ## 3.14.0 - 2026-08-28
 
 ### 新功能

@@ -15,6 +15,23 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | concept-audit | [qa/concept-audit/CHANGELOG.md](qa/concept-audit/CHANGELOG.md) |
 | concept-guardrails | [qa/concept-guardrails/CHANGELOG.md](qa/concept-guardrails/CHANGELOG.md) |
 
+## 4.0.0 - 2026-09-07
+
+### Breaking Changes
+
+- Rename installable skills: `jackson-concept-*` → `concept-*`, `wyx-zh-cn` → `concept-guardrails`, `sce-creator` → `semantic-pkm-creator`. Install with the new `--skill` names.
+- Remove `constraint-charter` from the installable set.
+
+### Features
+
+- **concept-design** **0.5.0**: six-section skeleton; distinguish paper semantics from this repo's dialect; fix flow, bindings, empty query sets, and the coordination graph; filled reserving example (see skill changelog)
+- **concept-prd** **0.4.0**: six-section skeleton; Jackson-style CONCEPT.md/SYNCS.md templates; authoritative specs and incremental edits; reserving example as transcribed files (see skill changelog)
+- **concept-implementation** **0.5.0**: six-section skeleton; fix transaction/error handling, completion events, and concurrency isolation; correct Spring Modulith and Cargo boundary-check notes (see skill changelog)
+- **concept-audit** **0.4.0**: reframe around independence and composition defects; judge by behavior and impact; add binding/conjunction/replay checks (see skill changelog)
+- **concept-guardrails** **0.28.0**: rename from wyx-zh-cn; unify Jackson/wyx consumer rules; explicit invocation only (see skill changelog)
+- **semantic-pkm-creator** **0.3.0**: rename from semantic-sce-creator for personal knowledge management; six-section skeleton; relations moved to references (see skill changelog)
+- Add `skills.sh.json` so the ten skills group on the skills.sh repo page
+
 ## 3.14.0 - 2026-08-28
 
 ### Features
