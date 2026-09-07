@@ -1,11 +1,11 @@
-# SemanticSkills
+# Ontology & Concept Design
 
 [![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.0.0)
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
-> Semantic skills for coding agents — ontology and concept design.
+> Name the meaning first — then write code, run a CLI, or draft a spec.
 
-Ten [Agent Skills](https://agentskills.io/) that make an agent name what something *means* before it writes code, runs a CLI, or drafts a spec: which purpose, which grain, which evidence. Each skill keeps its protocol in a thin `SKILL.md` and loads bulky domain material from `references/` only when the task needs it.
+[SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) is a set of ten [Agent Skills](https://agentskills.io/) for ontology, semantic layers, and concept design. Each skill keeps its protocol in a thin `SKILL.md` and loads bulky domain material from `references/` only when the task needs it. Huawei Cloud FinOps skills ship in the same repo.
 
 The concept-design skills adapt Daniel Jackson's concepts-and-synchronizations model — [The Essence of Software](https://essenceofsoftware.com/) (2021), with the current when/where/then sync notation from *Beyond Objects* ([arXiv:2606.27258](https://arxiv.org/abs/2606.27258)) — for agent use; an adaptation, not endorsed by the author.
 

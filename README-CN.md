@@ -1,11 +1,11 @@
-# Semantic Skills
+# 本体语义 · 概念设计
 
 [![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.0.0)
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
-> 面向编码 Agent 的语义技能 —— 本体与概念设计。
+> 先说清含义，再写代码、跑命令、起草规格。
 
-10 个 [Agent Skills](https://agentskills.io/)，让 Agent 在写代码、跑 CLI、起草规格之前先说清一件东西*意味着什么*：哪个 purpose、哪个粒度、哪份证据。每个技能把协议留在轻薄的 `SKILL.md`，体量大的领域材料放在 `references/`，只在任务需要时加载。
+[SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) 收录 10 个 [Agent Skills](https://agentskills.io/)，覆盖本体与语义层、概念设计。每个技能把协议留在轻薄的 `SKILL.md`，体量大的领域材料放在 `references/`，只在任务需要时加载。华为云 FinOps 技能同仓收录。
 
 概念设计几个技能改编自 Daniel Jackson 的 concepts 与 synchronizations 模型 —— [The Essence of Software](https://essenceofsoftware.com/)（2021），sync 采用 *Beyond Objects*（[arXiv:2606.27258](https://arxiv.org/abs/2606.27258)）里现行的 when/where/then 记法 —— 面向 Agent 改编，未获作者背书。
 
