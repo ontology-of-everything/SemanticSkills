@@ -1,6 +1,6 @@
-# 概念 PRD（Jackson）
+# 概念 PRD
 
-`concept-prd` · **Concept PRD (Jackson)** · 原名 `jackson-concept-prd`
+`concept-prd` · **Concept PRD**
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-prd/SKILL.md`](../../skills/concept-prd/SKILL.md)。
 
@@ -28,8 +28,11 @@
 
 ```text
 skills/concept-prd/
-├── SKILL.md
-└── agents/openai.yaml
+├── SKILL.md                 # 目标 / 原则 / 流程 / 命题 / 记法与模板 / 参考
+├── agents/openai.yaml
+└── references/
+    ├── templates.md         # CONCEPT.md 与 SYNCS.md 模板
+    └── sources.md           # 取用原则的出处
 ```
 
 ```bash

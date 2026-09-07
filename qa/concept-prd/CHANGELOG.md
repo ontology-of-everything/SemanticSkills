@@ -7,8 +7,12 @@ Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANG
 ### Changed
 
 - Rename the installable skill from `jackson-concept-prd` to `concept-prd`
-  (concept-* family prefix); companion references updated. The old name
-  stays a trigger keyword; content is unchanged
+  (concept-* family prefix); companion references updated
+- Restructure SKILL.md into the six-section skeleton (目标 / 原则 / 流程 /
+  命题 / 记法与模板 / 参考) and cut it to ~59% of its size (5.1 KB → 3.0 KB);
+  placement table becomes flow step 1, completion conditions become
+  checkable propositions, CONCEPT.md / SYNCS.md templates move to
+  `references/templates.md`, sources to `references/sources.md`
 
 ## 0.2.1 - 2026-08-28
 

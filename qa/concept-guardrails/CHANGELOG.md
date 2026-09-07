@@ -8,7 +8,7 @@ Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANG
 
 - 技能改名：`wyx-zh-cn` → `concept-guardrails`，与 `concept-design` /
   `concept-prd` / `concept-implementation` / `concept-audit` 共用 concept-*
-  前缀；显式调用改为 `$concept-guardrails`，`wyx-zh-cn` 与 `wyx` 保留为触发词
+  前缀；显式调用改为 `$concept-guardrails`
 - `runtime/.claude-plugin/plugin.json` 的插件标识同步改为 `concept-guardrails`
 - 内容仍对应上游 jlifyio/wyx v0.26.0；版本号不再与上游同步
 

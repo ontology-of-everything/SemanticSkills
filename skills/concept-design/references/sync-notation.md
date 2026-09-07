@@ -4,7 +4,7 @@
 
 ## 记法（when / where / then，作者现行版）
 
-示例改写自 Jackson 的 ExpiringUserSession：
+示例改写自 Daniel Jackson 的 ExpiringUserSession：
 
 ```text
 app ExpiringUserSession

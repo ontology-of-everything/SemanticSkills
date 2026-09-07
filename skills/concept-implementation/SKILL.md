@@ -1,9 +1,9 @@
 ---
 name: concept-implementation
-description: Maps a confirmed Jackson concept model onto a modular monolith (one module per concept, syncs as mediators or a rule engine). Use this skill whenever the user asks to implement the concept model, 模块单体, or mentions concept-implementation (formerly jackson-concept-implementation).
+description: Maps a confirmed concept model (Daniel Jackson's concept design) onto a modular monolith (one module per concept, syncs as mediators or a rule engine). Use this skill whenever the user asks to implement the concept model, 模块单体, or mentions concept-implementation.
 ---
 
-# Jackson 概念实现（模块单体）
+# 概念实现（模块单体）
 
 输入是已确认的概念模型（`concept-design` 的输出：concepts、syncs、依赖图）。本技能只做模型到代码结构的映射，不重开概念讨论；概念边界有疑问回上游技能，存量工程审计用 `concept-audit`。
 
@@ -28,7 +28,7 @@ description: Maps a confirmed Jackson concept model onto a modular monolith (one
 
 设计层语义是**因果规则**（when 匹配动作完成、where 经 queries 绑定变量、then 触发新调用）：不要求事务，错误是可匹配的输出 case。两条落地路线都实现同一语义：
 
-1. **过程式 mediator**（默认）：每个 flow 入口（`Requesting` 动作）一个编排函数，把该 flow 的若干 sync 顺序内联，调用各概念 actions、组装响应。最简单、最贴近常规 web 实践，Jackson 课程即此教法。
+1. **过程式 mediator**（默认）：每个 flow 入口（`Requesting` 动作）一个编排函数，把该 flow 的若干 sync 顺序内联，调用各概念 actions、组装响应。最简单、最贴近常规 web 实践，Daniel Jackson 的课程即此教法。
 2. **声明式规则引擎**：sync 按条写成 `when / where / then` 规则注册进引擎，由引擎派发并留下动作溯源。表达力强、行为增量可按条增删，但需引入引擎运行时。
 
 行为规则多、需要审计追踪或按规则粒度演进时才选 2。
@@ -51,7 +51,7 @@ syncs 层是应用级的用例层（整洁架构的 use-case 层），没有自�
 
 概念多到平铺难导航、构建变慢或多团队分治时（经验上十余个概念起）按**概念分组**（俗称分域）拆解；无痛点不分组。
 
-- **分组无架构语义**：Jackson 模型没有"域"元素，分组纯属工程组织（目录、交付、团队归属）。零引用铁律对全体概念平坦生效——不存在"同组可互引"，也不存在"组间接口"；跨组唯一通道仍是 syncs。看护规则不必按组升级：组无依赖语义，没有新规则可写。
+- **分组无架构语义**：概念模型没有"域"元素，分组纯属工程组织（目录、交付、团队归属）。零引用铁律对全体概念平坦生效——不存在"同组可互引"，也不存在"组间接口"；跨组唯一通道仍是 syncs。看护规则不必按组升级：组无依赖语义，没有新规则可写。
 - **按模型自带产物划分**：首选 extrinsic 依赖图聚类 + flow 亲和（常被同一批 flow 触达的概念归一组），团队所有权决胜，业务命名只作参考——这样分出的组天然是可独立交付的产品子集。
 - **默认纯目录分组**（`concepts/<组>/<概念>/`），构建单元不变；团队按组分治或构建时间失控时才升级为构建边界（嵌套 workspace / 父 POM），那只是多一道既有防线，不新增语义。
 - **syncs 按组拆包**：flow 是拆解原子、不拆散，flow 模块按组归堆成多个 sync 包。跨组 flow 按**入口 `Requesting` 动作的归属组**落位，不设公共组垃圾抽屉；组合根仍唯一。sync 引用任意组的概念照常合法——syncs 本来就是唯一的多概念引用点，分组不给它加任何限制。

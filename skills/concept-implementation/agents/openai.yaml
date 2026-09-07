@@ -1,4 +1,4 @@
 interface:
-  display_name: "Jackson Concept Implementation"
+  display_name: "Concept Implementation"
   short_description: "把概念模型映射为模块单体代码：concept→模块、sync→mediator"
   default_prompt: "Use $concept-implementation to map the confirmed concept model into a modular monolith: one module per concept, syncs as mediators, dependency graph as build order."

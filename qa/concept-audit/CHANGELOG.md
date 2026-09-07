@@ -8,7 +8,7 @@ Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANG
 
 - Rename the installable skill from `jackson-concept-audit` to
   `concept-audit` (concept-* family prefix); companion references updated.
-  The old name stays a trigger keyword; content is unchanged
+ ; content is unchanged
 
 ## 0.2.0 - 2026-08-28
 

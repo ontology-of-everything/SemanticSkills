@@ -1,9 +1,9 @@
 ---
 name: concept-audit
-description: Audits an existing codebase against its Jackson concept model (spec drift with calibrated severity checklists, boundaries, criteria, composition, dependencies, cross-spec validation). Use this skill whenever the user asks to audit a concept model, 概念审计, or mentions concept-audit (formerly jackson-concept-audit); read-only.
+description: Audits an existing codebase against its concept model (Daniel Jackson's concept design): spec drift with calibrated severity checklists, boundaries, criteria, composition, dependencies, cross-spec validation. Use this skill whenever the user asks to audit a concept model, 概念审计, or mentions concept-audit; read-only.
 ---
 
-# Jackson 概念审计
+# 概念审计
 
 输入：概念规格（与代码共存的 CONCEPT.md / SYNCS.md，以及被审计仓库集中 PRD 目录下的总体 PRD——两处都找）+ 代码库。**只读**：不修改任何文件，产出发现清单；修复由路由到的技能执行。无规格文档时降级为纯边界与判据审计，并在报告中声明。
 
@@ -107,11 +107,11 @@ Summary: 规格 <N> 份，有漂移 <N> 份；Critical <N> / High <N> / Medium <
 
 ## 依据
 
-Jackson：
+Daniel Jackson：
 
 - 批评循环与判据（`concept-design`；user-facing 判据见[资格判据教程](https://essenceofsoftware.com/tutorials/concept-basics/criteria/)）
 - 欠/过同步与 mediator 原则（[概念设计综述](https://essenceofsoftware.com/posts/distillation/)）
 - Parnas 规则（[依赖与子集教程](https://essenceofsoftware.com/tutorials/concept-basics/dependency/)）
 - 规范可从代码提取（[WYSIWID 论文](https://arxiv.org/abs/2508.14511)）；现行记法（[Beyond Objects](https://arxiv.org/abs/2606.27258)）
 
-业界：漂移检查表、严重度校准与并行扫描机制改编自 [jlifyio/wyx](https://github.com/jlifyio/wyx)（本仓 `concept-guardrails` 的上游），适配到零点名的 Jackson 规格格式；架构 fitness functions 管持续（CI 工具见 `concept-implementation` 语言参考），审计管周期，两层互补。
+业界：漂移检查表、严重度校准与并行扫描机制改编自 [jlifyio/wyx](https://github.com/jlifyio/wyx)（本仓 `concept-guardrails` 的上游），适配到零点名的概念规格格式；架构 fitness functions 管持续（CI 工具见 `concept-implementation` 语言参考），审计管周期，两层互补。

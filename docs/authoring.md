@@ -72,7 +72,7 @@ Optional per-skill file read by the harness, not the agent ([Codex skills docs](
 
 ```yaml
 interface:
-  display_name: "Jackson Concept Design"   # required when the file exists
+  display_name: "Concept Design"   # required when the file exists
   short_description: "..."                 # required, 25–64 chars
   default_prompt: "Use $concept-design to ..."   # must name the skill as $name
 ```

@@ -4,8 +4,8 @@
 
 | 来源 | 本技能取用的原则 |
 | --- | --- |
-| [Beyond Objects](https://arxiv.org/abs/2606.27258)（Jackson, 2026） | 规格五要素 + queries；when / where / then 因果语义；`Requesting` 伪概念；书版事务语义由作者废弃；notes 段惯例 |
-| [WYSIWID 论文](https://arxiv.org/abs/2508.14511)（Meng & Jackson, Onward! 2025） | 规格四节无跨概念段；错误是可匹配输出；规格即实现 prompt |
+| [Beyond Objects](https://arxiv.org/abs/2606.27258)（Daniel Jackson, 2026） | 规格五要素 + queries；when / where / then 因果语义；`Requesting` 伪概念；书版事务语义由作者废弃；notes 段惯例 |
+| [WYSIWID 论文](https://arxiv.org/abs/2508.14511)（Eagon Meng & Daniel Jackson, Onward! 2025） | 规格四节无跨概念段；错误是可匹配输出；规格即实现 prompt |
 | [资格判据教程](https://essenceofsoftware.com/tutorials/concept-basics/criteria/) | 资格五条；user-facing 含 API 程序员 |
 | [Sync 组合教程](https://essenceofsoftware.com/tutorials/concept-basics/sync/) | 组合层独立于概念；欠同步 / 过同步；placeholder 动作 |
 | [依赖与子集教程](https://essenceofsoftware.com/tutorials/concept-basics/dependency/) | intrinsic / extrinsic 依赖；Parnas 规则；子集即产品家族 |

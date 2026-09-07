@@ -8,7 +8,7 @@ Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANG
 
 - Rename the installable skill from `jackson-concept-implementation` to
   `concept-implementation` (concept-* family prefix); companion references
-  updated. The old name stays a trigger keyword; content is unchanged
+  updated; content is unchanged
 
 ## 0.3.0 - 2026-08-28
 

@@ -1,6 +1,6 @@
-# 概念设计（Jackson）
+# 概念设计
 
-`concept-design` · **Concept Design (Jackson)** · 原名 `jackson-concept-design`
+`concept-design` · **Concept Design**
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-design/SKILL.md`](../../skills/concept-design/SKILL.md)。
 

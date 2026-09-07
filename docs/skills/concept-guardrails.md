@@ -1,6 +1,6 @@
 # 概念护栏 · wyx 架构护栏中文版
 
-`concept-guardrails` · **Concept Guardrails — wyx Architecture Guardrails (Chinese)** · 原名 `wyx-zh-cn`
+`concept-guardrails` · **Concept Guardrails — wyx Architecture Guardrails (Chinese)**
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-guardrails/SKILL.md`](../../skills/concept-guardrails/SKILL.md)。
 
@@ -88,5 +88,5 @@ npx skills add ./skills/concept-guardrails \
 
 ## 来源
 
-- **WYSIWID** —— Meng & Jackson, "What You See Is What It Does"（MIT, Onward! 2025）。
+- **WYSIWID** —— Eagon Meng & Daniel Jackson, "What You See Is What It Does"（MIT, Onward! 2025）。
 - **WYWIWID** —— Dr. Ernie, "What You Write Is What It Did"。

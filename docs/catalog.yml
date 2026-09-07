@@ -78,8 +78,8 @@ skills:
   - id: concept-design
     path: skills/concept-design
     qa: qa/concept-design
-    display_name: "Concept Design (Jackson)"
-    display_name_zh: "概念设计（Jackson）"
+    display_name: "Concept Design"
+    display_name_zh: "概念设计"
     domain: meta
     subdomains: [concept-design, requirements, software-design]
     summary: Models requirements as independent concepts defined by one purpose, an end-to-end operational principle, relational state, and actions with error cases and read-only queries; critiques boundaries through specificity, completeness, independence, and familiarity; composes application behavior with when/where/then causal synchronizations (the author's current notation) and stops before engineering artifacts
@@ -92,12 +92,12 @@ skills:
   - id: concept-prd
     path: skills/concept-prd
     qa: qa/concept-prd
-    display_name: "Concept PRD (Jackson)"
-    display_name_zh: "概念 PRD（Jackson）"
+    display_name: "Concept PRD"
+    display_name_zh: "概念 PRD"
     domain: meta
     subdomains: [concept-design, prd, specifications]
-    summary: Transcribes a confirmed Jackson concept model into a PRD family—central overall PRD plus wyx-compatible per-concept CONCEPT.md (colocated with code when modules exist) and a single flow-grouped SYNCS.md (split per sync package later by implementation)—without inventing content; zero cross-concept naming in concept specs; model gaps return to concept design
-    summary_zh: 把已确认的 Jackson 概念模型转录为 PRD 文档族：总体 PRD 集中，每概念 CONCEPT.md 与代码共存（wyx 兼容格式）、全部 sync 转录期单文件按 flow 分节（实现期拆包归实现技能）；概念规格零点名，纯转录不再创作，缺口回上游建模
+    summary: Transcribes a confirmed concept model (Daniel Jackson's concept design) into a PRD family—central overall PRD plus wyx-compatible per-concept CONCEPT.md (colocated with code when modules exist) and a single flow-grouped SYNCS.md (split per sync package later by implementation)—without inventing content; zero cross-concept naming in concept specs; model gaps return to concept design
+    summary_zh: 把已确认的概念模型（Daniel Jackson 概念设计）转录为 PRD 文档族：总体 PRD 集中，每概念 CONCEPT.md 与代码共存（wyx 兼容格式）、全部 sync 转录期单文件按 flow 分节（实现期拆包归实现技能）；概念规格零点名，纯转录不再创作，缺口回上游建模
     version: "0.3.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; writes Markdown PRD files
@@ -106,12 +106,12 @@ skills:
   - id: concept-implementation
     path: skills/concept-implementation
     qa: qa/concept-implementation
-    display_name: "Concept Implementation (Jackson, Modular Monolith)"
-    display_name_zh: "概念实现（Jackson · 模块单体）"
+    display_name: "Concept Implementation — Modular Monolith"
+    display_name_zh: "概念实现 · 模块单体"
     domain: meta
     subdomains: [concept-design, modular-monolith, implementation]
-    summary: Maps a confirmed Jackson concept model onto a modular monolith—one module per concept, when/where/then syncs as mediators or a rule engine with error syncs as the default failure path, specs colocated with code, the dependency graph as build and cut order; scales via semantics-free concept grouping and per-group sync packages; language notes for Rust, Java/Spring Modulith, and TypeScript
-    summary_zh: 把已确认的 Jackson 概念模型映射为模块单体：一个 concept 一个模块，when/where/then sync 落在组合层（mediator 或规则引擎、错误 sync 为默认失败路径），规格与代码共存，依赖图决定构建与裁剪顺序；规模大时按无语义概念分组与 sync 拆包扩展；按需加载 Rust / Java / TypeScript 说明
+    summary: Maps a confirmed concept model (Daniel Jackson's concept design) onto a modular monolith—one module per concept, when/where/then syncs as mediators or a rule engine with error syncs as the default failure path, specs colocated with code, the dependency graph as build and cut order; scales via semantics-free concept grouping and per-group sync packages; language notes for Rust, Java/Spring Modulith, and TypeScript
+    summary_zh: 把已确认的概念模型（Daniel Jackson 概念设计）映射为模块单体：一个 concept 一个模块，when/where/then sync 落在组合层（mediator 或规则引擎、错误 sync 为默认失败路径），规格与代码共存，依赖图决定构建与裁剪顺序；规模大时按无语义概念分组与 sync 拆包扩展；按需加载 Rust / Java / TypeScript 说明
     version: "0.4.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: Mapping needs only the confirmed model; language-specific boundary tests may use cargo, Spring Modulith, or dependency-cruiser
@@ -120,11 +120,11 @@ skills:
   - id: concept-audit
     path: skills/concept-audit
     qa: qa/concept-audit
-    display_name: "Concept Audit (Jackson)"
-    display_name_zh: "概念审计（Jackson）"
+    display_name: "Concept Audit"
+    display_name_zh: "概念审计"
     domain: meta
     subdomains: [concept-design, architecture-audit, spec-drift]
-    summary: Read-only five-dimension audit of a codebase against its Jackson concept model—spec drift with calibrated severity checklists and cross-spec validation (adapted from jlifyio/wyx), boundary violations, criteria review, composition quality, dependency/subset integrity—with parallel scans for 5+ specs and evidenced findings routed to design, prd, or implementation
+    summary: Read-only five-dimension audit of a codebase against its concept model (Daniel Jackson's concept design)—spec drift with calibrated severity checklists and cross-spec validation (adapted from jlifyio/wyx), boundary violations, criteria review, composition quality, dependency/subset integrity—with parallel scans for 5+ specs and evidenced findings routed to design, prd, or implementation
     summary_zh: 只读对照概念规格与代码：规格漂移用校准过的检查表与跨规格校验（改编自 jlifyio/wyx），加边界违规、判据重审、组合质量、依赖与子集共五维；规格多时并行扫描，发现带证据并路由到 design / prd / implementation
     version: "0.3.0"
     agents: [cursor, claude-code, codex, openclaw]

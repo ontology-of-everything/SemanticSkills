@@ -1,6 +1,6 @@
-# 概念审计（Jackson）
+# 概念审计
 
-`concept-audit` · **Concept Audit (Jackson)** · 原名 `jackson-concept-audit`
+`concept-audit` · **Concept Audit**
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-audit/SKILL.md`](../../skills/concept-audit/SKILL.md)。
 
@@ -13,7 +13,7 @@
 
 ## 适用场景
 
-- 已有 Jackson 模型或 PRD，需要核对应代码是否仍一一对应。
+- 已有概念模型或 PRD，需要核对应代码是否仍一一对应。
 - 模块互引、共享表、DTO 进概念签名等边界问题需要定位，而不是立刻改代码。
 - 持续看护已由 CI 架构测试承担，需要一次周期或按需的人工审计。
 

@@ -1,15 +1,15 @@
 ---
 name: concept-design
-description: Models or reviews requirements as Jackson concepts defined by Purpose, OP, State, and Actions, then composes them with Syncs. Use this skill whenever the user asks to discuss requirements, review a concept model, or mentions 概念设计 / 概念建模 / concept-design (formerly jackson-concept-design); stop at model confirmation without producing PRD or code.
+description: Models or reviews requirements as concepts (Daniel Jackson's concept design) defined by Purpose, OP, State, and Actions, then composes them with Syncs. Use this skill whenever the user asks to discuss requirements, review a concept model, or mentions 概念设计 / 概念建模; stop at model confirmation without producing PRD or code.
 ---
 
-# 概念设计（Jackson）
+# 概念设计
 
 ## 目标
 
 输入：需求、访谈记录或既有概念模型。输出：由独立 concepts 与 synchronizations 组成的概念模型（模板见「记法与模板」），停在模型确认——除非用户明确要求，不出 PRD、架构或代码。确认后交接：文档化 → `concept-prd`；代码落地 → `concept-implementation`；存量审计 → `concept-audit`。
 
-Concept 同时是用户为有效使用软件而掌握的**心理构造**，和与之对应的**连贯功能单元**；界面和术语表达概念，代码实现概念，都不是概念本身。本文是按 Jackson 的结构、判据与设计动作整理的操作循环，不冒充作者原文流程。
+Concept 同时是用户为有效使用软件而掌握的**心理构造**，和与之对应的**连贯功能单元**；界面和术语表达概念，代码实现概念，都不是概念本身。本文是按 Daniel Jackson 的结构、判据与设计动作整理的操作循环，不冒充作者原文流程。
 
 ## 原则
 

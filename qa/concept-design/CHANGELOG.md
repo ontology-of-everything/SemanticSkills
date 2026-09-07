@@ -9,7 +9,7 @@ Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANG
 - Rename the installable skill from `jackson-concept-design` to
   `concept-design`; the concept-* family now shares one prefix with
   `concept-prd`, `concept-implementation`, `concept-audit`, and
-  `concept-guardrails`. The old name stays a trigger keyword
+  `concept-guardrails`
 - Restructure SKILL.md into the six-section skeleton (目标 / 原则 / 流程 /
   命题 / 记法与模板 / 参考) and cut it to ~46% of its size (14.0 KB → 6.5 KB).
   The design loop now routes to on-demand references: criteria and

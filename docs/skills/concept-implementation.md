@@ -1,6 +1,6 @@
-# 概念实现（Jackson · 模块单体）
+# 概念实现 · 模块单体
 
-`concept-implementation` · **Concept Implementation (Jackson, Modular Monolith)** · 原名 `jackson-concept-implementation`
+`concept-implementation` · **Concept Implementation — Modular Monolith**
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-implementation/SKILL.md`](../../skills/concept-implementation/SKILL.md)。
 

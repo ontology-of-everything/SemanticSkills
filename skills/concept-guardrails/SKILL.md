@@ -1,6 +1,6 @@
 ---
 name: concept-guardrails
-description: Run wyx spec guardrails (formerly wyx-zh-cn) only when the user explicitly invokes $concept-guardrails. / 仅在用户显式调用 $concept-guardrails 时运行 wyx 规格护栏。
+description: Run wyx spec guardrails only when the user explicitly invokes $concept-guardrails. / 仅在用户显式调用 $concept-guardrails 时运行 wyx 规格护栏。
 compatibility: 只需读写文件与 Grep/Glob；可选的边界注入运行时需要 Claude Code hooks 与 jq。
 metadata:
   author: ontology-of-everything
@@ -99,5 +99,5 @@ src/lib/
 
 本技能是 [jlifyio/wyx](https://github.com/jlifyio/wyx) v0.26.0 的中文改写版，遵循上游 MIT 许可（见 `LICENSE.upstream`）。上游的思想来源：
 
-- **WYSIWID** —— Meng & Jackson, "What You See Is What It Does"（MIT, Onward! 2025）：把概念规格与边界声明作为让软件可读的结构化手段。
+- **WYSIWID** —— Eagon Meng & Daniel Jackson, "What You See Is What It Does"（MIT, Onward! 2025）：把概念规格与边界声明作为让软件可读的结构化手段。
 - **WYWIWID** —— Dr. Ernie, "What You Write Is What It Did"：用漂移检测与数据管道不变量提供基于证据的可读性。
