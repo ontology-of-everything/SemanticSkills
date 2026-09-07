@@ -73,8 +73,9 @@ skills:
     version: "0.3.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; writes three YAML files plus a round-1 progress note; relation reference loaded on demand
-    marketplaces: []
+    marketplaces: [clawhub]
     distribution: direct-skill
+    clawhub_license: MIT-0 on ClawHub; repository source remains Apache-2.0
   - id: concept-design
     path: skills/concept-design
     qa: qa/concept-design
