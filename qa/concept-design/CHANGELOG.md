@@ -18,6 +18,14 @@ Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANG
   source list with one extracted principle per source →
   `references/sources.md`. Completion conditions become checkable
   propositions; no rules were dropped
+- Make sync design explicit: principles now state sync as the sole
+  composition mechanism (behavior preservation, Requesting entry, errors as
+  matchable outputs) and that composition has structure — syncs grouped by
+  flow, plus two deliverables: a coordination graph (who triggers whom) and
+  the dependency graph (who cannot ship without whom). Flow step 5 is broken
+  into sub-steps; the output template gains a `## 同步图` section and a
+  flow-grouped sync block with an error sync; `references/sync-notation.md`
+  gains a "结构：flow 与同步图" section (cascade rules, decomposition signals)
 
 ## 0.3.0 - 2026-08-28
 

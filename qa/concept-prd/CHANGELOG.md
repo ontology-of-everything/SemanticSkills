@@ -13,6 +13,8 @@ Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANG
   placement table becomes flow step 1, completion conditions become
   checkable propositions, CONCEPT.md / SYNCS.md templates move to
   `references/templates.md`, sources to `references/sources.md`
+- `SYNCS.md` coordination graph is a direct transcription of the model's
+  同步图 produced by `concept-design`
 
 ## 0.2.1 - 2026-08-28
 

@@ -30,7 +30,7 @@ description: Transcribes a confirmed concept model (Daniel Jackson's concept des
 
 2. **总体 PRD**：需求与 Misfits；概念索引（每概念一行 purpose + 规格链接）；依赖图与子集；排除与未决全量转录。
 3. **每概念 CONCEPT.md**：按 `references/templates.md`；OP 的每条 after/then 场景即一条验收场景。
-4. **SYNCS.md**：按 flow 分节（flow = 一个 `Requesting` 动作触发、多条 sync 接力的动作链），不按域分节；含错误 flow 与排除动作。
+4. **SYNCS.md**：`## coordination graph` 直接转录模型的同步图；按 flow 分节（flow = 一个 `Requesting` 动作触发、多条 sync 接力的动作链），不按域分节；含错误 flow 与排除动作。
 5. 逐条核对「命题」后交付。
 
 ## 命题

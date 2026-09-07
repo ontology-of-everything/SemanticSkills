@@ -23,7 +23,7 @@
 2. 识别有独立目的的候选 concepts，而不把表、页面、实体名或团队边界直接映射成 concepts。
 3. 用 Purpose、Operational Principle、关系式 State、带错误 case 与只读 queries 的 Actions 刻画每个 concept；规格四节零点名其他概念，使用上下文备注只进可选的 notes 段。
 4. 用专一、完整、独立、熟悉审查边界，并用 split/merge、unify/specialize、tighten/loosen 调整。
-5. 把跨 concept 行为写成 when / where / then 因果 sync（作者现行记法，书版事务语义已废弃；外部请求具体化为 Requesting 动作、错误由错误 sync 匹配），并按 Parnas 依赖图圈定 MVP；在模型确认处停止。
+5. 把跨 concept 行为写成 when / where / then 因果 sync（作者现行记法，书版事务语义已废弃；外部请求具体化为 Requesting 动作、错误由错误 sync 匹配），按 flow 分组并画同步图，再按 Parnas 依赖图圈定 MVP；在模型确认处停止。
 
 ## 安装载荷
 

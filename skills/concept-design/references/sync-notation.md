@@ -39,6 +39,13 @@ app ExpiringUserSession
 - 未被任何 sync 提及的概念动作不在应用中出现；排除是设计决策（Yellkey 不开放 renew），记入排除与未决表。
 - **实现层**由 mediator 或规则引擎落地 sync：组合层引用概念，概念之间零相互引用。
 
+## 结构：flow 与同步图
+
+- **Flow**：一个 `Requesting` 入口动作触发、多条细粒度 sync 接力的动作链。sync 按 flow 分组书写；每个 flow 至少有成功路径的响应 sync，可失败动作另有匹配 `(error)` 的错误 sync（或记入排除表）。flow 是后续 PRD（`SYNCS.md` 按 flow 分节）与实现（每 flow 一个 mediator）的拆解原子。
+- **同步图（coordination graph）**：每条 sync 一条边 `[Source.action] --(syncName)--> [Target.action]`；then 触发多个动作时一条 sync 多条边。它回答"谁触发谁"，与依赖图（"没有谁就不能有谁"）不同：同步图有边 A→B 不意味着 A 依赖 B——依赖只在应用层由 extrinsic 判断。
+- **级联**：sync 触发的动作可再触发 sync；设计层不限方向、不禁环，但每个环都要能说出终止条件，实现层声明级联深度上限。
+- **设计信号**：一个 flow 触达概念过多（经验 ≥5）或一条 sync 长成多步脚本 → 分解线索，回第 4 步；一组 sync 需要自有状态才能工作 → 升格为概念的信号。
+
 ## 模式与信号
 
 - **Placeholder 动作**：为同步而设计的概念提供占位动作，钉到其他概念的真实动作上——访问控制的 access、订阅的 notify。
