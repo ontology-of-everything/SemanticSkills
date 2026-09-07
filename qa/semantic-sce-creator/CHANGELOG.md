@@ -1,6 +1,14 @@
-# sce-creator Changelog
+# semantic-sce-creator Changelog
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
+
+## 0.2.0 - 2026-08-28
+
+### Changed
+
+- Rename the installable skill from `sce-creator` to `semantic-sce-creator`.
+  Output files stay `sce-scenes.yaml`, `sce-concepts.yaml`, `sce-entities.yaml`.
+  The old name remains a trigger keyword.
 
 ## 0.1.0 - 2026-08-18
 

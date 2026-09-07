@@ -2,6 +2,15 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 0.26.1 - 2026-09-03
+
+### Changed
+
+- 默认不再参与模型的自动技能选择；只有用户显式指名 `$wyx-zh-cn`
+  时才加载，并在 Codex 元数据中同步禁用隐式调用
+- 移除安装载荷中的 `license` frontmatter，避免与 ClawHub 的 MIT-0
+  技能包许可冲突；上游 MIT notice 继续保留在 `LICENSE.upstream`
+
 ## 0.26.0 - 2026-08-27
 
 ### Added

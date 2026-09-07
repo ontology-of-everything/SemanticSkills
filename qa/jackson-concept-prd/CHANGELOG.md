@@ -2,6 +2,15 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 0.2.1 - 2026-08-28
+
+### Changed
+
+- Clarify the SYNCS.md lifecycle: single file with a full coordination graph
+  at transcription time; when the syncs layer is later split into per-group
+  packages, jackson-concept-implementation splits the file by flow groups
+  (flows stay intact, coordination graphs localize per package)
+
 ## 0.2.0 - 2026-08-28
 
 ### Changed

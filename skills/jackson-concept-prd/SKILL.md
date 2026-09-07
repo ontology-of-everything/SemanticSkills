@@ -14,7 +14,7 @@ description: Transcribes a confirmed Jackson concept model into PRD specs (centr
 ```text
 docs/prd/README.md        # 总体 PRD：应用层视图（始终集中）
 <模块目录>/CONCEPT.md      # 每概念一份：模块目录已存在时与代码共存
-<syncs 目录>/SYNCS.md      # 全部 sync 单文件，放 syncs 目录
+<syncs 目录>/SYNCS.md      # 全部 sync 单文件，放 syncs 目录（实现期拆包见下）
 docs/prd/concepts/<名>.md  # 代码未就绪时的暂存位，同为 CONCEPT.md 格式
 docs/prd/SYNCS.md          # 同上，syncs 目录未建时暂存
 ```
@@ -58,7 +58,8 @@ after <动作>(<参数>) : (<结果>) then <动作>(<参数>) : (<结果>)
 
 ## SYNCS.md（按 flow 分节）
 
-Flow = 一个外部请求（`Requesting` 动作）触发、多条细粒度 sync 接力的动作链。**不按域拆 sync**——sync 常跨域，按 flow 聚合才能看出欠同步与过同步；全部 sync 保持单文件，协调图需要完整视图。
+Flow = 一个外部请求（`Requesting` 动作）触发、多条细粒度 sync 接力的动作链。**sync 按 flow 聚合、不按域分节**——sync 常跨域，按 flow 才能看出欠同步与过同步。
+转录期全部 sync 单文件、自带完整协调图；实现期 syncs 层按概念分组拆包时，由 `jackson-concept-implementation` 把本文件按 flow 群随包拆分（flow 不拆散，协调图随包局部化）。
 
 ```markdown
 # syncs: <应用名>
@@ -80,7 +81,7 @@ Flow = 一个外部请求（`Requesting` 动作）触发、多条细粒度 sync 
 - 模型输出的每个部分（concepts、syncs、依赖图、排除与未决）都有唯一落点，无遗漏无重复。
 - 每份 CONCEPT.md 四节零点名其他概念，无 interactions / dependencies 段；上下文备注只在 notes。
 - 每条验收场景可追溯到 OP；文档无模型外的新信息（notes 占位除外）。
-- SYNCS.md 单文件、有 coordination graph、按 flow 分节；每个可失败动作有错误 sync 或记入排除。
+- SYNCS.md 转录期单文件、有 coordination graph、按 flow 分节（实现期拆包归 `jackson-concept-implementation` 管辖）；每个可失败动作有错误 sync 或记入排除。
 - 总体 PRD 可导航到全部规格文件，链接有效。
 
 ## 依据

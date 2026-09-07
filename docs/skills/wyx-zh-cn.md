@@ -4,12 +4,17 @@
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/wyx-zh-cn/SKILL.md`](../../skills/wyx-zh-cn/SKILL.md)。
 
-**Version:** 0.26.0 · Changelog:
+**Version:** 0.26.1 · Changelog:
 [qa/wyx-zh-cn/CHANGELOG.md](../../qa/wyx-zh-cn/CHANGELOG.md)
 
 ## 一句话
 
 把模块边界写成放在代码旁边的规格（`CONCEPT.md` / `PIPELINE.md` / `SYNCS.md`），让 agent 动手前就看见边界，并能定期核对规格是否已和代码脱节。
+
+## 启用方式
+
+本技能在 Codex 中默认不参与自动选择，需用 `$wyx-zh-cn` 显式启用；在其他客户端使用对应的手动技能调用语法。
+下文的可选 hooks 运行时也不会随技能自动开启。
 
 ## 适用场景
 

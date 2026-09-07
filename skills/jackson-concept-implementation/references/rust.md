@@ -16,6 +16,8 @@ shared-kernel/      # 仅通用基础类型（Id、时间），无业务
 
 依赖方向由 cargo 强制：`app → syncs → concepts/*`；`concepts/*` 互不声明依赖，即互不可引用。adapters 是概念 crate 内的子模块，具体实现由 app 组合根选用。
 
+概念分组落为目录嵌套（`concepts/billing/invoice/`），workspace `members` 用 glob（`concepts/*/*`）覆盖；crate 名与依赖规则不变，不产生组级新规则。syncs 拆包即 `syncs/` 下每组一个 crate。按组分治时才升级嵌套 workspace。
+
 ## 概念 crate 内部
 
 ```text

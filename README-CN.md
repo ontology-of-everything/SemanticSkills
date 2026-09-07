@@ -30,14 +30,14 @@ English: [README.md](README.md)。
 | [`jackson-concept-prd`](docs/skills/jackson-concept-prd.md) | 0.2.0 | 把已确认的模型转录为集中的总体 PRD，加每概念一份共存的 `CONCEPT.md` 与一份按 flow 分节的 `SYNCS.md`。有缺口就退回建模 |
 | [`jackson-concept-implementation`](docs/skills/jackson-concept-implementation.md) | 0.2.0 | 把模型映射为模块单体：一个 concept 一个模块，sync 落在 mediator 或规则引擎，规格与代码共存。带 Rust、Java/Spring Modulith、TypeScript 说明 |
 | [`jackson-concept-audit`](docs/skills/jackson-concept-audit.md) | 0.2.0 | 只读五维审计代码与模型的偏差——漂移、边界、判据、组合、依赖——带严重度校准与修复路由 |
-| [`wyx-zh-cn`](docs/skills/wyx-zh-cn.md) | 0.26.0 | 用同目录的 `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` 声明模块边界并检测规格与代码的漂移。五种模式：audit、concept、pipeline、sync、map |
+| [`wyx-zh-cn`](docs/skills/wyx-zh-cn.md) | 0.26.1 | 仅显式调用；用同目录的 `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` 声明模块边界并检测规格与代码的漂移。五种模式：audit、concept、pipeline、sync、map |
 
 ### 本体与语义
 
 | 技能 | 版本 | 做什么 |
 | --- | --- | --- |
 | [`semantic-creator`](docs/skills/semantic-creator.md) | 0.5.1 | 把一套接口、CLI 或表做成粒度先行的 Kimball 语义层，经 HTML 决策工作台推进，输出 OKF 或 YAML，每个字段可追溯到观察到的证据 |
-| [`sce-creator`](docs/skills/sce-creator.md) | 0.1.0 | 两轮从原文萃取场景、概念、实体：先扫骨架给人确认，再回填 IPO、分解、组装与八种关系 |
+| [`semantic-sce-creator`](docs/skills/semantic-sce-creator.md) | 0.2.0 | 两轮从原文萃取场景、概念、实体：先扫骨架给人确认，再回填 IPO、分解、组装与八种关系 |
 
 ### 华为云
 
@@ -84,12 +84,12 @@ npx skills add ./skills/<skill-name> --skill <skill-name> --agent cursor --copy 
 
 ## 用法
 
-技能按 description 自动触发，正常说话就够：
+技能通常按 description 自动触发，正常说话就够。在 Codex 中 `wyx-zh-cn` 例外，必须显式指名：
 
 ```text
 把这个需求建成概念模型                      → jackson-concept-design
 模型定了，出一份 PRD 规格                   → jackson-concept-prd
-给 src/orders 写概念规格，然后查漂移         → wyx-zh-cn
+$wyx-zh-cn 给 src/orders 写概念规格，然后查漂移
 把这套接口做成语义层                        → semantic-creator
 3 月华为云为什么扣了这笔                     → huawei-cloud-billing-scout
 ```

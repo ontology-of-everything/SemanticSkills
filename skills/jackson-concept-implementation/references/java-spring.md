@@ -18,6 +18,7 @@ com.example.app/
 - 概念包即 `@ApplicationModule`：对外只暴露包根的公开类型（module API），内部子包默认对外不可见。
 - 概念间零引用由 Modulith 校验；类型参数落为泛型或 ID 值对象（record）。
 - 概念包内部照端口-适配器分层：domain / actions（应用服务）/ ports（接口）/ adapters（JPA 等实现）。
+- 概念分组落为中间包层（`com.example.app.billing.invoice`），用 Modulith 的嵌套 application module 声明；模块可见性与 `verify()` 规则不变，不产生组级新规则。syncs 拆包即 syncs 下每组一个子包。
 
 ## Sync 两种落地
 

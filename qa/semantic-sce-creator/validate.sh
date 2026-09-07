@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 QA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILL_DIR="$(cd "$QA_DIR/../../skills/sce-creator" && pwd)"
+SKILL_DIR="$(cd "$QA_DIR/../../skills/semantic-sce-creator" && pwd)"
 
 fail() { printf 'FAIL: %s\n' "$1" >&2; exit 1; }
 need_cmd() { command -v "$1" >/dev/null 2>&1 || fail "missing command: $1"; }
@@ -41,4 +41,4 @@ run_local_or_npx markdownlint-cli2 --config "$QA_DIR/.markdownlint.json" "$SKILL
 need_cmd skillcheck
 skillcheck "$SKILL_DIR" --target-agent cursor --strict-cursor --min-desc-score 70
 
-printf 'OK: sce-creator validation passed\n'
+printf 'OK: semantic-sce-creator validation passed\n'

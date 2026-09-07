@@ -4,7 +4,7 @@
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/jackson-concept-implementation/SKILL.md`](../../skills/jackson-concept-implementation/SKILL.md)。
 
-**Version:** 0.2.0 · Changelog:
+**Version:** 0.3.0 · Changelog:
 [qa/jackson-concept-implementation/CHANGELOG.md](../../qa/jackson-concept-implementation/CHANGELOG.md)
 
 ## 一句话
@@ -23,6 +23,7 @@
 2. 默认过程式 mediator；行为规则多或需要动作溯源时再选规则引擎。sync 语义为因果规则（when/where/then），错误 sync 是默认失败路径，共享事务只是单库可选强化。
 3. 对外 API 只暴露应用动作（Requesting 触发的 sync），不直通概念动作。
 4. 规格共存落位（模块目录 CONCEPT.md、syncs 目录 SYNCS.md），此后规格先行；边界规则固化为架构看护测试并进入 CI。概念边界有疑问回 `jackson-concept-design`。
+5. 概念多时按概念分组（俗称分域）扩展：纯工程组织、无架构语义，零引用铁律平坦生效；syncs 按 flow 群拆包，跨组 flow 归入口 Requesting 动作所在组，SYNCS.md 随包走。
 
 ## 安装载荷
 

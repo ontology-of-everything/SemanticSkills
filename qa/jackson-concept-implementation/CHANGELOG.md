@@ -2,6 +2,26 @@
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
 
+## 0.3.0 - 2026-08-28
+
+### Added
+
+- Scaling section: concept grouping (a.k.a. domain folders) as pure code
+  organization with zero architectural semantics — the zero-reference rule
+  stays flat across all concepts (no intra-group references, no "group
+  interfaces", no new guard rules); directory-only by default, build
+  boundaries as an optional upgrade
+- Groups derive from the extrinsic dependency graph plus flow affinity,
+  team ownership as tie-breaker; groups double as shippable product subsets
+- Syncs-layer split: flow modules regroup into per-group sync packages
+  (flows never split); cross-group flows land in the group owning the entry
+  Requesting action; each sync package carries its own SYNCS.md with a
+  local coordination graph (global view = overall PRD graph + wyx:map)
+- New violation signal: citing same-group membership to reference a sibling
+  concept, or inventing "group interfaces"
+- Language references gain nested grouping layouts (cargo glob members,
+  Spring Modulith nested application modules, pnpm workspace globs)
+
 ## 0.2.0 - 2026-08-28
 
 ### Changed

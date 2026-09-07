@@ -61,16 +61,16 @@ skills:
     marketplaces: [skills-sh, skillsmp, clawhub]
     distribution: direct-skill
     clawhub_license: MIT-0 on ClawHub; repository source remains Apache-2.0
-  - id: sce-creator
-    path: skills/sce-creator
-    qa: qa/sce-creator
-    display_name: "SCE Creator — Scene, Concept, Entity Extract"
-    display_name_zh: "场景-概念-实体萃取"
+  - id: semantic-sce-creator
+    path: skills/semantic-sce-creator
+    qa: qa/semantic-sce-creator
+    display_name: "Semantic SCE Creator — Scene, Concept, Entity Extract"
+    display_name_zh: "语义 · 场景-概念-实体萃取"
     domain: meta
     subdomains: [knowledge-extraction, ontology, sce]
     summary: Two-round extract of callable scenes, concepts, and entities from source text—skeleton first with human confirm, then IPO/decompose/assemble and eight relation types; concept is the hub
     summary_zh: 两轮从原文萃取可调用的场景、概念与实体：先扫骨架并确认，再回填 IPO/分解/组装与八种关系；概念是中枢
-    version: "0.1.0"
+    version: "0.2.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; writes three YAML files plus a round-1 progress note
     marketplaces: []
@@ -87,7 +87,7 @@ skills:
     version: "0.3.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; pure concept modeling
-    marketplaces: []
+    marketplaces: [clawhub]
     distribution: direct-skill
   - id: jackson-concept-prd
     path: skills/jackson-concept-prd
@@ -96,12 +96,12 @@ skills:
     display_name_zh: "Jackson 概念 PRD"
     domain: meta
     subdomains: [concept-design, prd, specifications]
-    summary: Transcribes a confirmed Jackson concept model into a PRD family—central overall PRD plus wyx-compatible per-concept CONCEPT.md (colocated with code when modules exist) and a single flow-grouped SYNCS.md—without inventing content; zero cross-concept naming in concept specs; model gaps return to concept design
-    summary_zh: 把已确认的 Jackson 概念模型转录为 PRD 文档族：总体 PRD 集中，每概念 CONCEPT.md 与代码共存（wyx 兼容格式）、全部 sync 单文件按 flow 分节；概念规格零点名，纯转录不再创作，缺口回上游建模
-    version: "0.2.0"
+    summary: Transcribes a confirmed Jackson concept model into a PRD family—central overall PRD plus wyx-compatible per-concept CONCEPT.md (colocated with code when modules exist) and a single flow-grouped SYNCS.md (split per sync package later by implementation)—without inventing content; zero cross-concept naming in concept specs; model gaps return to concept design
+    summary_zh: 把已确认的 Jackson 概念模型转录为 PRD 文档族：总体 PRD 集中，每概念 CONCEPT.md 与代码共存（wyx 兼容格式）、全部 sync 转录期单文件按 flow 分节（实现期拆包归实现技能）；概念规格零点名，纯转录不再创作，缺口回上游建模
+    version: "0.2.1"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; writes Markdown PRD files
-    marketplaces: []
+    marketplaces: [clawhub]
     distribution: direct-skill
   - id: jackson-concept-implementation
     path: skills/jackson-concept-implementation
@@ -110,12 +110,12 @@ skills:
     display_name_zh: "Jackson 概念实现"
     domain: meta
     subdomains: [concept-design, modular-monolith, implementation]
-    summary: Maps a confirmed Jackson concept model onto a modular monolith—one module per concept, when/where/then syncs as mediators or a rule engine with error syncs as the default failure path, specs colocated with code, the dependency graph as build and cut order; language notes for Rust, Java/Spring Modulith, and TypeScript
-    summary_zh: 把已确认的 Jackson 概念模型映射为模块单体：一个 concept 一个模块，when/where/then sync 落在组合层（mediator 或规则引擎、错误 sync 为默认失败路径），规格与代码共存，依赖图决定构建与裁剪顺序；按需加载 Rust / Java / TypeScript 说明
-    version: "0.2.0"
+    summary: Maps a confirmed Jackson concept model onto a modular monolith—one module per concept, when/where/then syncs as mediators or a rule engine with error syncs as the default failure path, specs colocated with code, the dependency graph as build and cut order; scales via semantics-free concept grouping and per-group sync packages; language notes for Rust, Java/Spring Modulith, and TypeScript
+    summary_zh: 把已确认的 Jackson 概念模型映射为模块单体：一个 concept 一个模块，when/where/then sync 落在组合层（mediator 或规则引擎、错误 sync 为默认失败路径），规格与代码共存，依赖图决定构建与裁剪顺序；规模大时按无语义概念分组与 sync 拆包扩展；按需加载 Rust / Java / TypeScript 说明
+    version: "0.3.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: Mapping needs only the confirmed model; language-specific boundary tests may use cargo, Spring Modulith, or dependency-cruiser
-    marketplaces: []
+    marketplaces: [clawhub]
     distribution: direct-skill
   - id: jackson-concept-audit
     path: skills/jackson-concept-audit
@@ -129,7 +129,7 @@ skills:
     version: "0.2.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: Read-only; needs the codebase plus optional PRD or concept-model docs
-    marketplaces: []
+    marketplaces: [clawhub]
     distribution: direct-skill
   - id: wyx-zh-cn
     path: skills/wyx-zh-cn
@@ -138,11 +138,11 @@ skills:
     display_name_zh: "wyx 架构护栏 · 中文版"
     domain: meta
     subdomains: [architecture, module-boundaries, drift-detection, concept-specs]
-    summary: Chinese adaptation of jlifyio/wyx v0.26.0—declares module boundaries as colocated CONCEPT/PIPELINE/SYNCS specs, audits spec coverage with dependency-ordered command plans, detects spec-code drift with calibrated severities and cross-spec reference validation, and renders an ARCHITECTURE.md Mermaid map; ships the upstream Claude Code hooks runtime verbatim as an optional boundary-injection layer
-    summary_zh: jlifyio/wyx v0.26.0 中文改写版 · 用与代码同目录的 CONCEPT/PIPELINE/SYNCS 规格声明模块边界；审计覆盖缺口并按依赖排序给出命令计划；用校准过的严重度与跨规格校验检测规格漂移；生成 ARCHITECTURE.md Mermaid 地图；上游 hooks 运行时原样收录，作为可选的边界自动注入层
-    version: "0.26.0"
+    summary: Explicit-invocation-only Chinese adaptation of jlifyio/wyx v0.26.0—declares module boundaries as colocated CONCEPT/PIPELINE/SYNCS specs, audits spec coverage with dependency-ordered command plans, detects spec-code drift with calibrated severities and cross-spec reference validation, and renders an ARCHITECTURE.md Mermaid map; ships the upstream Claude Code hooks runtime verbatim as an optional boundary-injection layer
+    summary_zh: 仅显式调用的 jlifyio/wyx v0.26.0 中文改写版 · 用与代码同目录的 CONCEPT/PIPELINE/SYNCS 规格声明模块边界；审计覆盖缺口并按依赖排序给出命令计划；用校准过的严重度与跨规格校验检测规格漂移；生成 ARCHITECTURE.md Mermaid 地图；上游 hooks 运行时原样收录，作为可选的边界自动注入层
+    version: "0.26.1"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: Specs and drift checks need only file read/write plus Grep/Glob; the optional boundary-injection runtime requires Claude Code hooks and jq
-    marketplaces: []
+    marketplaces: [clawhub]
     distribution: direct-skill
     upstream: https://github.com/jlifyio/wyx (MIT; notice retained as skills/wyx-zh-cn/LICENSE.upstream)

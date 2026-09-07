@@ -30,14 +30,14 @@ Requirements to modules, with the concept model as the contract. Each skill stop
 | [`jackson-concept-prd`](docs/skills/jackson-concept-prd.md) | 0.2.0 | Transcribes a confirmed model into a central PRD plus one colocated `CONCEPT.md` per concept and a flow-grouped `SYNCS.md`. Gaps route back to design |
 | [`jackson-concept-implementation`](docs/skills/jackson-concept-implementation.md) | 0.2.0 | Maps the model onto a modular monolith: one module per concept, syncs as mediators or a rule engine, specs colocated with code. Notes for Rust, Java/Spring Modulith, TypeScript |
 | [`jackson-concept-audit`](docs/skills/jackson-concept-audit.md) | 0.2.0 | Read-only five-dimension audit of code against its model — drift, boundaries, criteria, composition, dependencies — with severity calibration and fix routing |
-| [`wyx-zh-cn`](docs/skills/wyx-zh-cn.md) | 0.26.0 | Declares module boundaries as colocated `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` specs and detects spec–code drift. Five modes: audit, concept, pipeline, sync, map |
+| [`wyx-zh-cn`](docs/skills/wyx-zh-cn.md) | 0.26.1 | Explicit-only skill for colocated `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` boundaries and spec–code drift. Five modes: audit, concept, pipeline, sync, map |
 
 ### Ontology and semantics
 
 | Skill | Version | What it does |
 | --- | --- | --- |
 | [`semantic-creator`](docs/skills/semantic-creator.md) | 0.5.1 | Turns an API, CLI, or table set into a grain-first Kimball semantic layer through an HTML decision workbench; emits OKF or YAML, every field traceable to observed evidence |
-| [`sce-creator`](docs/skills/sce-creator.md) | 0.1.0 | Extracts scenes, concepts, and entities from source text in two rounds — skeleton for human confirmation, then IPO, decomposition, assembly, and eight relation types |
+| [`semantic-sce-creator`](docs/skills/semantic-sce-creator.md) | 0.2.0 | Extracts scenes, concepts, and entities from source text in two rounds — skeleton for human confirmation, then IPO, decomposition, assembly, and eight relation types |
 
 ### Huawei Cloud
 
@@ -84,12 +84,12 @@ Read a skill before using it — skills run with your agent's permissions.
 
 ## Usage
 
-Skills activate from their description, so plain requests are enough:
+Skills normally activate from their description, so plain requests are enough. In Codex, `wyx-zh-cn` is explicit-only and must be named:
 
 ```text
 把这个需求建成概念模型                      → jackson-concept-design
 模型定了，出一份 PRD 规格                   → jackson-concept-prd
-给 src/orders 写概念规格，然后查漂移         → wyx-zh-cn
+$wyx-zh-cn 给 src/orders 写概念规格，然后查漂移
 把这套接口做成语义层                        → semantic-creator
 3 月华为云为什么扣了这笔                     → huawei-cloud-billing-scout
 ```

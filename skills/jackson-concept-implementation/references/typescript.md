@@ -16,6 +16,7 @@ packages/
 
 - port 用 `interface`，adapter 实现之，组合根构造注入；概念包的 `package.json` 不声明其他概念包为依赖。
 - 类型参数直接用 TS 泛型（`Password<U>`）或不透明 ID（branded type）。
+- 概念分组落为目录嵌套（`packages/concepts/billing/invoice/`），workspace glob（`packages/concepts/*/*`）覆盖；包名与 dependency-cruiser 规则不变，不产生组级新规则。syncs 拆包即每组一个 sync 包。
 
 ## Sync 两种落地
 

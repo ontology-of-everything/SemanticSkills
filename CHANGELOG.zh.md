@@ -8,7 +8,7 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md](qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md) |
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
 | semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
-| sce-creator | [qa/sce-creator/CHANGELOG.md](qa/sce-creator/CHANGELOG.md) |
+| semantic-sce-creator | [qa/semantic-sce-creator/CHANGELOG.md](qa/semantic-sce-creator/CHANGELOG.md) |
 | jackson-concept-design | [qa/jackson-concept-design/CHANGELOG.md](qa/jackson-concept-design/CHANGELOG.md) |
 | jackson-concept-prd | [qa/jackson-concept-prd/CHANGELOG.md](qa/jackson-concept-prd/CHANGELOG.md) |
 | jackson-concept-implementation | [qa/jackson-concept-implementation/CHANGELOG.md](qa/jackson-concept-implementation/CHANGELOG.md) |

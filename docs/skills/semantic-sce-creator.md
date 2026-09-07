@@ -1,11 +1,11 @@
 # 场景-概念-实体萃取
 
-`sce-creator` · **SCE Creator — Scene, Concept, Entity Extract**
+`semantic-sce-creator` · **Semantic SCE Creator — Scene, Concept, Entity Extract**
 
-> 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/sce-creator/SKILL.md`](../../skills/sce-creator/SKILL.md)。
+> 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/semantic-sce-creator/SKILL.md`](../../skills/semantic-sce-creator/SKILL.md)。
 
-**Version:** 0.1.0 · Changelog:
-[qa/sce-creator/CHANGELOG.md](../../qa/sce-creator/CHANGELOG.md)
+**Version:** 0.2.0 · Changelog:
+[qa/semantic-sce-creator/CHANGELOG.md](../../qa/semantic-sce-creator/CHANGELOG.md)
 
 ## 一句话
 
@@ -24,13 +24,13 @@
 ## 安装载荷
 
 ```text
-skills/sce-creator/
+skills/semantic-sce-creator/
 └── SKILL.md
 ```
 
 ```bash
-npx skills add ./skills/sce-creator \
-  --skill sce-creator \
+npx skills add ./skills/semantic-sce-creator \
+  --skill semantic-sce-creator \
   --agent cursor \
   --copy
 ```

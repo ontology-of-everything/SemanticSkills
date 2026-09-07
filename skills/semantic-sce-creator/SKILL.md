@@ -1,8 +1,8 @@
 ---
-name: sce-creator
+name: semantic-sce-creator
 description: >-
   按两轮流程从原文萃取可调用知识元：先扫骨架（id+define+sources）并等人确认，再回查原文填 IPO/分解/组装与关系。
-  概念是中枢；场景只编排；实体是实例。Use when 知识萃取、sce-creator、三层萃取、知识组装、IPO、场景/概念/实体.
+  概念是中枢；场景只编排；实体是实例。Use when 知识萃取、semantic-sce-creator、sce-creator、三层萃取、知识组装、IPO、场景/概念/实体.
 ---
 
 # 场景-概念-实体萃取

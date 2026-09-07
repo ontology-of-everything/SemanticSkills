@@ -1,11 +1,10 @@
 ---
 name: wyx-zh-cn
-description: Declares module boundaries as colocated CONCEPT/PIPELINE/SYNCS specs and detects spec-code drift. Use whenever the user asks for wyx, architecture guardrails, concept specs, coverage audits, drift detection, pipeline invariants, sync maps, or ARCHITECTURE.md（中文：架构护栏、概念规格、规格漂移、模块边界）。
-license: MIT
+description: Run wyx spec guardrails only when the user explicitly invokes $wyx-zh-cn. / 仅在用户显式调用 $wyx-zh-cn 时运行规格护栏。
 compatibility: 只需读写文件与 Grep/Glob；可选的边界注入运行时需要 Claude Code hooks 与 jq。
 metadata:
   author: ontology-of-everything
-  version: "0.26.0"
+  version: "0.26.1"
 ---
 
 # wyx 架构护栏（中文版）

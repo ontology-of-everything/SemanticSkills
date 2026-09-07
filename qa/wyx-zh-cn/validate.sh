@@ -33,7 +33,9 @@ check_skill_layout() {
   [[ -f "$QA_DIR/assertions/README.md" ]] || fail "missing assertions guide"
   [[ ! -f "$QA_DIR/evals.json" ]] || fail "duplicate eval source: $QA_DIR/evals.json"
   rg -q '^name: wyx-zh-cn$' "$SKILL_DIR/SKILL.md" || fail "frontmatter name mismatch"
+  ! rg -q '^license:' "$SKILL_DIR/SKILL.md" || fail "SKILL.md must omit license to avoid ClawHub MIT-0 conflict"
   rg -q '\$wyx-zh-cn' "$SKILL_DIR/agents/openai.yaml" || fail "default prompt must name the skill"
+  rg -q '^  allow_implicit_invocation: false$' "$SKILL_DIR/agents/openai.yaml" || fail "Codex implicit invocation must be disabled"
 }
 
 # 六个模式各有一份参考文件，SKILL.md 的路由表必须指得到实处。
