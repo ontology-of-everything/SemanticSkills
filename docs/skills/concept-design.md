@@ -29,8 +29,12 @@
 
 ```text
 skills/concept-design/
-├── SKILL.md
-└── agents/openai.yaml
+├── SKILL.md                       # 目标 / 原则 / 流程 / 命题 / 记法与模板 / 参考
+├── agents/openai.yaml
+└── references/
+    ├── criteria.md                # 流程第 4 步：资格五条、四词、误判速查、design moves
+    ├── sync-notation.md           # 流程第 5 步：sync 记法、因果语义、信号、依赖图
+    └── sources.md                 # 作者原文与取用原则
 ```
 
 ```bash

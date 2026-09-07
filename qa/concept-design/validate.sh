@@ -36,8 +36,18 @@ check_skill_layout() {
   rg -q '\$concept-design' "$SKILL_DIR/agents/openai.yaml" || fail "default prompt must name the skill"
 }
 
+# 流程步骤按需加载的参考文件必须存在，且 SKILL.md 的「参考」表指得到实处。
+check_references() {
+  local ref
+  for ref in criteria sync-notation sources; do
+    [[ -f "$SKILL_DIR/references/$ref.md" ]] || fail "missing reference: references/$ref.md"
+    rg -q "references/$ref\.md" "$SKILL_DIR/SKILL.md" || fail "SKILL.md does not route to references/$ref.md"
+  done
+}
+
 need_cmd rg
 check_skill_layout
+check_references
 run_local_or_npx skills-ref validate "$SKILL_DIR"
 run_local_or_npx markdownlint-cli2 --config "$QA_DIR/.markdownlint.json" "$SKILL_DIR/**/*.md"
 need_cmd skillcheck
