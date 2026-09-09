@@ -1,6 +1,6 @@
-# 语义创建器（元技能）
+# 语义 KM 创建器（企业知识）
 
-`semantic-creator` · **Semantic Creator — Interface to Governed Semantic Layer (Meta-Skill)**
+`semantic-km-creator` · **Semantic KM Creator — Enterprise Knowledge from APIs & Databases**
 
 把一份**接口契约**（REST/OpenAPI、CLI 帮助、或数据表/DDL）建成受治理的
 Kimball 语义层：访谈锁事实与粒度 → **交互式 HTML 决策工作台**通过固定
@@ -8,10 +8,11 @@ YAGNI 指导确认目标、候选、证据、风险、依赖与权衡 → 按 Sc
 输出 **Google OKF v0.1** bundle，可选仓库 Kimball 星型 YAML / markdown。
 唯一真源是用户给的接口——**不臆造**字段、粒度、枚举或取值。
 
-> **元技能** · 它生产的是「别的领域的语义层」，本身不连任何云或数据库。
+> **企业知识** · 面向 API、CLI、数据库等企业接口。个人知识库走
+> [`semantic-pkm-creator`](semantic-pkm-creator.md)。本身不连任何云或数据库。
 
-**Version:** 0.5.1 · Changelog:
-[qa/semantic-creator/CHANGELOG.md](../../qa/semantic-creator/CHANGELOG.md)
+**Version:** 0.6.0 · Changelog:
+[qa/semantic-km-creator/CHANGELOG.md](../../qa/semantic-km-creator/CHANGELOG.md)
 
 ## What it does
 
@@ -54,7 +55,7 @@ Phase 4 · Verify ── 结构检查 + 语义 lint + OKF 硬约束；不可机�
 ## Runtime bundle (install payload)
 
 ```text
-skills/semantic-creator/
+skills/semantic-km-creator/
 ├── SKILL.md
 ├── assets/
 │   └── review-template.html   # Phase 2 决策工作台壳（内联渲染器，离线无 CDN）
@@ -72,7 +73,7 @@ No `evals/`, `qa/`, or `*-workspace/` under `skills/`.
 ## QA (not installed with skill)
 
 ```text
-qa/semantic-creator/
+qa/semantic-km-creator/
 ├── validate.sh
 ├── VERSION
 ├── .markdownlint.json
@@ -81,18 +82,18 @@ qa/semantic-creator/
 ```
 
 ```bash
-./qa/semantic-creator/validate.sh
+./qa/semantic-km-creator/validate.sh
 ```
 
 ## Marketplaces
 
-- ClawHub: `semantic-creator` 0.5.1; bundle license MIT-0
+- ClawHub: `semantic-km-creator` 0.6.0; bundle license MIT-0
 
 ## Install
 
 ```bash
 npx skills add ontology-of-everything/SemanticSkills \
-  --skill semantic-creator \
+  --skill semantic-km-creator \
   --agent cursor \
   --copy -y
 ```

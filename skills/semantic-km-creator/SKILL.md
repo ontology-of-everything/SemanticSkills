@@ -1,14 +1,14 @@
 ---
-name: semantic-creator
-description: Builds evidence-only Kimball semantic layers from APIs, CLIs, or tables with an HTML decision workbench; emits OKF/YAML. Use this skill when users request semantic layers, dimensional models, ontology, OKF, 语义层、接口转语义、维度建模或本体.
+name: semantic-km-creator
+description: Builds evidence-only Kimball semantic layers for enterprise knowledge from APIs, CLIs, or tables/databases with an HTML decision workbench; emits OKF/YAML. Use when 企业知识、知识建模、KM、semantic-km-creator、semantic-creator、semantic layers, dimensional models, ontology, OKF, 语义层、接口转语义、维度建模或本体.
 license: Apache-2.0
 metadata:
-  version: "0.5.1"
+  version: "0.6.0"
   openclaw:
-    homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/semantic-creator
+    homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/semantic-km-creator
 ---
 
-# Semantic Creator（接口 → 语义层 元技能）
+# Semantic KM Creator（企业知识 · 接口 → 语义层）
 
 把**接口契约**（REST/OpenAPI、CLI、表/DDL）一次通过地建成**受治理语义层**。四个阶段严格串行，每阶段一个参考文件、一组退出条件——满足才前进，不满足不硬闯：
 

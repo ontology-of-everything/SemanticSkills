@@ -3,6 +3,8 @@
 `semantic-pkm-creator` · **Semantic PKM Creator — Scene, Concept, Entity Extract**
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/semantic-pkm-creator/SKILL.md`](../../skills/semantic-pkm-creator/SKILL.md)。
+>
+> 面向**个人知识库**。企业接口 / 数据库走 [`semantic-km-creator`](semantic-km-creator.md)。
 
 **Version:** 0.3.0 · Changelog:
 [qa/semantic-pkm-creator/CHANGELOG.md](../../qa/semantic-pkm-creator/CHANGELOG.md)

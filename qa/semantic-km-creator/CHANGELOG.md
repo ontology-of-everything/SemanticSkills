@@ -1,6 +1,15 @@
-# semantic-creator Changelog
+# semantic-km-creator Changelog
 
 Skill-only history. Repository tooling changes: [../../CHANGELOG.md](../../CHANGELOG.md).
+
+## 0.6.0 - 2026-09-09
+
+### Changed
+
+- Rename the installable skill from `semantic-creator` to `semantic-km-creator`:
+  this skill serves **enterprise knowledge** (APIs, CLIs, tables/databases);
+  `semantic-pkm-creator` remains the personal-knowledge counterpart. The old
+  name stays a trigger keyword.
 
 ## 0.5.1 - 2026-07-10
 
