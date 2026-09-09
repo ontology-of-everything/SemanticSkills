@@ -1,17 +1,17 @@
 # 本体语义 · 概念设计
 
-[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.0.0)
+[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.1.0)
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
 > 先说清含义，再写代码、跑命令、起草规格。
 
-[SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) 收录 10 个 [Agent Skills](https://agentskills.io/)，覆盖本体与语义层、概念设计。每个技能把协议留在轻薄的 `SKILL.md`，体量大的领域材料放在 `references/`，只在任务需要时加载。华为云 FinOps 技能同仓收录。
+[SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) 收录 11 个 [Agent Skills](https://agentskills.io/)，覆盖本体与语义层、概念设计。每个技能把协议留在轻薄的 `SKILL.md`，体量大的领域材料放在 `references/`，只在任务需要时加载。华为云 FinOps 技能同仓收录。
 
 概念设计几个技能改编自 Daniel Jackson 的 concepts 与 synchronizations 模型 —— [The Essence of Software](https://essenceofsoftware.com/)（2021），sync 采用 *Beyond Objects*（[arXiv:2606.27258](https://arxiv.org/abs/2606.27258)）里现行的 when/where/then 记法 —— 面向 Agent 改编，未获作者背书。
 
 English: [README.md](README.md)。
 
-当前版本 **[v4.0.0](CHANGELOG.zh.md#400---2026-09-07)**（[English](CHANGELOG.md#400---2026-09-07)）。本版安装名：`concept-*`（原 `jackson-concept-*`）、`concept-guardrails`（原 `wyx-zh-cn`）、`semantic-pkm-creator`（原 `sce-creator`）。`constraint-charter` 已不再分发。
+当前版本 **[v4.1.0](CHANGELOG.zh.md#410---2026-09-09)**（[English](CHANGELOG.md#410---2026-09-09)）。本版安装名：`semantic-km-creator`（原 `semantic-creator`）；新增 `html-slides`。
 
 ## 目录
 
@@ -38,10 +38,18 @@ English: [README.md](README.md)。
 
 ### 本体与语义
 
+企业知识来自 API / 数据库（`semantic-km-creator`）；个人知识来自原文（`semantic-pkm-creator`）。
+
 | 技能 | 版本 | 做什么 |
 | --- | --- | --- |
-| [`semantic-creator`](docs/skills/semantic-creator.md) | 0.5.1 | 把一套接口、CLI 或表做成粒度先行的 Kimball 语义层，经 HTML 决策工作台推进，输出 OKF 或 YAML，每个字段可追溯到观察到的证据 |
-| [`semantic-pkm-creator`](docs/skills/semantic-pkm-creator.md) | 0.3.0 | 两轮从原文萃取场景、概念、实体：先扫骨架给人确认，再回填 IPO、分解、组装与八种关系 |
+| [`semantic-km-creator`](docs/skills/semantic-km-creator.md) | 0.6.0 | 企业知识：把一套接口、CLI 或表/库做成粒度先行的 Kimball 语义层，经 HTML 决策工作台推进，输出 OKF 或 YAML，每个字段可追溯到观察到的证据 |
+| [`semantic-pkm-creator`](docs/skills/semantic-pkm-creator.md) | 0.3.0 | 个人知识：两轮从原文萃取场景、概念、实体：先扫骨架给人确认，再回填 IPO、分解、组装与八种关系 |
+
+### 胶片
+
+| 技能 | 版本 | 做什么 |
+| --- | --- | --- |
+| [`html-slides`](docs/skills/html-slides.md) | 0.1.0 | 仅显式调用：大纲 → 逐页表 → 明文单文件 HTML 胶片；风格可插拔（generic、华为官方浅/深色、Apple）；可选导出 PPTX |
 
 ### 华为云
 
@@ -96,7 +104,7 @@ npx skills add ./skills/<skill-name> --skill <skill-name> --agent cursor --copy 
 把这个需求建成概念模型                      → concept-design
 模型定了，出一份 PRD 规格                   → concept-prd
 $concept-guardrails 给 src/orders 写概念规格，然后查漂移
-把这套接口做成语义层                        → semantic-creator
+把这套接口做成语义层                        → semantic-km-creator
 3 月华为云为什么扣了这笔                     → huawei-cloud-billing-scout
 ```
 

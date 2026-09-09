@@ -1,17 +1,17 @@
 # Ontology & Concept Design
 
-[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.0.0)
+[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.1.0)
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
 > Name the meaning first — then write code, run a CLI, or draft a spec.
 
-[SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) is a set of ten [Agent Skills](https://agentskills.io/) for ontology, semantic layers, and concept design. Each skill keeps its protocol in a thin `SKILL.md` and loads bulky domain material from `references/` only when the task needs it. Huawei Cloud FinOps skills ship in the same repo.
+[SemanticSkills](https://github.com/ontology-of-everything/SemanticSkills) is a set of eleven [Agent Skills](https://agentskills.io/) for ontology, semantic layers, and concept design. Each skill keeps its protocol in a thin `SKILL.md` and loads bulky domain material from `references/` only when the task needs it. Huawei Cloud FinOps skills ship in the same repo.
 
 The concept-design skills adapt Daniel Jackson's concepts-and-synchronizations model — [The Essence of Software](https://essenceofsoftware.com/) (2021), with the current when/where/then sync notation from *Beyond Objects* ([arXiv:2606.27258](https://arxiv.org/abs/2606.27258)) — for agent use; an adaptation, not endorsed by the author.
 
 中文说明见 [README-CN.md](README-CN.md).
 
-Current release **[v4.0.0](CHANGELOG.md#400---2026-09-07)** ([中文](CHANGELOG.zh.md#400---2026-09-07)). Install names in this release: `concept-*` (was `jackson-concept-*`), `concept-guardrails` (was `wyx-zh-cn`), `semantic-pkm-creator` (was `sce-creator`). `constraint-charter` is no longer shipped.
+Current release **[v4.1.0](CHANGELOG.md#410---2026-09-09)** ([中文](CHANGELOG.zh.md#410---2026-09-09)). Install names in this release: `semantic-km-creator` (was `semantic-creator`); new `html-slides`.
 
 ## Table of Contents
 
@@ -38,10 +38,18 @@ Requirements to modules, with the concept model as the contract. Each skill stop
 
 ### Ontology and semantics
 
+Enterprise knowledge from APIs and databases (`semantic-km-creator`); personal knowledge from source text (`semantic-pkm-creator`).
+
 | Skill | Version | What it does |
 | --- | --- | --- |
-| [`semantic-creator`](docs/skills/semantic-creator.md) | 0.5.1 | Turns an API, CLI, or table set into a grain-first Kimball semantic layer through an HTML decision workbench; emits OKF or YAML, every field traceable to observed evidence |
-| [`semantic-pkm-creator`](docs/skills/semantic-pkm-creator.md) | 0.3.0 | Extracts scenes, concepts, and entities from source text in two rounds — skeleton for human confirmation, then IPO, decomposition, assembly, and eight relation types |
+| [`semantic-km-creator`](docs/skills/semantic-km-creator.md) | 0.6.0 | Enterprise knowledge: turns an API, CLI, or table/database into a grain-first Kimball semantic layer through an HTML decision workbench; emits OKF or YAML, every field traceable to observed evidence |
+| [`semantic-pkm-creator`](docs/skills/semantic-pkm-creator.md) | 0.3.0 | Personal knowledge: extracts scenes, concepts, and entities from source text in two rounds — skeleton for human confirmation, then IPO, decomposition, assembly, and eight relation types |
+
+### Presentation
+
+| Skill | Version | What it does |
+| --- | --- | --- |
+| [`html-slides`](docs/skills/html-slides.md) | 0.1.0 | Explicit-only deck builder: outline → per-page table → plain single-file HTML deck in a pluggable style (generic, Huawei official light/dark, Apple); optional PPTX export |
 
 ### Huawei Cloud
 
@@ -96,7 +104,7 @@ Skills normally activate from their description, so plain requests are enough. I
 把这个需求建成概念模型                      → concept-design
 模型定了，出一份 PRD 规格                   → concept-prd
 $concept-guardrails 给 src/orders 写概念规格，然后查漂移
-把这套接口做成语义层                        → semantic-creator
+把这套接口做成语义层                        → semantic-km-creator
 3 月华为云为什么扣了这笔                     → huawei-cloud-billing-scout
 ```
 

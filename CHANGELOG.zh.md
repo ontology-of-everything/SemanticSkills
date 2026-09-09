@@ -7,13 +7,25 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | huawei-cloud-billing-scout | [qa/huawei-cloud-billing-scout/CHANGELOG.zh.md](qa/huawei-cloud-billing-scout/CHANGELOG.zh.md) |
 | huawei-cloud-cost-estimation | [qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md](qa/huawei-cloud-cost-estimation/CHANGELOG.zh.md) |
 | huawei-cloud-account-onboarding | [qa/huawei-cloud-account-onboarding/CHANGELOG.md](qa/huawei-cloud-account-onboarding/CHANGELOG.md) |
-| semantic-creator | [qa/semantic-creator/CHANGELOG.md](qa/semantic-creator/CHANGELOG.md) |
+| semantic-km-creator | [qa/semantic-km-creator/CHANGELOG.md](qa/semantic-km-creator/CHANGELOG.md) |
 | semantic-pkm-creator | [qa/semantic-pkm-creator/CHANGELOG.md](qa/semantic-pkm-creator/CHANGELOG.md) |
 | concept-design | [qa/concept-design/CHANGELOG.md](qa/concept-design/CHANGELOG.md) |
 | concept-prd | [qa/concept-prd/CHANGELOG.md](qa/concept-prd/CHANGELOG.md) |
 | concept-implementation | [qa/concept-implementation/CHANGELOG.md](qa/concept-implementation/CHANGELOG.md) |
 | concept-audit | [qa/concept-audit/CHANGELOG.md](qa/concept-audit/CHANGELOG.md) |
 | concept-guardrails | [qa/concept-guardrails/CHANGELOG.md](qa/concept-guardrails/CHANGELOG.md) |
+| html-slides | [qa/html-slides/CHANGELOG.md](qa/html-slides/CHANGELOG.md) |
+
+## 4.1.0 - 2026-09-09
+
+### 破坏性变更
+
+- 安装名更名：`semantic-creator` → `semantic-km-creator`（企业知识：API、CLI、表/库）。个人知识仍为 `semantic-pkm-creator`。请用 `--skill semantic-km-creator` 安装。
+
+### 新功能
+
+- **semantic-km-creator** **0.6.0**：由 `semantic-creator` 更名，与 `semantic-pkm-creator` 成对（详见技能 changelog）
+- **html-slides** **0.1.0**：仅显式调用的单文件 HTML 胶片（详见技能 changelog）
 
 ## 4.0.0 - 2026-09-07
 
