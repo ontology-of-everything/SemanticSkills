@@ -46,16 +46,16 @@ skills:
     marketplaces: [skills-sh, skillsmp, clawhub]
     distribution: direct-skill
     clawhub_license: MIT-0 on ClawHub; repository source remains Apache-2.0
-  - id: semantic-creator
-    path: skills/semantic-creator
-    qa: qa/semantic-creator
-    display_name: "Semantic Creator — Interface to Governed Semantic Layer (Meta-Skill)"
-    display_name_zh: "语义创建器 · 接口转语义元技能"
+  - id: semantic-km-creator
+    path: skills/semantic-km-creator
+    qa: qa/semantic-km-creator
+    display_name: "Semantic KM Creator — Enterprise Knowledge from APIs & Databases"
+    display_name_zh: "语义 · 企业知识 · 接口/库转语义层"
     domain: meta
-    subdomains: [semantic-layer, dimensional-modeling, ontology, okf]
-    summary: Meta-skill—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball semantic layer through an interactive HTML decision workbench with fixed YAGNI guidance, atomic decisions, explicit options, evidence, risks, dependencies, and user approval; emits Google OKF v0.1 by default or repo YAML; evidence-only
-    summary_zh: 元技能 · 把 REST/CLI/数据表接口经访谈与 HTML 决策工作台建成 Kimball 语义层；四类固定 YAGNI 指导帮助理解原子决定、候选、证据、风险、依赖与权衡，用户显式批准后输出；默认 Google OKF v0.1，可选仓库 YAML；不臆造
-    version: "0.5.1"
+    subdomains: [semantic-layer, dimensional-modeling, ontology, okf, enterprise-knowledge]
+    summary: Enterprise knowledge—turns a REST/OpenAPI, CLI, or table/DDL interface into a governed Kimball semantic layer through an interactive HTML decision workbench with fixed YAGNI guidance, atomic decisions, explicit options, evidence, risks, dependencies, and user approval; emits Google OKF v0.1 by default or repo YAML; evidence-only; counterpart to semantic-pkm-creator
+    summary_zh: 企业知识 · 把 REST/CLI/数据表接口经访谈与 HTML 决策工作台建成 Kimball 语义层；四类固定 YAGNI 指导帮助理解原子决定、候选、证据、风险、依赖与权衡，用户显式批准后输出；默认 Google OKF v0.1，可选仓库 YAML；不臆造；个人知识库见 semantic-pkm-creator
+    version: "0.6.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; pure modeling + file generation; review report is self-contained HTML (inline CSS/JS, no CDN)
     marketplaces: [skills-sh, skillsmp, clawhub]
@@ -152,3 +152,19 @@ skills:
     distribution: direct-skill
     clawhub_license: MIT-0 on ClawHub; repository source remains Apache-2.0
     upstream: https://github.com/jlifyio/wyx (MIT; notice retained as skills/concept-guardrails/LICENSE.upstream)
+  - id: html-slides
+    path: skills/html-slides
+    qa: qa/html-slides
+    display_name: "HTML Slides — Styled Single-File Decks (Huawei / Apple / Generic)"
+    display_name_zh: "HTML 胶片 · 华为 / Apple / 通用风格单文件 HTML 演示"
+    domain: content
+    subdomains: [presentation, slides, huawei-style, html-deck]
+    summary: Explicit-invocation-only deck builder—settles scene, audience, duration and style, confirms an outline then a per-page table, and writes a plain single-file 1920×1080 HTML (inlined vars + base.css + runtime.js, one section per page, data-URI images, ?debug overflow check) in a pluggable style (generic, huawei official light/dark with bundled assets, apple); optional screenshot PPTX via tools/export_pptx.py or python-pptx rebuild
+    summary_zh: 仅显式调用的胶片生成器 · 先定场景 / 对象 / 时长 / 风格，确认大纲再确认逐页表，然后写一份明文单文件 1920×1080 HTML（内联变量块 + base.css + runtime.js，每页一个 section，图片 data URI，?debug 查溢出）；风格插拔：generic、huawei 官方浅 / 深色（随包素材）、apple；可选截图版 PPTX 或 python-pptx 重建
+    version: "0.1.0"
+    agents: [cursor, claude-code, codex, openclaw]
+    compatibility: Writing the deck needs only file read/write; optional tools/export_pptx.py needs Python 3, playwright (Chromium) and python-pptx, never auto-installed
+    marketplaces: [skills-sh, skillsmp, clawhub]
+    distribution: direct-skill
+    clawhub_license: MIT-0 on ClawHub; repository source remains Apache-2.0
+    notes: Huawei assets under assets/huawei are Huawei trademarks bundled for Huawei-style decks only

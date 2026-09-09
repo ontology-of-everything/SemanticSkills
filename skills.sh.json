@@ -15,10 +15,17 @@
     },
     {
       "title": "Ontology and semantics",
-      "description": "Evidence-only semantic layers and personal-knowledge extraction.",
+      "description": "Enterprise knowledge from APIs and databases, and personal-knowledge extraction.",
       "skills": [
-        "semantic-creator",
+        "semantic-km-creator",
         "semantic-pkm-creator"
+      ]
+    },
+    {
+      "title": "Presentation",
+      "description": "Explicit-invocation HTML decks in pluggable visual styles.",
+      "skills": [
+        "html-slides"
       ]
     },
     {
