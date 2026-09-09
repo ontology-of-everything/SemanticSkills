@@ -1,0 +1,4 @@
+interface:
+  display_name: "HTML Slides"
+  short_description: "按华为 / Apple / 通用风格生成单文件 HTML 演示，可选导出 PPTX"
+  default_prompt: "Use $html-slides to plan the outline and per-page table, then build the deck as a single-file HTML in the chosen style."

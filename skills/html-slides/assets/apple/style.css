@@ -1,0 +1,15 @@
+/* html-slides · apple 专属组件。复制进 deck <style> 第 ③ 段。 */
+/* 单点大字 hero：一页一句，居中，字重 600，字距收紧 */
+.ap-hero{margin:auto;text-align:center;font-size:120px;font-weight:600;letter-spacing:-.03em;line-height:1.05;color:var(--fg);max-width:1500px}
+.ap-hero small{display:block;margin-top:28px;font-size:34px;font-weight:400;letter-spacing:0;color:var(--fg-muted)}
+/* 渐变文字强调（关键词 / 数字） */
+.ap-grad{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* 产品居中留白：图占高度 70%，四周大留白 */
+.ap-product{margin:auto;height:70%;display:flex;align-items:center;justify-content:center}
+.ap-product img{height:100%;width:auto;object-fit:contain}
+/* 规格三联：大数字 + 一行说明，无卡片边框 */
+.ap-spec{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;text-align:center;align-content:center;flex:1}
+.ap-spec .num{font-family:var(--font-sans);font-size:96px;font-weight:600;letter-spacing:-.03em;color:var(--fg)}
+.ap-spec p{margin:14px 0 0;font-size:24px;color:var(--fg-muted)}
+/* 本风格卡片去边框、圆角更大 */
+.card{border:0}

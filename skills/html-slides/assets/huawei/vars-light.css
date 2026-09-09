@@ -1,0 +1,10 @@
+/* html-slides · huawei 官方胶片 · 浅色 profile（默认）：白底 + 灰结构 + 红焦点。品牌红唯一取值 #C7000B。 */
+:root{
+  --bg:#ffffff; --bg-alt:#f7f7f8; --bg-cover:#f5f5f6;
+  --surface:#ffffff; --line:#e6e6e8;
+  --fg:#1a1a1c; --fg-body:#585860; --fg-muted:#8a8a92;
+  --accent:#C7000B; --accent-soft:rgba(199,0,11,.07); --accent-2:#566472;
+  --font-sans:"Noto Sans SC","PingFang SC","Microsoft YaHei","Source Han Sans SC",sans-serif;
+  --font-mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --radius:14px; --shadow:0 1px 2px rgba(0,0,0,.04); --table-head:#C7000B;
+}

@@ -1,0 +1,10 @@
+/* html-slides · apple 发布会风格 · 深色 profile（默认）：纯黑底 + 白字 + 单点渐变强调。无随包素材、无商标。 */
+:root{
+  --bg:#000000; --bg-alt:#000000; --bg-cover:#000000;
+  --surface:#1c1c1e; --line:#2c2c2e;
+  --fg:#f5f5f7; --fg-body:#d2d2d7; --fg-muted:#86868b;
+  --accent:#2997ff; --accent-soft:rgba(41,151,255,.14); --accent-2:#bf5af2;
+  --font-sans:"SF Pro Display","SF Pro SC","PingFang SC","Helvetica Neue","Noto Sans SC","Microsoft YaHei",sans-serif;
+  --font-mono:"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  --radius:18px; --shadow:none; --table-head:#1c1c1e;
+}

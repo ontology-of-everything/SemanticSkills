@@ -1,0 +1,10 @@
+/* html-slides · generic 通用商务 · 浅色 profile（默认）。换主色只改 --accent / --accent-soft / --table-head。 */
+:root{
+  --bg:#ffffff; --bg-alt:#f7f8fa; --bg-cover:#eef1f5;
+  --surface:#ffffff; --line:#e3e6ea;
+  --fg:#1a1d21; --fg-body:#4a5058; --fg-muted:#8b929b;
+  --accent:#1f4e8c; --accent-soft:rgba(31,78,140,.08); --accent-2:#6b7785;
+  --font-sans:"Noto Sans SC","PingFang SC","Microsoft YaHei","Source Han Sans SC",sans-serif;
+  --font-mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --radius:14px; --shadow:none; --table-head:#1f4e8c;
+}

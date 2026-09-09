@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>html-slides · huawei 专属页型</title>
+<!-- 画廊：外链仅为预览方便；写 deck 时全部内联。图片位用占位块，实际 deck 换成 data URI。 -->
+<link rel="stylesheet" href="vars-light.css">
+<link rel="stylesheet" href="../core/base.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="bar"><span class="pn"></span><button data-mode="present">▶</button><button data-mode="scroll">☰</button></nav>
+
+<!-- ===== 官方封面：全幅 KV + 左上黑标题 + 红角线 + 底部白条右侧 logo + Security Level ===== -->
+<div class="slide-wrap"><section class="slide cover" data-label="封面" data-family="门面" data-density="light"
+  style="background:var(--bg-cover) url(kv-light-planet.jpeg) center/cover;padding:0">
+  <div style="position:absolute;left:130px;top:108px;max-width:1100px">
+    <h1 class="hw-corner" style="margin:0;font-size:72px;line-height:1.15;font-weight:700;color:var(--fg);display:inline-block;padding:10px 14px">主标题：一句判断</h1>
+    <p style="margin:26px 0 0 14px;font-size:30px;color:var(--fg-body)">副题 · 部门 · 汇报人 · 2026-09</p>
+  </div>
+  <div style="position:absolute;left:0;right:0;bottom:0;height:88px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 130px">
+    <span class="eyebrow" style="margin:0">SECURITY LEVEL：<span data-classification></span></span>
+    <img alt="HUAWEI" src="logo-horizontal.png" style="height:36px">
+  </div>
+</section></div>
+
+<!-- ===== 官方目录：黑「目录」+ 红短下划线；复用作章节过渡时只切换红色高亮项 ===== -->
+<div class="slide-wrap"><section class="slide toc" data-label="目录" data-family="门面" data-density="light" style="background:var(--bg)">
+  <h2 style="margin:0 0 48px;font-size:64px;color:var(--fg)">目录<span class="hw-underline"></span></h2>
+  <ol style="margin:0;padding:0;list-style:none;display:grid;gap:26px;font-size:30px;color:var(--fg)">
+    <li style="display:flex;gap:28px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:18px;color:var(--accent)">
+      <span class="eyebrow" style="font-size:27px;margin:0">01</span><span>当前章（高亮）</span></li>
+    <li style="display:flex;gap:28px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:18px">
+      <span class="eyebrow" style="font-size:27px;margin:0;color:var(--fg-muted)">02</span><span>其他章</span></li>
+  </ol>
+</section></div>
+
+<!-- ===== 案例五段式 case：「案例｜对象：做法，价值」标题；背景 → 过程三段 → 成果数字 → 红角框实证图 → 引文署名 ===== -->
+<div class="slide-wrap"><section class="slide dense" data-label="3.2 案例" data-family="证据" data-density="dense">
+  <div class="eyebrow">3.2 · 案例 / CASE</div>
+  <h3>案例｜深圳职业技术大学：课证共生共长，实现校企合作精准育人</h3>
+  <div class="body" style="flex-direction:row;gap:28px">
+    <div style="flex:3;display:flex;flex-direction:column;gap:14px">
+      <div class="hw-bar">合作背景</div><p style="margin:0;font-size:18px;line-height:1.5">一两句。</p>
+      <div class="hw-bar">合作过程</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+        <div class="card"><div class="ct" style="font-size:18px">建立</div><div class="cb" style="font-size:18px">…</div></div>
+        <div class="card"><div class="ct" style="font-size:18px">内容</div><div class="cb" style="font-size:18px">…</div></div>
+        <div class="card"><div class="ct" style="font-size:18px">成果</div><div class="cb" style="font-size:18px">…</div></div>
+      </div>
+      <div style="display:flex;gap:40px"><div class="num" style="font-size:48px">1,200<small>人 认证</small></div><div class="num" style="font-size:48px">3<small>个 联合实验室</small></div></div>
+    </div>
+    <div style="flex:2;display:flex;flex-direction:column;gap:18px;min-height:0">
+      <div class="hw-corner" data-todo="fig" style="flex:1;min-height:0;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--fg-muted)">【原图】实证：牌匾 / 证书 · 横图</div>
+      <div class="hw-quote">引文一句，关键词<span style="color:var(--accent)">红色强调</span>。<small>—— 姓名，职务全称</small></div>
+    </div>
+  </div>
+  <footer class="foot"><span class="foot-l">Huawei Confidential</span><span class="foot-r"><img alt="HUAWEI" src="logo-horizontal.png"></span></footer>
+</section></div>
+
+<!-- ===== 底部结论条 + 右上二维码位（内容页可选组件） ===== -->
+<div class="slide-wrap"><section class="slide" data-label="4.1 结论条示例" data-family="网格" data-density="normal">
+  <div class="eyebrow">4.1 · 生态 / ECOSYSTEM</div>
+  <h3>ICT 人才生态：以赛促学、以赛促教、以赛促就业</h3>
+  <div class="hw-qr"><div data-todo="fig" style="width:120px;height:120px;border:2px dashed var(--accent);margin-bottom:6px"></div>报名入口</div>
+  <div class="body" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-content:start">
+    <div class="card"><div class="ct">课：课程体系</div><div class="cb">四到六字断言 ×3</div></div>
+    <div class="card"><div class="ct">训：实训平台</div><div class="cb">…</div></div>
+    <div class="card"><div class="ct">赛：技能竞赛</div><div class="cb">…</div></div>
+  </div>
+  <div class="hw-conclusion">2022《中国 ICT 人才生态白皮书》预测：2025 年人才缺口 <b style="color:var(--accent)">2,000 万+</b></div>
+  <footer class="foot"><span class="foot-l">Huawei Confidential</span><span class="foot-r"><img alt="HUAWEI" src="logo-horizontal.png"></span></footer>
+</section></div>
+
+<!-- ===== 官方致谢：左特大黑字 Thank you. + 右栏使命宣言 / 版权 / logo；无页脚三件套 ===== -->
+<div class="slide-wrap"><section class="slide thanks" data-label="致谢" data-family="门面" data-density="light" style="background:var(--bg);flex-direction:row;align-items:center;gap:80px">
+  <h1 style="margin:0;flex:1;font-size:140px;font-weight:700;color:var(--fg);letter-spacing:-.03em">Thank you.</h1>
+  <div style="flex:1;font-size:21px;line-height:1.7;color:var(--fg-body)">
+    <p style="margin:0 0 18px;color:var(--fg)">把数字世界带入每个人、每个家庭、每个组织，构建万物互联的智能世界。</p>
+    <p style="margin:0 0 18px">Bring digital to every person, home and organization for a fully connected, intelligent world.</p>
+    <p style="margin:0;font-size:15px;color:var(--fg-muted)">Copyright © 2026 Huawei Technologies Co., Ltd. All Rights Reserved. 本文档所载信息仅供参考，不构成任何承诺。</p>
+    <img alt="HUAWEI" src="logo-horizontal.png" style="height:40px;margin-top:28px">
+  </div>
+</section></div>
+
+<script src="../core/runtime.js"></script>
+</body></html>

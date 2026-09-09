@@ -1,0 +1,22 @@
+/* html-slides · huawei 专属组件。复制进 deck <style> 的第 ③ 段（基础 CSS 之后）。 */
+/* 红色四角线框：套在重要图片 / 实证图外层，不描整框 */
+.hw-corner{position:relative}
+.hw-corner::before,.hw-corner::after{content:"";position:absolute;width:28px;height:28px;border:3px solid var(--accent)}
+.hw-corner::before{left:-6px;top:-6px;border-right:0;border-bottom:0}
+.hw-corner::after{right:-6px;bottom:-6px;border-left:0;border-top:0}
+/* 小面积红底白字条幅（阶段标签、章节横条）——永远是小条幅 */
+.hw-bar{background:var(--accent);color:#fff;padding:6px 16px;font-size:18px;font-weight:600;display:inline-block;align-self:flex-start}
+/* 大引号引文 + 破折号署名（职务全称） */
+.hw-quote{font-size:24px;line-height:1.5;color:var(--fg)}
+.hw-quote::before{content:"“";font-size:64px;color:var(--accent);line-height:0;vertical-align:-22px;margin-right:6px}
+.hw-quote small{display:block;margin-top:10px;font-size:18px;color:var(--fg-muted)}
+/* 底部结论条：权威引用 + 红数字单行 takeaway（本风格例外允许横贯页底） */
+.hw-conclusion{margin-top:auto;background:var(--accent-soft);border-left:4px solid var(--accent);padding:14px 22px;font-size:21px;color:var(--fg)}
+/* 右上三段面包屑：长章节子章节定位，当前段红 */
+.hw-crumb{position:absolute;right:90px;top:56px;display:flex;gap:18px;font-size:18px;color:var(--fg-muted)}
+.hw-crumb b{color:var(--accent);font-weight:600}
+/* 右上二维码位 + 一行用途标签 */
+.hw-qr{position:absolute;right:90px;top:56px;text-align:center;font-size:14px;color:var(--fg-muted)}
+.hw-qr img{width:120px;height:120px;display:block;margin-bottom:6px}
+/* 目录页红短下划线 */
+.hw-underline{display:block;width:64px;height:6px;background:var(--accent);margin-top:14px}

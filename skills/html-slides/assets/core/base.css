@@ -1,0 +1,59 @@
+/* html-slides · 基础 CSS（风格无关）。整段复制进 deck 的 <style>，放在风格变量块之后。
+   只引用变量名；具体色值、字体、圆角来自 assets/<style>/vars-*.css。 */
+*{box-sizing:border-box}
+html{--s:1}
+html,body{margin:0;background:#111}
+body{font-family:var(--font-sans);color:var(--fg-body)}
+
+/* 画布：每页 1920×1080，按 --s 缩放适配视口 */
+.slide-wrap{width:calc(1920px*var(--s));height:calc(1080px*var(--s));margin:24px auto;position:relative}
+.slide{width:1920px;height:1080px;overflow:hidden;position:relative;transform:scale(var(--s));transform-origin:0 0;
+  background:var(--bg);padding:56px 90px;display:flex;flex-direction:column}
+.slide-wrap:nth-child(even) .slide{background:var(--bg-alt)}
+.slide.cover,.slide.toc,.slide.thanks,.slide.chapter,.slide.question{padding:108px 130px;background:var(--bg-cover);background-size:cover}
+
+/* 内容页四段 */
+.eyebrow{font-family:var(--font-mono);font-size:18px;letter-spacing:.2em;color:var(--accent);margin-bottom:10px}
+.slide h3{margin:0 0 8px;font-size:46px;font-weight:600;letter-spacing:-.02em;color:var(--fg);line-height:1.2}
+.slide.dense h3{font-size:40px}
+.intro{margin:0 0 22px;max-width:1320px;font-size:21px;line-height:1.55;color:var(--fg-body)}
+.body{flex:1;min-height:0;display:flex;flex-direction:column}
+
+/* 统一卡片：同组同角色卡片完全同构；hot 只给文案点明差异的那一张 */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+  display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.card>.ct{padding:12px 16px;border-bottom:1px solid var(--line);font-size:21px;font-weight:700;line-height:1.35;color:var(--fg)}
+.card>.cb{padding:14px 16px;flex:1;min-height:0;font-size:21px;line-height:1.45}
+.card.hot{border-color:var(--accent)}
+.card.hot>.ct{color:var(--accent)}
+
+/* 数字大字 + 紧贴单位 */
+.num{font-family:var(--font-mono);font-size:64px;font-weight:700;color:var(--accent);line-height:1}
+.num small{font-family:var(--font-sans);font-size:21px;font-weight:400;color:var(--fg);margin-left:6px}
+
+/* 页脚插槽（内容由风格文件规定） */
+.foot{position:absolute;left:90px;right:90px;bottom:28px;display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--font-mono);font-size:14px;color:var(--fg-muted)}
+.foot img{height:28px}
+.foot-l::after{content:attr(data-pn);margin-left:14px}
+
+/* 动画协议（motion.md）：build 逐拍、layer 互斥画面 */
+.build{opacity:1;transition:opacity .25s}
+body.present .build:not([data-shown]){opacity:0}
+[data-layer-panel]{display:none}
+[data-layer-panel][data-active]{display:block}
+[data-layer-btn]{cursor:pointer;padding:10px 18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--fg)}
+[data-layer-btn][data-active]{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* 顶部工具条与放映模式 */
+.bar{position:fixed;top:12px;right:16px;z-index:9;display:flex;gap:8px;align-items:center;font:14px var(--font-mono);color:#ddd}
+.bar button{border:1px solid #555;background:#222;color:#ddd;border-radius:6px;padding:4px 10px;cursor:pointer}
+body.present{height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+body.present .slide-wrap{display:none;margin:0}
+body.present .slide-wrap.cur{display:block}
+body.present .bar{opacity:.25}
+body.present .bar:hover{opacity:1}
+
+/* ?debug 标记：section 级溢出红实框，内层裁切橙虚框 */
+.dbg-overflow{outline:6px solid #f00 !important}
+.dbg-clip{outline:3px dashed #f80 !important}

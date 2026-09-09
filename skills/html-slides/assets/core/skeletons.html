@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>html-slides · 骨架画廊</title>
+<!-- 本文件是可直接用浏览器打开的骨架画廊（外链 css/js 仅为画廊方便）。
+     写自己的 deck 时：① 复制 assets/<style>/vars-*.css 的 :root 块 ② 复制 base.css ③ 复制风格 style.css（如有）
+     全部内联进 <style>；runtime.js 内联进末尾 <script>；下面的 <section> 按需复制并替换文字。 -->
+<link rel="stylesheet" href="../generic/vars-light.css">
+<link rel="stylesheet" href="base.css">
+</head>
+<body>
+<nav class="bar"><span class="pn"></span><button data-mode="present" title="放映 (P)">▶</button><button data-mode="scroll" title="滚动 (P)">☰</button></nav>
+
+<!-- ===== 固定页 1/3：封面 cover ===== -->
+<div class="slide-wrap"><section class="slide cover" data-label="封面" data-family="门面" data-density="light">
+  <div style="margin-top:auto">
+    <h1 style="margin:0;font-size:84px;line-height:1.1;font-weight:700;color:var(--fg);max-width:1300px">主标题：一句判断</h1>
+    <p style="margin:24px 0 0;font-size:30px;color:var(--fg-body)">副题一行</p>
+  </div>
+  <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-size:21px;color:var(--fg-muted)">
+    <div>部门 · 汇报人 · 2026-09</div><div class="eyebrow" style="margin:0">SECURITY LEVEL：<span data-classification></span></div>
+  </div>
+</section></div>
+
+<!-- ===== 固定页 2/3：目录 toc（每章一个 li，章名与大纲逐字一致；作章节过渡页复用时给当前项 style="color:var(--accent)"） ===== -->
+<div class="slide-wrap"><section class="slide toc" data-label="目录" data-family="门面" data-density="light">
+  <h2 style="margin:0 0 48px;font-size:64px;color:var(--fg)">目录<span style="display:block;width:64px;height:6px;background:var(--accent);margin-top:14px"></span></h2>
+  <ol style="margin:0;padding:0;list-style:none;display:grid;gap:26px;font-size:30px;color:var(--fg)">
+    <li style="display:flex;gap:28px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:18px">
+      <span class="eyebrow" style="font-size:27px;margin:0">01</span><span>章名一</span>
+      <span style="margin-left:auto;font-size:21px;color:var(--fg-muted)">本章要回答的问题</span></li>
+    <li style="display:flex;gap:28px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:18px">
+      <span class="eyebrow" style="font-size:27px;margin:0">02</span><span>章名二</span>
+      <span style="margin-left:auto;font-size:21px;color:var(--fg-muted)">本章要回答的问题</span></li>
+  </ol>
+</section></div>
+
+<!-- ===== 章扉 chapter ===== -->
+<div class="slide-wrap"><section class="slide chapter" data-label="02 章扉" data-family="门面" data-density="light" style="justify-content:center">
+  <div class="eyebrow" style="position:absolute;left:130px;top:96px;font-size:180px;letter-spacing:0;opacity:.08;line-height:1">02</div>
+  <div class="eyebrow" style="font-size:21px">SECTION 02 · 12 MIN</div>
+  <h2 style="margin:30px 0 0;font-size:100px;line-height:.98;letter-spacing:-.03em;color:var(--fg)">章名：一行点题</h2>
+  <p style="margin:36px 0 0;max-width:1040px;font-size:27px;line-height:1.7;color:var(--fg-body)">两三句写清本章叙事线。</p>
+</section></div>
+
+<!-- ===== 内容页四段 + 卡片网格 card-grid ===== -->
+<div class="slide-wrap"><section class="slide" data-label="2.1 三个瓶颈" data-family="网格" data-density="normal">
+  <div class="eyebrow">2.1 · 瓶颈 / BOTTLENECKS</div>
+  <h3>基于 X 机制的三个瓶颈决定了 Y 的上限</h3>
+  <p class="intro">一两句导语，带信息量。</p>
+  <div class="body" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+    <div class="card"><div class="ct">交付成本高</div><div class="cb">4–12 字短语条目 ×3–5；同组卡结构完全一致。</div></div>
+    <div class="card"><div class="ct">场景覆盖窄</div><div class="cb">…</div></div>
+    <div class="card hot"><div class="ct">迁移能力弱（本页结论）</div><div class="cb">只有文案点明差异的卡才加 hot。</div></div>
+  </div>
+  <footer class="foot"><span class="foot-l"></span><span class="foot-r"></span></footer>
+</section></div>
+
+<!-- ===== 左图右文 image-text（图 height:100%;width:auto，不要 max-*） ===== -->
+<div class="slide-wrap"><section class="slide" data-label="2.2 左图右文" data-family="分栏" data-density="normal">
+  <div class="eyebrow">2.2 · 证据 / EVIDENCE</div>
+  <h3>在 X 实验中，结合 Y 方法，Z 指标提升 1.76×</h3>
+  <div class="body" style="flex-direction:row;gap:34px;align-items:center">
+    <div style="flex:0 0 auto;max-width:60%;height:100%;display:flex;align-items:center">
+      <div data-todo="fig" style="height:100%;aspect-ratio:4/3;border:2px dashed var(--accent);border-radius:var(--radius);background:var(--accent-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:18px">
+        <span style="font-family:var(--font-mono);font-size:14px;color:var(--accent)">【原图】《论文名》Fig 3</span>
+        <span style="font-size:15px;color:var(--fg-muted)">内容一句 · 约 4:3 横图</span>
+      </div>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:12px">
+      <div style="font-size:24px;font-weight:600;color:var(--fg)">小标题</div>
+      <div style="font-size:21px;line-height:1.6">正文…</div>
+    </div>
+  </div>
+</section></div>
+
+<!-- ===== 痛点·方案·价值 pain-solution-value（1-2-1） ===== -->
+<div class="slide-wrap"><section class="slide" data-label="3.1 方案" data-family="分栏" data-density="dense">
+  <div class="eyebrow">3.1 · 方案 / SOLUTION</div>
+  <h3>远程运维：减少上站，让运维管理简单高效</h3>
+  <div class="body" style="flex-direction:row;gap:24px">
+    <div class="card" style="flex:1"><div class="ct">痛点</div><div class="cb">以问句收尾的 3 条短语</div></div>
+    <div class="card" style="flex:2"><div class="ct">方案：功能名词 → 利益句</div><div class="cb">自绘流程 / 架构图或要点网格</div></div>
+    <div class="card" style="flex:1"><div class="ct">价值</div><div class="cb">≤3 条断言，每条带数字</div></div>
+  </div>
+</section></div>
+
+<!-- ===== 对比两栏 compare（AS-IS / TO-BE） ===== -->
+<div class="slide-wrap"><section class="slide" data-label="3.2 对比" data-family="分栏" data-density="normal">
+  <div class="eyebrow">3.2 · 对比 / BEFORE · AFTER</div>
+  <h3>引入 X 后，单 TB 处理时间从 300 分钟降到 15 分钟</h3>
+  <div class="body" style="flex-direction:row;gap:24px;align-items:stretch">
+    <div class="card" style="flex:1"><div class="ct" style="color:var(--fg-muted)">AS-IS · 过去</div>
+      <div class="cb"><div class="num" style="color:var(--fg-muted);font-size:48px">300 <small>min/TB</small></div></div></div>
+    <div style="align-self:center;font-family:var(--font-mono);font-size:48px;color:var(--accent)">→</div>
+    <div class="card hot" style="flex:1"><div class="ct">TO-BE · 现在</div>
+      <div class="cb"><div class="num">15 <small>min/TB</small></div></div></div>
+  </div>
+</section></div>
+
+<!-- ===== 数字大字带 kpi-band ===== -->
+<div class="slide-wrap"><section class="slide" data-label="4.1 成果" data-family="网格" data-density="normal">
+  <div class="eyebrow">4.1 · 成果 / RESULTS</div>
+  <h3>华为职业认证架构：三层技术栈，六大领域，22 个方向</h3>
+  <div class="body" style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;align-content:center">
+    <div class="card" style="align-items:center;padding:28px 0"><div class="num">37,000<small>+</small></div>
+      <div style="font-size:21px;color:var(--fg)">HCIE</div><div style="font-size:15px;color:var(--fg-muted)">口径：截至 2025-08</div></div>
+    <div class="card" style="align-items:center;padding:28px 0"><div class="num">170<small>+</small></div>
+      <div style="font-size:21px;color:var(--fg)">国家</div><div style="font-size:15px;color:var(--fg-muted)">口径</div></div>
+    <div class="card" style="align-items:center;padding:28px 0"><div class="num">20.8<small>万</small></div>
+      <div style="font-size:21px;color:var(--fg)">员工</div><div style="font-size:15px;color:var(--fg-muted)">口径</div></div>
+    <div class="card" style="align-items:center;padding:28px 0"><div class="num">1.76<small>×</small></div>
+      <div style="font-size:21px;color:var(--fg)">提升</div><div style="font-size:15px;color:var(--fg-muted)">口径</div></div>
+  </div>
+</section></div>
+
+<!-- ===== 流程条 flow（瓶颈节点 hot）+ build 逐拍示例 ===== -->
+<div class="slide-wrap"><section class="slide" data-label="4.2 流程" data-family="流程" data-density="normal">
+  <div class="eyebrow">4.2 · 流程 / PIPELINE</div>
+  <h3>在解析 → 替换 DOM 这一步，X 策略吃掉了 60% 的时延</h3>
+  <div class="body" style="flex-direction:row;align-items:center;gap:14px">
+    <div class="card build" data-step="0" style="flex:1;padding:14px;text-align:center"><b style="color:var(--fg)">输入</b><div style="font-size:15px;color:var(--fg-muted)">一句补充</div></div>
+    <div class="build" data-step="0" style="font-family:var(--font-mono);font-size:28px;color:var(--fg-muted)">→</div>
+    <div class="card build" data-step="1" style="flex:1;padding:14px;text-align:center"><b style="color:var(--fg)">解析</b></div>
+    <div class="build" data-step="1" style="font-family:var(--font-mono);font-size:28px;color:var(--fg-muted)">→</div>
+    <div class="card hot build" data-step="2" style="flex:1;padding:14px;text-align:center"><b style="color:var(--accent)">替换 DOM（瓶颈）</b></div>
+  </div>
+</section></div>
+
+<!-- ===== 标准表格（visuals.md §4）：表头 --table-head，全黑边，分组 3px 粗外框，列宽写到每个 th/td ===== -->
+<div class="slide-wrap"><section class="slide dense" data-label="4.3 表格" data-family="矩阵" data-density="dense">
+  <div class="eyebrow">4.3 · 对照 / MATRIX</div>
+  <h3>两组模块各自面对一个代表性技术问题</h3>
+  <div class="body">
+  <table style="width:100%;flex:1;min-height:0;border-collapse:collapse;table-layout:fixed;font-size:15px;line-height:1.15;color:var(--fg)">
+    <thead><tr style="background:var(--table-head);color:#fff">
+      <th style="width:15%;height:46px;border:1px solid #000;border-top-width:3px;border-bottom-width:3px;border-left-width:3px;text-align:center">分类</th>
+      <th style="width:19%;height:46px;border:1px solid #000;border-top-width:3px;border-bottom-width:3px;text-align:center">模块</th>
+      <th style="width:66%;height:46px;border:1px solid #000;border-top-width:3px;border-bottom-width:3px;border-right-width:3px;text-align:center">说明</th>
+    </tr></thead>
+    <tbody>
+      <tr><td rowspan="2" style="width:15%;border:1px solid #000;border-left-width:3px;border-top-width:3px;border-bottom-width:3px;text-align:center;font-weight:700">组 A</td>
+          <td style="width:19%;border:1px solid #000;border-top-width:3px;padding:6px 7px;font-weight:700">模块 A</td>
+          <td style="width:66%;border:1px solid #000;border-top-width:3px;border-right-width:3px;padding:6px 8px;white-space:normal;overflow-wrap:break-word">一句代表性说明。</td></tr>
+      <tr><td style="width:19%;border:1px solid #000;border-bottom-width:3px;padding:6px 7px;font-weight:700">模块 B</td>
+          <td style="width:66%;border:1px solid #000;border-bottom-width:3px;border-right-width:3px;padding:6px 8px;white-space:normal;overflow-wrap:break-word">另一句说明。</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section></div>
+
+<!-- ===== layer 互斥画面示例（motion.md §3）：默认按钮不写 data-step，其余从 0 编号 ===== -->
+<div class="slide-wrap"><section class="slide" data-label="4.4 三方案" data-family="矩阵" data-density="normal">
+  <div class="eyebrow">4.4 · 选型 / OPTIONS</div>
+  <h3>三种方案中，B 在成本与时延上同时占优</h3>
+  <div style="display:flex;gap:14px;margin-bottom:18px">
+    <div data-layer-btn="a" data-layer-group="opt" data-active>方案 A</div>
+    <div data-layer-btn="b" data-layer-group="opt" data-step="0">方案 B</div>
+    <div data-layer-btn="c" data-layer-group="opt" data-step="1">方案 C</div>
+  </div>
+  <div class="body">
+    <div data-layer-panel="a" data-layer-group="opt" data-active class="card" style="height:100%"><div class="cb">面板 A</div></div>
+    <div data-layer-panel="b" data-layer-group="opt" class="card" style="height:100%"><div class="cb">面板 B</div></div>
+    <div data-layer-panel="c" data-layer-group="opt" class="card" style="height:100%"><div class="cb">面板 C</div></div>
+  </div>
+</section></div>
+
+<!-- ===== 固定页 3/3：致谢 thanks ===== -->
+<div class="slide-wrap"><section class="slide thanks" data-label="致谢" data-family="门面" data-density="light" style="justify-content:center">
+  <h1 style="margin:0;font-size:120px;font-weight:700;color:var(--fg)">谢谢</h1>
+  <p style="margin:28px 0 0;font-size:27px;color:var(--fg-body)">联系方式 · 声明</p>
+</section></div>
+
+<script src="runtime.js"></script>
+</body></html>

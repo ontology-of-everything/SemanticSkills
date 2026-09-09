@@ -1,0 +1,48 @@
+{
+  "skill_name": "html-slides",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "$html-slides 帮我做一份 15 分钟的华为云 DME 产品介绍胶片，对象是客户 IT 主管，华为风格浅色。素材我稍后给，先出大纲。",
+      "expected_output": "Stage-1 facts are taken from the prompt without re-asking; a chapter outline with per-chapter questions and time budget is proposed and stops for confirmation; no per-page table or HTML yet.",
+      "assertions": [
+        "The response does not re-ask scene, audience, duration or style already given.",
+        "It proposes an outline (chapters, each with the question it answers and minutes) and explicitly waits for confirmation.",
+        "It does not write the per-page table or any HTML before the outline is confirmed.",
+        "It names the style as huawei / light profile and mentions the confidentiality footer choice as the only remaining stage-1 question."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/html-slides 大纲和逐页表都确认了（见 deck.plan.md），风格 generic 深色。现在写 HTML。",
+      "expected_output": "A single-file HTML assembled from assets/generic/vars-dark.css + assets/core/base.css + inlined runtime.js, one section per plan row, placeholders where art is pending, followed by the self-check list.",
+      "assertions": [
+        "The HTML inlines the dark variable block, base.css and runtime.js; there is no external http resource.",
+        "Every <section class=\"slide\"> carries data-label matching a plan.md row; cover, toc and thanks appear once each.",
+        "No hardcoded color values appear in page markup; colors reference CSS variables.",
+        "Pending figures use data-todo placeholders with type, source, one-line content and aspect ratio.",
+        "The response tells the user to open <deck>.html?debug and reports the grep-based self-checks."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "$html-slides 把 deck.html 导出成 PPTX，要能在 PowerPoint 里改文字。",
+      "expected_output": "The agent distinguishes the two PPTX tiers, picks the editable rebuild path because the user wants editable text, and states the visual differences from the HTML; it does not auto-install dependencies.",
+      "assertions": [
+        "It explains that tools/export_pptx.py yields a screenshot deck that is not editable, so it is not the right tier here.",
+        "It rebuilds natively with python-pptx from plan.md + deck.html text and states the layout differs from the HTML.",
+        "It checks for python-pptx and, if missing, prints the install command instead of installing it.",
+        "Speaker notes come from the plan.md 核心观点 column."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "PPT 封面一般怎么设计比较好看？",
+      "expected_output": "A short general answer; the skill workflow is not started.",
+      "assertions": [
+        "The response does not run the seven-stage workflow or ask stage-1 questions.",
+        "It does not create files or mention plan.md / deck.html deliverables."
+      ]
+    }
+  ]
+}
