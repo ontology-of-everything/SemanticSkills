@@ -2,3 +2,5 @@ interface:
   display_name: "Concept PRD"
   short_description: "把确认的概念模型转录为 PRD 规格：总体 + 每概念 + 按 flow 的 syncs"
   default_prompt: "Use $concept-prd to transcribe the confirmed concept model into PRD documents: overall PRD, one sub-PRD per concept, syncs grouped by flow."
+policy:
+  allow_implicit_invocation: false

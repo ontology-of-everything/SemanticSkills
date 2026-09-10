@@ -1,5 +1,14 @@
 # concept-implementation Changelog
 
+## 0.6.0 - 2026-09-10
+
+### Changed
+
+- Default off: run only on explicit `$concept-implementation` /
+  `/concept-implementation`. Codex `allow_implicit_invocation: false`.
+- `references/scaling.md`: `wyx:map` → `concept-guardrails map` (guardrails 0.30.0
+  dropped the `wyx:` prefix).
+
 ## 0.5.0 - 2026-09-07
 
 - 修复事务/错误处理、完成事件与并发隔离；纠正 Spring Modulith 与 Cargo 边界检查说明。

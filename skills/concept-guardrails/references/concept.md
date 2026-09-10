@@ -1,24 +1,22 @@
-# 有边界的概念设计（wyx:concept）
+# 有边界的概念设计（`concept` 模式）
 
 生成**概念规格**——一份结构化的模块描述，作为代码生成的压缩上下文。它提供行为契约，但不能替代审计时读取实现。
 
-新建规格采用基于 Daniel Jackson *Beyond Objects*（2026）的本仓记法；已有 wyx 原生格式保留其边界段与约定。Jackson 模板为：`purpose` / `principle` / `state` / `actions`（含 `_` queries）。跨概念边只写在 `SYNCS.md`。
+规格采用基于 Daniel Jackson *Beyond Objects*（2026）的本仓记法：`purpose` / `principle` / `state` / `actions`（含 `_` queries）。跨概念边只写在 `SYNCS.md`。漂移检测是独立的 `drift` 模式，见 `drift-detection.md`。
 
 ## 如何解读用户参数
 
-从参数判断模式：
+从参数判断子模式：
 
-- **目录或文件路径**（如 `src/lib/server/auth/`）：**回填模式** —— 读现有代码，提出一份描述「已经存在的东西」的概念规格。发现的任何边界破坏都要标出来（引用了其他模块的内部实现、共享可变状态等）。
-- **功能描述**（如 `带自选清单的投资组合跟踪`）：**新建模式** —— 从描述设计一份新的概念规格。强制分解：如果这个功能包含多个互相独立的目的，就拆成多个概念。缺口或边界不明时回 `concept-design`，不要在回填里发明模型。
-- **`drift` 或 `check`**（可带路径，如 `drift src/lib/server/`）：**漂移检测模式** —— 把现有 `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` 与当前代码对比，产出结构化的漂移报告。
-- **没有参数**：**发现模式** —— 分析项目结构，提出哪些模块应该有概念规格。每个候选列一行 purpose。**不要**生成完整规格；询问用户想细化哪些。列完概念候选后，如果项目里存在数据转换模式或跨概念协调，简短提示 `wyx:pipeline` 和 `wyx:sync`。
+- **目录或文件路径**（如 `src/lib/server/auth/`）：**回填** —— 读现有代码，提出一份描述「已经存在的东西」的概念规格。发现的任何边界破坏都要标出来（引用了其他模块的内部实现、共享可变状态等）。
+- **功能描述**（如 `带自选清单的投资组合跟踪`）：**新建** —— 从描述设计一份新的概念规格。强制分解：如果这个功能包含多个互相独立的目的，就拆成多个概念。缺口或边界不明时回 `concept-design`，不要在回填里发明模型。
+- **没有参数**：**发现** —— 分析项目结构，提出哪些模块应该有概念规格。每个候选列一行 purpose。**不要**生成完整规格；询问用户想细化哪些。列完概念候选后，如果项目里存在数据转换模式或跨概念协调，简短提示 `pipeline` 和 `sync` 模式。项目尚无任何规格时改走 `audit`，它还给出依赖顺序。
 
 ## 概念规格格式
 
 规格写成 `CONCEPT.md` 文件，放在**实现代码旁边**（如 `src/lib/server/auth/CONCEPT.md`）。
 
-Jackson 方言使用以下结构（与 `concept-prd` / `concept-design` 对齐）；原生方言保留现有模板，不静默迁移。
-填好的对照：`Reserving [User, Slot]` 与 `Availability [Venue]`（query `_getAvailableSlot` 在 Availability；组合只在 sync）。
+结构与 `concept-prd` / `concept-design` 对齐。填好的对照：`Reserving [User, Slot]` 与 `Availability [Venue]`（query `_getAvailableSlot` 在 Availability；组合只在 sync）。
 
 ```markdown
 # concept Name [T, ...]
@@ -49,7 +47,7 @@ _query (arg: Type) : (result: Type)
 ```
 
 可选 `## notes`：应用角色、类型参数实例化。四节不出现其他概念名。
-Jackson 方言不写 `## interactions` / `## dependencies` / `## known coupling`；旧版耦合记录保留在原生格式，迁移时转入应用级取舍记录。
+不写 `## interactions` / `## dependencies` / `## known coupling`。遇到含这些段的旧 wyx 规格，按入口的迁移规则处理：耦合记录转入应用级取舍记录或漂移报告，不保留在 `CONCEPT.md`。
 类型参数是列表：可零个（省略 `[]`）、一个或多个（`Reserving [User, Slot]`）；每个参数是无约束身份。
 状态也可用等价 Alloy 关系式（`password: U -> String`）。
 回填时若发现绕过动作接口的耦合，报告为漂移的 Boundary violation，不写进规格。
@@ -82,8 +80,8 @@ Jackson 方言不写 `## interactions` / `## dependencies` / `## known coupling`
 
 边界注入 hook 从被编辑文件所在目录**向上**走，在**第一个含 `CONCEPT.md` 或 `PIPELINE.md` 的目录**停下（这两者提供边界）。`SYNCS.md` 会被识别并列出，但**不**终止向上查找。
 
-上游 hook 脚本仍提取 `## interactions` / `## dependencies`（见 `hooks-runtime.md`）；Jackson 规格没有这两段，hook 仅列规格并提示缺边界段。
-agent 应自己读本目录 `CONCEPT.md` 全文，以及 `SYNCS.md` 里点名本概念的 `sync` 块。`PIPELINE.md` 的 `## data boundary` 仍会被注入。
+上游 hook 脚本只提取旧段 `## interactions` / `## dependencies`（见 `hooks-runtime.md`）；本记法没有这两段，hook 对 `CONCEPT.md` 仅列出文件并提示无边界段。
+agent 应自己读本目录 `CONCEPT.md` 全文，以及 `SYNCS.md` 里点名本概念的 `sync` 块。`PIPELINE.md` 的 `## data boundary` 会被注入。
 
 ```text
 src/lib/
@@ -106,7 +104,3 @@ src/lib/
 - **根目录级 `CONCEPT.md`**：放在 `src/` 的 `CONCEPT.md` 会成为所有子目录（那些没有更近规格的）的兜底边界——把过宽的约束套到未覆盖模块上。
 - **规格放在子目录**：`scoring/transforms/PIPELINE.md` 会让 hook 在查找边界时停在那里。hook 随后向上走到 `scoring/CONCEPT.md`，带 `[SHADOWED]` 标注——能用，但放置不理想。
 - **规格离代码太远**：放得离实现很远的 `CONCEPT.md`，在附近文件被编辑时不会触发。
-
-## 漂移检测模式
-
-当参数以 `drift` 开头时，跨全部规格类型检测规格与代码的脱节，包含跨规格引用校验。程序见 `drift-detection.md`。

@@ -1,6 +1,6 @@
-# 漂移检测（wyx:concept drift）
+# 漂移检测（`drift` 模式）
 
-只读对照规格与当前实现；修复是后续有授权的独立步骤。先用入口的方言表识别格式。
+只读对照规格与当前实现；修复是后续有授权的独立步骤。可带路径限定范围。含旧 wyx 段落的文件不进入下列检查表，单列为「待迁移」并注明段名。
 
 ## 扫描
 
@@ -19,13 +19,13 @@
 | New state | 未记录且影响可观察行为的状态；检查迁移/schema | Medium |
 | Boundary violation | 绕过其他概念动作/query 访问其内部状态或实现 | High |
 | Cross-cutting parameter | 多个动作的公共参数影响权限、身份等契约却未记录 | Medium |
-| Spec naming violation | Jackson 四节真正依赖别的概念定义，或混入边界段 | Medium |
-| Intrinsic coupling | Jackson 概念直接调用另一概念的公开 API | High |
+| Spec naming violation | 四节真正依赖别的概念定义，或混入 interactions / dependencies 等边界段 | Medium |
+| Intrinsic coupling | 概念直接调用另一概念的公开 API | High |
 | OP 无测试 | principle 的场景无对应行为测试 | Medium |
 | 排除动作被使用 | 应用有意排除的动作被调用或暴露 | High |
 | Resolved known gap/coupling | 现有实现已解决记录在案的缺口 | Low |
 
-wyx 原生另查 **New dependency**（未声明的新依赖，High）；Jackson 格式不补 `dependencies` 来“修复”独立性。局部类型参数 User 与外部概念同名不构成点名违规。
+不补 `dependencies` 段来"修复"独立性；跨概念依赖只能出现在 `SYNCS.md`，否则报 Intrinsic coupling。局部类型参数 User 与外部概念同名不构成点名违规。
 
 ## PIPELINE.md
 
@@ -43,23 +43,22 @@ wyx 原生另查 **New dependency**（未声明的新依赖，High）；Jackson 
 | 类别 | 判定依据 | 默认严重度 |
 | --- | --- | --- |
 | Missing/Removed sync | 新协调未记录 / 已声明协调无实现 | Medium / High |
-| Changed trigger | when（旧版 timing/trigger）与实现的触发不同 | Medium |
+| Changed trigger | when 与实现的触发不同 | Medium |
 | New participant | 实际参与概念未声明 | High |
 | Changed binding/effect | where 的资格/绑定或 then 的目标/参数改变 | High |
 | Graph inconsistency | 存在的派生图与规则块不符 | Medium |
 
-Jackson 同步图可在总体 PRD，不要求 SYNCS 内重复一份。旧版另查 interactions 声明的协调是否有 sync 覆盖（Missing SYNCS coverage，Medium）。响应、错误、循环等语义缺陷需要全面检查时交接 `concept-audit`。
+同步图可在总体 PRD，不要求 SYNCS 内重复一份。响应、错误、循环等语义缺陷需要全面检查时交接 `concept-audit`。
 
 ## 跨规格引用
 
-逐条解析 include 实例化、动作、query、参数和输出 case，核对真实声明；读取兼容 `principle` / `operational principle`。`Requesting` 等明确的外部入口契约单独核对，不要求伪概念拥有 CONCEPT.md。
+逐条解析 include 实例化、动作、query、参数和输出 case，核对真实声明；`principle` / `operational principle` 视为同一节。`Requesting` 等明确的外部入口契约单独核对，不要求伪概念拥有 CONCEPT.md。
 
 | 类别 | 判定依据 | 默认严重度 |
 | --- | --- | --- |
 | Missing reference | sync/管道引用不存在的动作或 query | High |
 | Missing participant | 内部概念既无规格也无索引说明 | Medium |
 | Signature/binding mismatch | 参数、输出 case 或类型实例化不匹配 | High |
-| Legacy reference mismatch | 原生 interactions 显式方法引用不存在；dependencies 目标无规格 | High / Medium |
 
 ## 校准
 
@@ -67,7 +66,7 @@ Jackson 同步图可在总体 PRD，不要求 SYNCS 内重复一份。旧版另�
 
 - “规格没提”不推出行为被禁止；Missing 类专门记录新增遗漏，与明确矛盾分开。
 - 不影响契约的异步/Result 包装、命名映射和私有派生值无需报缺陷；需要维护说明时最多 Low。有显式映射的跨规格名字不误报不存在。
-- 授权的架构例外注明来源、范围和后果；原生公开 API 调用可以合法，Jackson 概念间公开 API 调用仍破坏独立性。组合层调用声明接口合法。
+- 授权的架构例外注明来源、范围和后果；概念间公开 API 调用仍破坏独立性，例外不改变类别，只影响修复方向。组合层调用声明接口合法。
 - 报 Medium 以上需有当前代码或规格位置与证据。合并同一根因，跨多份规格保留受影响路径；不把遗漏类别算作通过。
 
 ## 报告与修复

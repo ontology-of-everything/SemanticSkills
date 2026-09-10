@@ -4,12 +4,16 @@
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-design/SKILL.md`](../../skills/concept-design/SKILL.md)。
 
-**Version:** 0.5.0 · Changelog:
+**Version:** 0.6.0 · Changelog:
 [qa/concept-design/CHANGELOG.md](../../qa/concept-design/CHANGELOG.md)
 
 ## 一句话
 
 把需求转成由独立 concepts 和 synchronizations 组成的概念模型：每个 concept 都用单一 Purpose、端到端 Operational Principle、最小 State 与完整 Actions 定义。模型确认后，文档化用 `concept-prd`，代码落地用 `concept-implementation`，存量审计用 `concept-audit`。
+
+## 启用方式
+
+本技能默认不自动启动。Cursor 用 `/concept-design`，Codex 用 `$concept-design`。
 
 ## 适用场景
 

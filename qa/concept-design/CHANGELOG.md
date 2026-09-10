@@ -1,5 +1,12 @@
 # concept-design Changelog
 
+## 0.6.0 - 2026-09-10
+
+### Changed
+
+- Default off: run only on explicit `$concept-design` / `/concept-design`.
+  Codex `allow_implicit_invocation: false`.
+
 ## 0.5.0 - 2026-09-07
 
 - 区分论文语义与本仓方言；修复 flow、绑定、查询空集与同步图；压缩模板并重写订位教学例。

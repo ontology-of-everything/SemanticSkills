@@ -4,12 +4,16 @@
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-audit/SKILL.md`](../../skills/concept-audit/SKILL.md)。
 
-**Version:** 0.4.0 · Changelog:
+**Version:** 0.5.0 · Changelog:
 [qa/concept-audit/CHANGELOG.md](../../qa/concept-audit/CHANGELOG.md)
 
 ## 一句话
 
 只读对照概念模型（或 PRD 文档族）与代码，回答两个主问题——**概念是否真独立**、**概念的组合是否有缺陷**——再加规格漂移、判据重审、依赖与子集，五维给出带证据的发现，并路由到 design / prd / implementation 修复。
+
+## 启用方式
+
+本技能默认不自动启动。Cursor 用 `/concept-audit`，Codex 用 `$concept-audit`。
 
 ## 适用场景
 

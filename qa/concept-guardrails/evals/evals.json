@@ -3,19 +3,19 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "$concept-guardrails 帮我给 src/payments/ 这个模块写一份概念规格。里面有 service.ts、repository.ts、refund.ts，其中 service.ts 从 ../orders/repository 直接读了订单总额。",
-      "expected_output": "Read current code, draft and write an authorized specification in the detected dialect, and report the direct internal access without legitimizing it.",
+      "prompt": "$concept-guardrails concept src/payments/ 帮我给这个模块写一份概念规格。里面有 service.ts、repository.ts、refund.ts，其中 service.ts 从 ../orders/repository 直接读了订单总额。",
+      "expected_output": "Backfill sub-mode: read current code, draft and write an authorized CONCEPT.md in the Jackson notation, and report the direct internal access as a boundary violation without legitimizing it.",
       "assertions": [
-        "先读取代码及现有方言；新建使用 purpose/principle/state/actions，旧版保留原格式。",
-        "报告跨概念内部访问，修复通过组合层调用声明接口。",
+        "先读取代码；规格只用 purpose/principle/state/actions（可选 notes），不写 interactions / dependencies 段。",
+        "报告跨概念内部访问为 Boundary violation，修复方向是组合层经 orders 的动作或 _query 读取。",
         "呈现草案/diff 后完成已授权写入，不重复要求确认。",
         "纯编排不作为概念动作，未知行为不编造。"
       ]
     },
     {
       "id": 2,
-      "prompt": "$concept-guardrails 查一下我们项目的规格漂移。",
-      "expected_output": "A two-phase drift run: a read-only structured drift report with per-spec findings grouped by severity, cross-spec reference validation, and only then a request to choose fix direction.",
+      "prompt": "$concept-guardrails drift 查一下我们项目的规格漂移。",
+      "expected_output": "Read-only drift run: per-spec findings grouped by severity, cross-spec reference validation, then a request to choose fix direction only where the requirement cannot decide it.",
       "assertions": [
         "只读检查不修改规格/代码，也不追加历史记录。",
         "按默认类别及可验证影响校准严重度，记录理由。",
@@ -25,34 +25,44 @@
     },
     {
       "id": 3,
-      "prompt": "$concept-guardrails 这个项目还没有任何规格，我想开始用 wyx，从哪儿下手？",
-      "expected_output": "An audit-first response: a read-only coverage scan that lists uncovered modules, pipeline/sync candidates, and a dependency-ordered command plan, without generating any spec files.",
+      "prompt": "$concept-guardrails 这个项目还没有任何规格，我想开始用概念护栏，从哪儿下手？",
+      "expected_output": "Audit-first: no mode given and no specs exist, so run a read-only coverage scan listing uncovered modules, pipeline/sync candidates, and a dependency-ordered command plan using `$concept-guardrails <mode> <path>`, without generating any spec files.",
       "assertions": [
-        "先走审计模式，而不是直接挑一个模块生成规格。",
+        "未指定模式且项目无规格时走 audit，而不是直接挑一个模块生成规格。",
         "全程只读，不产出任何 CONCEPT.md / PIPELINE.md / SYNCS.md 文件。",
-        "输出按依赖顺序分阶段排列的命令清单，叶子模块在前。",
+        "输出按依赖顺序分阶段排列的命令清单，叶子模块在前，命令形式为 `$concept-guardrails concept|pipeline|sync <路径>`，不带 wyx: 前缀。",
         "跳过纯类型定义、工具函数、schema 等缺乏状态归属的目录，并说明跳过理由。"
       ]
     },
     {
       "id": 4,
-      "prompt": "$concept-guardrails 我们的 sync 目录 src/syncs/ 下有十来个处理器，帮我理清它们之间的协调关系。",
-      "expected_output": "Read handlers and existing dialect, then map causal rules with binding sources, failures and scope; preserve existing legacy fields when present.",
+      "prompt": "$concept-guardrails sync src/syncs/ 下有十来个处理器，帮我理清它们之间的协调关系。",
+      "expected_output": "Backfill sub-mode: read handlers, map each to when / where / then with binding sources, failure branches and scope, in one authoritative SYNCS.md for the package.",
       "assertions": [
-        "每个 syncs 包一份权威 SYNCS，保留规则身份与归组。",
-        "Jackson 方言记录 when/where/then，原生保留旧字段，不混用。",
+        "每个 syncs 包一份权威 SYNCS.md，保留规则身份与 // flow: 归组。",
+        "只写 app / include / sync 与 when / where / then；不写 dispatching、coordination graph、trigger/timing/qualification 字段。",
         "查询空集不冒充错误；需要响应的请求有明确结果分支与关联。",
         "组合层绕过其他概念公开接口的数据访问被标出。"
       ]
     },
     {
       "id": 5,
-      "prompt": "$concept-guardrails wyx:map：SYNCS 是 Jackson 方言：when A.done 与 B.ready，where C._lookup，then D.apply。PRD 产品依赖只有 D -> A。原地图较新，但 B.ready 刚被删除（文件 mtime 被保留）。请更新地图。",
+      "prompt": "$concept-guardrails map：SYNCS 里 when A.done 与 B.ready，where C._lookup，then D.apply。PRD 产品依赖只有 D -> A。原地图较新，但 B.ready 刚被删除（文件 mtime 被保留）。请更新地图。",
       "expected_output": "Re-read authoritative specs, preserve conjunction and query distinction, update from content instead of mtime, and keep product dependency D -> A separate.",
       "assertions": [
         "不凭 mtime 跳过，检查删除/重命名及来源集合。",
         "每条规则为节点，多 when 共同输入，query 仅读取。",
         "不把 A/B/C/D 同步关系推成产品依赖。"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "$concept-guardrails drift src/inventory/ 这里的 CONCEPT.md 是老格式，有 ## interactions 和 ## dependencies 段。",
+      "expected_output": "The file is reported as pending migration and excluded from the drift checklist; no dependencies section is read as a boundary, no partial edit is made, and migration is offered as a full-document rewrite in the Jackson notation subject to authorization.",
+      "assertions": [
+        "把该文件单列为待迁移并注明段名，不套用漂移检查表，也不把 dependencies 当作已声明边界。",
+        "不部分修改或只改标题；迁移只在授权后按 Jackson 记法整份重写，耦合记录转入报告或应用级取舍。",
+        "范围内其他 Jackson 格式规格照常检查。"
       ]
     }
   ]

@@ -3,7 +3,7 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "概念模型已经确认。请把它转录成 PRD 规格文档，不要重新设计概念，也不要写代码。",
+      "prompt": "$concept-prd 概念模型已经确认。请把它转录成 PRD 规格文档，不要重新设计概念，也不要写代码。",
       "expected_output": "A PRD document family transcribed from the confirmed model: overall PRD, one sub-PRD per concept, syncs grouped by flow, with acceptance scenarios derived from operational principles.",
       "assertions": [
         "The response transcribes the confirmed model and does not invent concepts, syncs, or exclusions.",
@@ -14,7 +14,7 @@
     },
     {
       "id": 2,
-      "prompt": "请用 concept-prd 转录已确认模型：query _find 返回零到多个 slot，没有 error 输出；reserve 有 Conflict 输出；principle 是成功故事；要求保留已有 CONCEPT 的 notes 并更新动作规格。",
+      "prompt": "$concept-prd 转录已确认模型：query _find 返回零到多个 slot，没有 error 输出；reserve 有 Conflict 输出；principle 是成功故事；要求保留已有 CONCEPT 的 notes 并更新动作规格。",
       "expected_output": "A source-grounded result satisfying the behavioral assertions, with unresolved information explicitly identified.",
       "assertions": [
         "不为 _find 发明 error case。",

@@ -1,5 +1,14 @@
 # concept-prd Changelog
 
+## 0.5.0 - 2026-09-10
+
+### Changed
+
+- Default off: run only on explicit `$concept-prd` / `/concept-prd`. Codex
+  `allow_implicit_invocation: false`.
+- Downstream reference renamed: `wyx:concept drift` / `wyx:map` → `concept-guardrails`
+  `drift` / `map` modes (guardrails 0.30.0 dropped the `wyx:` prefix).
+
 ## 0.4.0 - 2026-09-07
 
 - 明确权威规格与增量编辑；修复验收追溯、错误查询和文件格式；压缩重复示例。

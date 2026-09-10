@@ -2,6 +2,8 @@
 
 Evaluate observable mapping behavior rather than exact folder names.
 
+- The skill runs only on explicit `$concept-implementation` /
+  `/concept-implementation` invocation.
 - Each concept has a verifiable module boundary; concept modules do not import each
   other.
 - Syncs land only in the composition layer (mediator or rule engine).

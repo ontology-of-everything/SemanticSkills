@@ -1,12 +1,14 @@
 ---
 name: concept-prd
-description: Generates PRD specifications from a confirmed Daniel Jackson concept model, with an overall PRD and colocated CONCEPT.md and SYNCS.md. Use when the user requests a concept PRD, 概念规格文档, or concept-prd; preserve the model without inventing content.
+description: Generates PRD files from a confirmed concept model only when the user explicitly invokes $concept-prd. / 仅在用户显式调用 $concept-prd 时转录概念 PRD。
 metadata:
   openclaw:
     homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/concept-prd
 ---
 
 # 概念 PRD
+
+仅在用户显式调用 `$concept-prd` 时运行。
 
 ## 目标
 
@@ -46,7 +48,7 @@ metadata:
 
 ## 记法与模板
 
-`CONCEPT.md` / `SYNCS.md` 采用基于 *Beyond Objects* 的本仓 Markdown 记法（见 `references/templates.md`），与 `concept-design` 产出一致。`wyx:concept drift`、`wyx:map` 按同一记法消费。
+`CONCEPT.md` / `SYNCS.md` 采用基于 *Beyond Objects* 的本仓 Markdown 记法（见 `references/templates.md`），与 `concept-design` 产出一致。`concept-guardrails` 的 `drift`、`map` 模式按同一记法消费。
 
 ## 参考
 

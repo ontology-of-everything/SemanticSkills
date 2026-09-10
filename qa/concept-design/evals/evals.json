@@ -3,7 +3,7 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "我们要做一个团队共享书签产品。成员可以保存链接、给链接加标签，并订阅某个标签的新内容。请先做概念设计，暂时不要写 PRD 或代码。",
+      "prompt": "$concept-design 我们要做一个团队共享书签产品。成员可以保存链接、给链接加标签，并订阅某个标签的新内容。请先做概念设计，暂时不要写 PRD 或代码。",
       "expected_output": "A concept model that separates independently purposeful concepts, defines each through purpose, operational principle, state, and actions, and composes cross-concept behavior through synchronizations.",
       "assertions": [
         "The response identifies user needs and misfits before settling concept boundaries.",
@@ -15,7 +15,7 @@
     },
     {
       "id": 2,
-      "prompt": "用 concept-design 建模共享设备预约：两人并发选同一时段只能一人成功；无时段需回复；管理员可开放和关闭时段。先给模型。",
+      "prompt": "$concept-design 建模共享设备预约：两人并发选同一时段只能一人成功；无时段需回复；管理员可开放和关闭时段。先给模型。",
       "expected_output": "A source-grounded result satisfying the behavioral assertions, with unresolved information explicitly identified.",
       "assertions": [
         "写动作原子维护预约唯一性，不只做查询前置检查。",

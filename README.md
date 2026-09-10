@@ -30,11 +30,11 @@ Requirements to modules, with the concept model as the contract. Each skill stop
 
 | Skill | Version | What it does |
 | --- | --- | --- |
-| [`concept-design`](docs/skills/concept-design.md) | 0.5.0 | Models requirements as concepts (purpose, operational principle, state, actions) composed by syncs, with a dependency graph and product subset. Produces the model; continues to PRD or code when requested |
-| [`concept-prd`](docs/skills/concept-prd.md) | 0.4.0 | Transcribes a confirmed model into a central PRD plus one colocated `CONCEPT.md` per concept and a flow-grouped `SYNCS.md`. Gaps route back to design |
-| [`concept-implementation`](docs/skills/concept-implementation.md) | 0.5.0 | Maps the model onto a modular monolith: one module per concept, syncs as mediators or a rule engine, specs colocated with code. Notes for Rust, Java/Spring Modulith, TypeScript |
-| [`concept-audit`](docs/skills/concept-audit.md) | 0.4.0 | Read-only five-dimension audit of code against its model — drift, boundaries, criteria, composition, dependencies — with severity calibration and fix routing |
-| [`concept-guardrails`](docs/skills/concept-guardrails.md) | 0.28.0 | Explicit-only skill for colocated `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` boundaries and spec–code drift. Six routes: audit, concept, drift, pipeline, sync, map |
+| [`concept-design`](docs/skills/concept-design.md) | 0.6.0 | Explicit-only: models requirements as concepts (purpose, operational principle, state, actions) composed by syncs, with a dependency graph and product subset. Produces the model; continues to PRD or code when requested |
+| [`concept-prd`](docs/skills/concept-prd.md) | 0.5.0 | Explicit-only: transcribes a confirmed model into a central PRD plus one colocated `CONCEPT.md` per concept and a flow-grouped `SYNCS.md`. Gaps route back to design |
+| [`concept-implementation`](docs/skills/concept-implementation.md) | 0.6.0 | Explicit-only: maps the model onto a modular monolith: one module per concept, syncs as mediators or a rule engine, specs colocated with code. Notes for Rust, Java/Spring Modulith, TypeScript |
+| [`concept-audit`](docs/skills/concept-audit.md) | 0.5.0 | Explicit-only: read-only five-dimension audit of code against its model — drift, boundaries, criteria, composition, dependencies — with severity calibration and fix routing |
+| [`concept-guardrails`](docs/skills/concept-guardrails.md) | 0.30.0 | Explicit-only: colocated `CONCEPT.md` / `PIPELINE.md` / `SYNCS.md` boundaries and spec–code drift in the Jackson notation only. Six modes: `audit`, `concept`, `drift`, `pipeline`, `sync`, `map` |
 
 ### Ontology and semantics
 
@@ -98,11 +98,11 @@ Read a skill before using it — skills run with your agent's permissions.
 
 ## Usage
 
-Skills normally activate from their description, so plain requests are enough. In Codex, `concept-guardrails` is explicit-only and must be named:
+Skills normally activate from their description, so plain requests are enough. The `concept-*` family is explicit-only and must be named (`/concept-design` in Cursor, `$concept-design` in Codex):
 
 ```text
-把这个需求建成概念模型                      → concept-design
-模型定了，出一份 PRD 规格                   → concept-prd
+$concept-design 把这个需求建成概念模型
+$concept-prd 模型定了，出一份 PRD 规格
 $concept-guardrails 给 src/orders 写概念规格，然后查漂移
 把这套接口做成语义层                        → semantic-km-creator
 3 月华为云为什么扣了这笔                     → huawei-cloud-billing-scout

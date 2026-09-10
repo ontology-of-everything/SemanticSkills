@@ -2,6 +2,8 @@
 
 Evaluate observable concept-design behavior rather than exact headings or wording.
 
+- The skill runs only on explicit `$concept-design` / `/concept-design`
+  invocation; a generic requirements discussion does not start it.
 - Every retained concept serves one evaluable purpose and includes an operational
   principle that reaches that purpose.
 - State and actions are sufficient to describe behavior without implementation

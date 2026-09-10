@@ -1,5 +1,34 @@
 # concept-guardrails Changelog
 
+## 0.30.0 - 2026-09-10
+
+### Breaking Changes
+
+- 模式名去掉 `wyx:` 前缀：`$concept-guardrails <audit|concept|drift|pipeline|sync|map> [路径或描述]`；
+  `drift` 从 `concept` 的子参数独立为模式，`check` 别名移除。
+- 只保留 Jackson 记法（与 `concept-design` / `concept-prd` 一致）。不再消费 wyx 原生格式
+  （`## interactions` / `## dependencies` / `## known coupling` / `## dispatching` /
+  `## coordination graph` / `## sync:`）：audit / drift / map 把含这些段的文件标为待迁移，
+  授权后整份重写。移除 New dependency、Legacy reference mismatch、Missing SYNCS coverage
+  等仅对原生格式有意义的检查项。
+
+### Changed
+
+- `SKILL.md` 模式表补齐 `concept` / `pipeline` / `sync` 的回填 / 新建 / 发现子模式；统一无参数
+  路由：进入该模式的发现子模式，未指定模式或项目尚无规格时走 `audit`（原先入口与 references
+  对无参数行为的规定互相冲突）。
+- `hooks-runtime.md` 如实说明运行时对本记法只能列规格并注入 `PIPELINE.md` data boundary；
+  `PostToolUse` 静默。`concept.md` 移除漂移子节。
+- `agents/openai.yaml`、`docs/catalog.yml` 去掉 "wyx 中文版" 定位；`default_prompt` 列出模式。
+- 门禁新增：`SKILL.md` 与 `references/` 不得再出现 `wyx:` 模式前缀。
+
+## 0.29.0 - 2026-09-10
+
+### Changed
+
+- Align Cursor with Codex: skill stays off until `/concept-guardrails` or
+  `$concept-guardrails` (Codex already had `allow_implicit_invocation: false`).
+
 ## 0.28.0 - 2026-09-07
 
 - 统一 Jackson/wyx 消费规则；修复地图遗漏与新鲜度、只读历史冲突、重复授权及严重度；压缩共用流程。

@@ -4,12 +4,16 @@
 
 > 本文是给人看的中文说明，**不是** `npx skills add` 安装包内容。Agent 加载 [`skills/concept-implementation/SKILL.md`](../../skills/concept-implementation/SKILL.md)。
 
-**Version:** 0.5.0 · Changelog:
+**Version:** 0.6.0 · Changelog:
 [qa/concept-implementation/CHANGELOG.md](../../qa/concept-implementation/CHANGELOG.md)
 
 ## 一句话
 
 把已确认的概念模型映射为模块单体：一个 concept 一个模块，sync 落在组合层（mediator 或规则引擎），产品依赖图用于验证裁剪条件，实际构建另行检查。
+
+## 启用方式
+
+本技能默认不自动启动。Cursor 用 `/concept-implementation`，Codex 用 `$concept-implementation`。
 
 ## 适用场景
 

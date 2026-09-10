@@ -1,20 +1,18 @@
-# Sync 协调映射（wyx:sync）
+# Sync 协调映射（`sync` 模式）
 
-生成 **`SYNCS.md`**——相互独立的概念如何通过同步规则交互。Jackson 方言采用基于 Daniel Jackson *Beyond Objects*（2026）的本仓记法：因果规则 `when` / `where` / `then`，入口是 `Requesting` 伪概念。回填与审计仍需核对实现。
+生成 **`SYNCS.md`**——相互独立的概念如何通过同步规则交互。采用基于 Daniel Jackson *Beyond Objects*（2026）的本仓记法：因果规则 `when` / `where` / `then`，入口是 `Requesting` 伪概念。回填与审计仍需核对实现。
 
 概念规格不点名其他概念。组合只写在 `SYNCS.md`。
 
 ## 如何解读用户参数
 
-从参数判断模式：
+从参数判断子模式：
 
-- **sync 目录路径**（如 `src/lib/server/syncs/`）：**回填模式** —— 读现有的 sync 处理器，映射成 when / where / then，提出一份 `SYNCS.md`。把任何绕过概念边界的做法标出来。
-- **sync 描述**（如 `订单履约 → 库存更新`）：**新建模式** —— 为所描述的协调写 sync 规格。复杂分解回 `concept-design`。
-- **没有参数**：**发现模式** —— 分析项目里类似 sync 的模式（事件处理器、跨概念调用、定时任务），列出候选。**不要**生成完整规格；询问用户想细化哪些。如果发现的其实是没有跨概念协调的数据转换链，提示 `wyx:pipeline`。
+- **sync 目录路径**（如 `src/lib/server/syncs/`）：**回填** —— 读现有的 sync 处理器，映射成 when / where / then，提出一份 `SYNCS.md`。把任何绕过概念边界的做法标出来。
+- **sync 描述**（如 `订单履约 → 库存更新`）：**新建** —— 为所描述的协调写 sync 规格。复杂分解回 `concept-design`。
+- **没有参数**：**发现** —— 分析项目里类似 sync 的模式（事件处理器、跨概念调用、定时任务），列出候选。**不要**生成完整规格；询问用户想细化哪些。如果发现的其实是没有跨概念协调的数据转换链，提示 `pipeline` 模式。
 
 ## SYNCS.md 格式
-
-已有 wyx 原生格式保留 dispatching、coordination graph、sync 条目及 trigger/timing/qualification/flow/error/file；本节为 Jackson 模板。迁移时逐条保留触发、绑定、效果与错误路径，不能仅换标题。
 
 规格写成 `SYNCS.md` 文件，放在 **sync 目录里**（如 `src/lib/server/syncs/SYNCS.md`）。
 
@@ -41,9 +39,9 @@ then Requesting.respond (request: r, error: e)
 
 `when` 匹配已完成动作及其输出（允许只匹配参数子集）。`where` 经 `_` queries 读概念状态并绑定变量；绑定不成立则本条不触发。`then` 对 where（可选）产生的每个绑定调用已声明动作。只有已声明的错误 case 才能匹配；查询返回空集合不产生 error，也不自动响应。为预期拒绝声明独立查询/动作分支。then 内调用不能互相使用尚未完成的输出。
 
-`// flow:` 是规则组织注释；运行时 flow 是同一外部事件引发的因果实例，需隔离不同请求，不是规格节。规模化后每个 syncs 包一份 `SYNCS.md`，同一 flow 不拆散；`wyx:map` 从 when → then 合成全局视图。
+`// flow:` 是规则组织注释；运行时 flow 是同一外部事件引发的因果实例，需隔离不同请求，不是规格节。规模化后每个 syncs 包一份 `SYNCS.md`，同一 flow 不拆散；`map` 模式从 when → then 合成全局视图。
 
-Jackson 模板不写 `## dispatching`、`## coordination graph`、`trigger` / `timing` / `qualification` / `file`。时机分类（动作后 / 前置校验 / 定时）属于 `concept-implementation`，不进规格。
+不写 `## dispatching`、`## coordination graph`、`## sync:` 条目或 `trigger` / `timing` / `qualification` / `file` 字段；遇到含这些的旧 wyx 文件按入口的迁移规则整份重写，逐条保留触发、绑定、效果与错误路径。时机分类（动作后 / 前置校验 / 定时）属于 `concept-implementation`，不进规格。
 
 ## sync 模式的设计规则
 
@@ -87,8 +85,8 @@ Jackson 模板不写 `## dispatching`、`## coordination graph`、`trigger` / `t
 3. 为可失败动作写错误 sync，或记入排除。
 4. 考虑级联：这条 sync 的 then 会不会再触发另一条。
 
-## 与其他 wyx 模式的关系
+## 与其他模式的关系
 
-- **`wyx:concept`**：每个被 sync 点名的概念都应有 `CONCEPT.md`。`SYNCS.md` 只引用其中声明的动作与 `_` queries。
+- **`concept`**：每个被 sync 点名的概念都应有 `CONCEPT.md`。`SYNCS.md` 只引用其中声明的动作与 `_` queries。
   **放置**：每个 sync 目录只保留一份 `SYNCS.md`。hook 的向上查找行为见 `concept.md`。
-- **`wyx:pipeline`**：sync 里的数据转换阶段可以另写 `PIPELINE.md`。`SYNCS.md` 管协调，`PIPELINE.md` 管数据质量。
+- **`pipeline`**：sync 里的数据转换阶段可以另写 `PIPELINE.md`。`SYNCS.md` 管协调，`PIPELINE.md` 管数据质量。

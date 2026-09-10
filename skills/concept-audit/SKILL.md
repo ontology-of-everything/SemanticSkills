@@ -1,6 +1,6 @@
 ---
 name: concept-audit
-description: Audits code against a Daniel Jackson concept model for independence, composition defects, spec drift, design criteria, and product dependencies. Use when the user requests 概念审计 or concept-audit; read-only, with evidence and repair routing.
+description: Audits code against a concept model only when the user explicitly invokes $concept-audit. / 仅在用户显式调用 $concept-audit 时做概念审计。
 metadata:
   openclaw:
     homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/concept-audit
@@ -8,7 +8,7 @@ metadata:
 
 # 概念审计
 
-只读对照概念模型与代码，回答独立性和组合正确性，并检查漂移、判据与产品子集。输出带证据、影响与修复路由的报告；不修改文件。无规格时只审可验证的代码性质，注明不能判断的契约。
+仅在用户显式调用 `$concept-audit` 时运行。只读对照概念模型与代码，回答独立性和组合正确性，并检查漂移、判据与产品子集。输出带证据、影响与修复路由的报告；不修改文件。无规格时只审可验证的代码性质，注明不能判断的契约。
 
 ## 执行
 

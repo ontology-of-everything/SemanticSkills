@@ -3,7 +3,7 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "请对照现有概念模型和代码做一次 Jackson 概念审计。仓库里有 docs/prd/ 和 src/。不要改任何文件。",
+      "prompt": "$concept-audit 请对照现有概念模型和代码做一次 Jackson 概念审计。仓库里有 docs/prd/ 和 src/。不要改任何文件。",
       "expected_output": "A read-only five-dimension audit report with evidenced findings, each routed to design, prd, or implementation, plus an upstream-first repair order.",
       "assertions": [
         "The response does not create, edit, or delete any files.",
@@ -14,7 +14,7 @@
     },
     {
       "id": 2,
-      "prompt": "请只读审计：动作类型图 A.done -> B.tick -> A.done；每次剩余计数递减至0终止；引擎持久化 flow 日志；多 when 同 token 合取；规则分在不同目录；无 depth limit。规格允许这些行为，仅给上述材料。",
+      "prompt": "$concept-audit 请只读审计：动作类型图 A.done -> B.tick -> A.done；每次剩余计数递减至0终止；引擎持久化 flow 日志；多 when 同 token 合取；规则分在不同目录；无 depth limit。规格允许这些行为，仅给上述材料。",
       "expected_output": "A source-grounded result satisfying the behavioral assertions, with unresolved information explicitly identified.",
       "assertions": [
         "不单凭类型环、日志、分目录或无上限报缺陷。",

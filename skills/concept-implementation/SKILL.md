@@ -1,12 +1,14 @@
 ---
 name: concept-implementation
-description: Maps a confirmed concept model (Daniel Jackson's concept design) onto a modular monolith (one module per concept, syncs as mediators or a rule engine). Use to implement an established concept model as a 模块单体, or for concept-implementation.
+description: Generates a modular-monolith mapping from a confirmed concept model only when the user explicitly invokes $concept-implementation. / 仅在用户显式调用 $concept-implementation 时做模块单体映射。
 metadata:
   openclaw:
     homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/concept-implementation
 ---
 
 # 概念实现（模块单体）
+
+仅在用户显式调用 `$concept-implementation` 时运行。
 
 ## 目标
 

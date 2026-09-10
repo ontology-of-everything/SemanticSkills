@@ -45,6 +45,13 @@ check_references() {
     [[ -f "$SKILL_DIR/references/$ref.md" ]] || fail "missing reference: references/$ref.md"
     rg -q "references/$ref\.md" "$SKILL_DIR/SKILL.md" || fail "SKILL.md does not route to references/$ref.md"
   done
+  # 0.30.0: 模式名不再带 wyx: 前缀；六个模式必须都出现在 SKILL.md 的路由表里。
+  ! rg -q 'wyx:(audit|concept|drift|pipeline|sync|map)' "$SKILL_DIR/SKILL.md" "$SKILL_DIR/references" \
+    || fail "wyx: mode prefix is gone since 0.30.0; use bare mode names"
+  local mode
+  for mode in audit concept drift pipeline sync map; do
+    rg -q "^\| \`$mode\` \|" "$SKILL_DIR/SKILL.md" || fail "SKILL.md mode table missing: $mode"
+  done
 }
 
 # runtime/ 是上游原样收录的 bash：至少保证它能被解析，且 hooks 注册完整。

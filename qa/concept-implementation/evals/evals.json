@@ -3,7 +3,7 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "概念模型已经确认。请按 Jackson 映射把它落地成模块单体，目标语言是 TypeScript。不要重开概念讨论。",
+      "prompt": "$concept-implementation 概念模型已经确认。请按 Jackson 映射把它落地成模块单体，目标语言是 TypeScript。不要重开概念讨论。",
       "expected_output": "A modular-monolith mapping: one package per concept, syncs as mediators in the composition layer, TypeScript notes loaded, concept modules mutually unreferenced.",
       "assertions": [
         "Each concept has a verifiable module boundary; separate compilation units are selected when appropriate, and concepts do not depend on one another.",
@@ -14,7 +14,7 @@
     },
     {
       "id": 2,
-      "prompt": "按 concept-implementation 修正 Java 方案：我们仅调用 Modulith verify() 就声称概念零依赖；普通监听器代替含两个 when 的规则；where 返回空集后直接不响应。请给具体修正。",
+      "prompt": "$concept-implementation 修正 Java 方案：我们仅调用 Modulith verify() 就声称概念零依赖；普通监听器代替含两个 when 的规则；where 返回空集后直接不响应。请给具体修正。",
       "expected_output": "A source-grounded result satisfying the behavioral assertions, with unresolved information explicitly identified.",
       "assertions": [
         "显式允许依赖集合或附加规则验证概念互不依赖。",

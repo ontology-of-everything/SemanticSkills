@@ -2,6 +2,7 @@
 
 Evaluate observable PRD-transcription behavior rather than exact headings.
 
+- The skill runs only on explicit `$concept-prd` / `/concept-prd` invocation.
 - The skill transcribes a confirmed model; it does not invent concepts, syncs,
   or exclusions.
 - Model gaps route back to `concept-design` instead of being filled in

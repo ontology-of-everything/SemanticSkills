@@ -34,6 +34,7 @@ check_skill_layout() {
   [[ ! -f "$QA_DIR/evals.json" ]] || fail "duplicate eval source: $QA_DIR/evals.json"
   rg -q '^name: concept-design$' "$SKILL_DIR/SKILL.md" || fail "frontmatter name mismatch"
   rg -q '\$concept-design' "$SKILL_DIR/agents/openai.yaml" || fail "default prompt must name the skill"
+  rg -q '^  allow_implicit_invocation: false$' "$SKILL_DIR/agents/openai.yaml" || fail "Codex implicit invocation must be disabled"
 }
 
 # 流程步骤按需加载的参考文件必须存在，且 SKILL.md 的「参考」表指得到实处。

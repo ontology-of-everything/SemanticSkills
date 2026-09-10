@@ -1,5 +1,12 @@
 # concept-audit Changelog
 
+## 0.5.0 - 2026-09-10
+
+### Changed
+
+- Default off: run only on explicit `$concept-audit` / `/concept-audit`. Codex
+  `allow_implicit_invocation: false`.
+
 ## 0.4.0 - 2026-09-07
 
 - 审计按行为与影响判定；补充绑定/合取/重放检查，消除合法循环、日志与组织方式误报。

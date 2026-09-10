@@ -2,6 +2,7 @@
 
 Evaluate observable audit behavior rather than exact headings or wording.
 
+- The skill runs only on explicit `$concept-audit` / `/concept-audit` invocation.
 - The run stays read-only: no files are created or edited.
 - All five dimensions run, or skipped dimensions are named with a reason.
 - Each finding has a location, evidence a reviewer can re-check, a severity,

@@ -1,6 +1,6 @@
 ---
 name: concept-design
-description: Generates and revises Daniel Jackson concept models from requirements with independent purposes, behavior specifications, and causal synchronizations. Use when the user requests 概念设计, 概念建模, or concept-design; generic requirement discussions do not require it.
+description: Generates Daniel Jackson concept models (purpose, OP, state, actions, syncs) only when the user explicitly invokes $concept-design. / 仅在用户显式调用 $concept-design 时做概念建模。
 metadata:
   openclaw:
     homepage: https://github.com/ontology-of-everything/SemanticSkills/tree/main/skills/concept-design
@@ -8,7 +8,7 @@ metadata:
 
 # 概念设计
 
-把需求、访谈或既有模型转成独立 concepts、syncs、产品依赖与取舍。Concept 既是用户理解功能的心理构造，也对应连贯功能单元；页面、实体和代码模块不直接等同概念。以下是本仓对 Jackson 方法的操作化，不是作者规定的固定流程。
+仅在用户显式调用 `$concept-design` 时运行。把需求、访谈或既有模型转成独立 concepts、syncs、产品依赖与取舍。Concept 既是用户理解功能的心理构造，也对应连贯功能单元；页面、实体和代码模块不直接等同概念。以下是本仓对 Jackson 方法的操作化，不是作者规定的固定流程。
 
 只要求建模时交付模型；用户同时要求 PRD/实现且取舍已明确时继续交接 `concept-prd` / `concept-implementation`，不重复索要确认。未安装伴生技能时交付可用模型与缺口，不假定其存在。
 

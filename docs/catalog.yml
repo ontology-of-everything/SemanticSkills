@@ -83,9 +83,9 @@ skills:
     display_name_zh: "概念设计"
     domain: meta
     subdomains: [concept-design, requirements, software-design]
-    summary: Models requirements as independent concepts defined by one purpose, an end-to-end operational principle, relational state, and actions with error cases and read-only queries; critiques boundaries through specificity, completeness, independence, and familiarity; composes application behavior with when/where/then causal synchronizations (the author's current notation) and follows the requested handoff scope
-    summary_zh: 用单一 Purpose、端到端 Operational Principle、关系式 State、带错误 case 与只读 queries 的 Actions 建模独立 concepts；以专一、完整、独立、熟悉审查边界，用 when/where/then 因果 synchronizations（作者现行记法）组合应用行为，按用户授权范围交接
-    version: "0.5.0"
+    summary: Explicit-invocation-only — models requirements as independent concepts defined by one purpose, an end-to-end operational principle, relational state, and actions with error cases and read-only queries; critiques boundaries through specificity, completeness, independence, and familiarity; composes application behavior with when/where/then causal synchronizations (the author's current notation) and follows the requested handoff scope
+    summary_zh: 仅显式调用 · 用单一 Purpose、端到端 Operational Principle、关系式 State、带错误 case 与只读 queries 的 Actions 建模独立 concepts；以专一、完整、独立、熟悉审查边界，用 when/where/then 因果 synchronizations（作者现行记法）组合应用行为，按用户授权范围交接
+    version: "0.6.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; pure concept modeling
     marketplaces: [skills-sh, skillsmp, clawhub]
@@ -98,9 +98,9 @@ skills:
     display_name_zh: "概念 PRD"
     domain: meta
     subdomains: [concept-design, prd, specifications]
-    summary: Transcribes a confirmed concept model (Daniel Jackson's concept design) into a PRD family—central overall PRD plus Jackson-style per-concept CONCEPT.md (colocated with code when modules exist) and a single flow-grouped SYNCS.md (split per sync package later by implementation)—without inventing content; zero cross-concept naming in concept specs; model gaps return to concept design
-    summary_zh: 把已确认的概念模型（Daniel Jackson 概念设计）转录为 PRD 文档族：总体 PRD 集中，每概念 CONCEPT.md 与代码共存（Jackson 格式）、全部 sync 转录期单文件按 flow 分组（实现期拆包归实现技能）；概念规格零点名，纯转录不再创作，缺口回上游建模
-    version: "0.4.0"
+    summary: Explicit-invocation-only — transcribes a confirmed concept model (Daniel Jackson's concept design) into a PRD family—central overall PRD plus Jackson-style per-concept CONCEPT.md (colocated with code when modules exist) and a single flow-grouped SYNCS.md (split per sync package later by implementation)—without inventing content; zero cross-concept naming in concept specs; model gaps return to concept design
+    summary_zh: 仅显式调用 · 把已确认的概念模型（Daniel Jackson 概念设计）转录为 PRD 文档族：总体 PRD 集中，每概念 CONCEPT.md 与代码共存（Jackson 格式）、全部 sync 转录期单文件按 flow 分组（实现期拆包归实现技能）；概念规格零点名，纯转录不再创作，缺口回上游建模
+    version: "0.5.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: No external tools or network; writes Markdown PRD files
     marketplaces: [skills-sh, skillsmp, clawhub]
@@ -113,9 +113,9 @@ skills:
     display_name_zh: "概念实现 · 模块单体"
     domain: meta
     subdomains: [concept-design, modular-monolith, implementation]
-    summary: Maps a confirmed concept model (Daniel Jackson's concept design) onto a modular monolith—one module per concept, when/where/then syncs as mediators or a rule engine with error syncs as the default failure path, specs colocated with code, validated product subsets; scales via semantics-free concept grouping and per-group sync packages; language notes for Rust, Java/Spring Modulith, and TypeScript
-    summary_zh: 把已确认的概念模型（Daniel Jackson 概念设计）映射为模块单体：一个 concept 一个模块，when/where/then sync 落在组合层（mediator 或规则引擎、错误 sync 为默认失败路径），规格与代码共存，验证产品子集与构建支持；规模大时按无语义概念分组与 sync 拆包扩展；按需加载 Rust / Java / TypeScript 说明
-    version: "0.5.0"
+    summary: Explicit-invocation-only — maps a confirmed concept model (Daniel Jackson's concept design) onto a modular monolith—one module per concept, when/where/then syncs as mediators or a rule engine with error syncs as the default failure path, specs colocated with code, validated product subsets; scales via semantics-free concept grouping and per-group sync packages; language notes for Rust, Java/Spring Modulith, and TypeScript
+    summary_zh: 仅显式调用 · 把已确认的概念模型（Daniel Jackson 概念设计）映射为模块单体：一个 concept 一个模块，when/where/then sync 落在组合层（mediator 或规则引擎、错误 sync 为默认失败路径），规格与代码共存，验证产品子集与构建支持；规模大时按无语义概念分组与 sync 拆包扩展；按需加载 Rust / Java / TypeScript 说明
+    version: "0.6.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: Mapping needs only the confirmed model; language-specific boundary tests may use cargo, Spring Modulith, or dependency-cruiser
     marketplaces: [skills-sh, skillsmp, clawhub]
@@ -128,9 +128,9 @@ skills:
     display_name_zh: "概念审计"
     domain: meta
     subdomains: [concept-design, architecture-audit, spec-drift]
-    summary: Read-only audit of a codebase against its concept model (Daniel Jackson's concept design) around two questions—are concepts truly independent, and is their sync composition free of defects—plus spec drift with calibrated checklists and cross-spec validation (adapted from jlifyio/wyx), criteria review, and dependency/subset integrity; parallel scans for 5+ specs; evidenced findings routed to design, prd, or implementation
-    summary_zh: 只读对照概念规格与代码，回答两问：概念是否真独立、组合是否有缺陷（行为保持、错误 sync、入口响应、冲突/死 sync、级联、欠/过同步、直通动作）；加规格漂移（校准检查表与跨规格校验，改编自 jlifyio/wyx）、判据重审、依赖与子集；规格多时并行扫描，发现带证据并路由到 design / prd / implementation
-    version: "0.4.0"
+    summary: Explicit-invocation-only — read-only audit of a codebase against its concept model (Daniel Jackson's concept design) around two questions—are concepts truly independent, and is their sync composition free of defects—plus spec drift with calibrated checklists and cross-spec validation (adapted from jlifyio/wyx), criteria review, and dependency/subset integrity; parallel scans for 5+ specs; evidenced findings routed to design, prd, or implementation
+    summary_zh: 仅显式调用 · 只读对照概念规格与代码，回答两问：概念是否真独立、组合是否有缺陷（行为保持、错误 sync、入口响应、冲突/死 sync、级联、欠/过同步、直通动作）；加规格漂移（校准检查表与跨规格校验，改编自 jlifyio/wyx）、判据重审、依赖与子集；规格多时并行扫描，发现带证据并路由到 design / prd / implementation
+    version: "0.5.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: Read-only; needs the codebase plus optional PRD or concept-model docs
     marketplaces: [skills-sh, skillsmp, clawhub]
@@ -139,13 +139,13 @@ skills:
   - id: concept-guardrails
     path: skills/concept-guardrails
     qa: qa/concept-guardrails
-    display_name: "Concept Guardrails — wyx Architecture Guardrails (Chinese)"
-    display_name_zh: "概念护栏 · wyx 架构护栏中文版"
+    display_name: "Concept Guardrails"
+    display_name_zh: "概念护栏"
     domain: meta
     subdomains: [architecture, module-boundaries, drift-detection, concept-specs]
-    summary: Explicit-invocation-only Chinese adaptation of jlifyio/wyx v0.26.0—declares module boundaries as colocated CONCEPT/PIPELINE/SYNCS specs, audits spec coverage with dependency-ordered command plans, detects spec-code drift with impact-calibrated severities and cross-spec reference validation, and renders an ARCHITECTURE.md Mermaid map; ships the upstream Claude Code hooks runtime verbatim as an optional boundary-injection layer
-    summary_zh: 仅显式调用的 jlifyio/wyx v0.26.0 中文改写版 · 用与代码同目录的 CONCEPT/PIPELINE/SYNCS 规格声明模块边界；审计覆盖缺口并按依赖排序给出命令计划；用校准过的严重度与跨规格校验检测规格漂移；生成 ARCHITECTURE.md Mermaid 地图；上游 hooks 运行时原样收录，作为可选的边界自动注入层
-    version: "0.28.0"
+    summary: Explicit-invocation-only — six modes (audit, concept, drift, pipeline, sync, map) that declare module boundaries as colocated CONCEPT/PIPELINE/SYNCS specs in this repo's Jackson notation only, audit spec coverage with dependency-ordered command plans, detect spec-code drift with impact-calibrated severities and cross-spec reference validation, and render an ARCHITECTURE.md Mermaid map; workflow adapted from jlifyio/wyx v0.26.0, whose native format is flagged for migration rather than consumed; upstream Claude Code hooks runtime kept as an optional spec-listing layer
+    summary_zh: 仅显式调用 · 六种模式（audit、concept、drift、pipeline、sync、map）用与代码同目录的 CONCEPT/PIPELINE/SYNCS 规格声明模块边界，只消费本仓 Jackson 记法；审计覆盖缺口并按依赖排序给出命令计划；用校准过的严重度与跨规格校验检测规格漂移；生成 ARCHITECTURE.md Mermaid 地图；流程改编自 jlifyio/wyx v0.26.0，其原生格式只标待迁移不消费；上游 hooks 运行时保留为可选的规格列举层
+    version: "0.30.0"
     agents: [cursor, claude-code, codex, openclaw]
     compatibility: Specs and drift checks need only file read/write plus Grep/Glob; the optional boundary-injection runtime requires Claude Code hooks and jq
     marketplaces: [skills-sh, skillsmp, clawhub]
