@@ -1,6 +1,6 @@
 # 本体语义 · 概念设计
 
-[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.1.0)
+[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.2.0)
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
 > 先说清含义，再写代码、跑命令、起草规格。
@@ -11,7 +11,7 @@
 
 English: [README.md](README.md)。
 
-当前版本 **[v4.1.0](CHANGELOG.zh.md#410---2026-09-09)**（[English](CHANGELOG.md#410---2026-09-09)）。本版安装名：`semantic-km-creator`（原 `semantic-creator`）；新增 `html-slides`。
+当前版本 **[v4.2.0](CHANGELOG.zh.md#420---2026-09-10)**（[English](CHANGELOG.md#420---2026-09-10)）。`concept-*` 全家仅显式调用；`concept-guardrails` 去掉 `wyx:` 模式前缀，只消费 Jackson 记法。
 
 ## 目录
 

@@ -16,6 +16,19 @@ Monorepo **infrastructure** history. Each skill has its own changelog:
 | concept-guardrails | [qa/concept-guardrails/CHANGELOG.md](qa/concept-guardrails/CHANGELOG.md) |
 | html-slides | [qa/html-slides/CHANGELOG.md](qa/html-slides/CHANGELOG.md) |
 
+## 4.2.0 - 2026-09-10
+
+### Breaking Changes
+
+- **concept-guardrails** **0.30.0**: drop the `wyx:` mode prefix — invoke `$concept-guardrails <audit|concept|drift|pipeline|sync|map>`; consume Jackson notation only (wyx-native sections are flagged for migration, not parsed). See skill changelog.
+
+### Features
+
+- **concept-design** **0.6.0**: explicit-only (`/concept-design` / `$concept-design`; see skill changelog)
+- **concept-prd** **0.5.0**: explicit-only; downstream `wyx:*` references renamed (see skill changelog)
+- **concept-implementation** **0.6.0**: explicit-only; `wyx:map` → `concept-guardrails map` (see skill changelog)
+- **concept-audit** **0.5.0**: explicit-only (see skill changelog)
+
 ## 4.1.0 - 2026-09-09
 
 ### Breaking Changes

@@ -16,6 +16,19 @@ Monorepo **基础设施**变更。各技能独立 changelog：
 | concept-guardrails | [qa/concept-guardrails/CHANGELOG.md](qa/concept-guardrails/CHANGELOG.md) |
 | html-slides | [qa/html-slides/CHANGELOG.md](qa/html-slides/CHANGELOG.md) |
 
+## 4.2.0 - 2026-09-10
+
+### 破坏性变更
+
+- **concept-guardrails** **0.30.0**：去掉 `wyx:` 模式前缀，改为 `$concept-guardrails <audit|concept|drift|pipeline|sync|map>`；只消费 Jackson 记法（wyx 原生段落标为待迁移，不解析）。详见技能 changelog。
+
+### 新功能
+
+- **concept-design** **0.6.0**：仅显式调用（`/concept-design` / `$concept-design`；详见技能 changelog）
+- **concept-prd** **0.5.0**：仅显式调用；下游 `wyx:*` 引用更名（详见技能 changelog）
+- **concept-implementation** **0.6.0**：仅显式调用；`wyx:map` → `concept-guardrails map`（详见技能 changelog）
+- **concept-audit** **0.5.0**：仅显式调用（详见技能 changelog）
+
 ## 4.1.0 - 2026-09-09
 
 ### 破坏性变更

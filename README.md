@@ -1,6 +1,6 @@
 # Ontology & Concept Design
 
-[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.1.0)
+[![GitHub release](https://img.shields.io/github/v/release/ontology-of-everything/SemanticSkills)](https://github.com/ontology-of-everything/SemanticSkills/releases/tag/v4.2.0)
 [![skills.sh](https://skills.sh/b/ontology-of-everything/SemanticSkills)](https://skills.sh/ontology-of-everything/SemanticSkills)
 
 > Name the meaning first — then write code, run a CLI, or draft a spec.
@@ -11,7 +11,7 @@ The concept-design skills adapt Daniel Jackson's concepts-and-synchronizations m
 
 中文说明见 [README-CN.md](README-CN.md).
 
-Current release **[v4.1.0](CHANGELOG.md#410---2026-09-09)** ([中文](CHANGELOG.zh.md#410---2026-09-09)). Install names in this release: `semantic-km-creator` (was `semantic-creator`); new `html-slides`.
+Current release **[v4.2.0](CHANGELOG.md#420---2026-09-10)** ([中文](CHANGELOG.zh.md#420---2026-09-10)). `concept-*` family is explicit-only; `concept-guardrails` modes drop the `wyx:` prefix and consume Jackson notation only.
 
 ## Table of Contents
 
